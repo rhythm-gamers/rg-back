@@ -5,7 +5,7 @@ import axios from "axios";
 import qs from "qs";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { Logger } from "winston";
-import { steam, UserObject, sixtarGateId, djMaxId, ez2onRebootRId, museDashId, rhythmDoctorId, adofaiId } from "./auth.object";
+import { steam, SteamUserObject, sixtarGateId, djMaxId, ez2onRebootRId, museDashId, rhythmDoctorId, adofaiId } from "./auth.object";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -26,7 +26,7 @@ export class AuthController {
 
   @Get("steam/authenticate")
   async steamAuthenticate(@Req() req: Request) {
-    const user: UserObject = await steam.authenticate(req);
+    const user: SteamUserObject = await steam.authenticate(req);
     return user;
   }
 
