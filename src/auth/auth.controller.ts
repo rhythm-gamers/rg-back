@@ -1,9 +1,9 @@
-import { Controller, Get, Param, Req, Res } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
-import SteamAuth from 'node-steam-openid';
-import axios from 'axios';
-import qs from 'qs';
+import { Controller, Get, Param, Req, Res } from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { Request, Response } from "express";
+import SteamAuth from "node-steam-openid";
+import axios from "axios";
+import qs from "qs";
 
 const steam = new SteamAuth({
   realm: process.env.STEAM_REALM,
@@ -35,28 +35,28 @@ axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
 };
 
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('steam')
+  @Get("steam")
   async steamLogin(@Res() res: Response) {
     const redirectUrl = await steam.getRedirectUrl();
     res.redirect(redirectUrl);
   }
 
-  @Get('steam/authenticate')
+  @Get("steam/authenticate")
   async steamAuthenticate(@Req() req: Request) {
     const user: UserObject = await steam.authenticate(req);
     return user;
   }
 
-  @Get('steam/games/:id')
-  async getGames(@Param('id') id: string) {
+  @Get("steam/games/:id")
+  async getGames(@Param("id") id: string) {
     const params = {
       key: process.env.STEAM_API_KEY,
       steamid: id,
-      format: 'json',
+      format: "json",
       include_appinfo: true,
       appids_filter: [
         sixtarGateId,
