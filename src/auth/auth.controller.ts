@@ -1,35 +1,11 @@
-import { Controller, Get, Param, Req, Res } from "@nestjs/common";
+import { Controller, Get, Inject, Param, Req, Res } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
-import SteamAuth from "node-steam-openid";
 import axios from "axios";
 import qs from "qs";
-
-const steam = new SteamAuth({
-  realm: process.env.STEAM_REALM,
-  returnUrl: process.env.STEAM_RETURN_URL,
-  apiKey: process.env.STEAM_API_KEY,
-});
-
-const museDashId = 774171;
-const rhythmDoctorId = 774181;
-const djMaxId = 960170;
-const adofaiId = 977950;
-const ez2onRebootRId = 1477590;
-const sixtarGateId = 1802720;
-
-type UserObject = {
-  _json: Record<string, any>;
-  steamid: string;
-  username: string;
-  name: string;
-  profile: string;
-  avatar: {
-    small: string;
-    medium: string;
-    large: string;
-  };
-};
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { Logger } from "winston";
+import { steam, UserObject, sixtarGateId, djMaxId, ez2onRebootRId, museDashId, rhythmDoctorId, adofaiId } from "./auth.object";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -37,7 +13,10 @@ axios.defaults.paramsSerializer = (params) => {
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+  ) {}
 
   @Get("steam")
   async steamLogin(@Res() res: Response) {
@@ -53,6 +32,8 @@ export class AuthController {
 
   @Get("steam/games/:id")
   async getGames(@Param("id") id: string) {
+    this.logger.info(`GET - /auth/steam/games/${id}`);
+    
     const params = {
       key: process.env.STEAM_API_KEY,
       steamid: id,

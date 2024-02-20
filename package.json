@@ -26,6 +26,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@types/node-steam-openid": "^1.0.3",
     "axios": "^1.6.5",
+    "class-validator": "^0.14.1",
     "nest-winston": "^1.9.4",
     "node-steam-openid": "^1.2.1",
     "reflect-metadata": "^0.1.13",
