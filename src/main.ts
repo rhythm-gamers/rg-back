@@ -5,9 +5,7 @@ import { loggerConfig } from "./config/logger.config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger(
-      loggerConfig
-    )
+    logger: WinstonModule.createLogger(loggerConfig),
   });
   await app.listen(3000);
 }

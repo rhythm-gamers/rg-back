@@ -5,7 +5,16 @@ import axios from "axios";
 import qs from "qs";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { Logger } from "winston";
-import { steam, SteamUserObject, sixtarGateId, djMaxId, ez2onRebootRId, museDashId, rhythmDoctorId, adofaiId } from "./auth.object";
+import {
+  steam,
+  SteamUserObject,
+  sixtarGateId,
+  djMaxId,
+  ez2onRebootRId,
+  museDashId,
+  rhythmDoctorId,
+  adofaiId,
+} from "./auth.object";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -33,7 +42,7 @@ export class AuthController {
   @Get("steam/games/:id")
   async getGames(@Param("id") id: string) {
     this.logger.info(`GET - /auth/steam/games/${id}`);
-    
+
     const params = {
       key: process.env.STEAM_API_KEY,
       steamid: id,
