@@ -1,5 +1,5 @@
 import { Post } from "src/post/entity/post.entity";
-import { CommentReport } from "src/report/entity/commentreport.entity";
+import { CommentReport } from "src/report/entity/comment-report.entity";
 import { User } from "src/user/entity/user.entity";
 import {
   Column,

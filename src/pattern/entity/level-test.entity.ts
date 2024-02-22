@@ -6,8 +6,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { PatternInfo } from "./patterninfo.entity";
-import { PatternProgress } from "src/user/entity/patternprogress.entity";
+import { PatternInfo } from "./pattern-info.entity";
+import { PatternProgress } from "src/user/entity/pattern-progress.entity";
 
 @Entity()
 export class LevelTest {

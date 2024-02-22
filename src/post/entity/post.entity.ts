@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { PostReport } from "src/report/entity/postreport.entity";
+import { PostReport } from "src/report/entity/post-report.entity";
 
 @Entity()
 export class Post {

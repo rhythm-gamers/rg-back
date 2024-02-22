@@ -1,6 +1,6 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Practice } from "./practice.entity";
-import { LevelTest } from "./leveltest.entity";
+import { LevelTest } from "./level-test.entity";
 
 @Entity()
 export class PatternInfo {

@@ -1,4 +1,4 @@
-import { LevelTest } from "src/pattern/entity/leveltest.entity";
+import { LevelTest } from "src/pattern/entity/level-test.entity";
 import { Practice } from "src/pattern/entity/practice.entity";
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
