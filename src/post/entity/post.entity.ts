@@ -1,4 +1,4 @@
-import { Board } from "src/global-entity/board.entity";
+import { Board } from "src/board/entity/board.entity";
 import { User } from "src/user/entity/user.entity";
 import { Comment } from "src/comment/entity/comment.entity";
 import {
