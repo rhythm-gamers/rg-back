@@ -14,7 +14,6 @@ import { PostModule } from "./post/post.module";
 import { CommentModule } from "./comment/comment.module";
 import { ReportModule } from "./report/report.module";
 import { BoardModule } from "./board/board.module";
-import { BoardModule } from "./board/board.module";
 
 @Module({
   imports: [
