@@ -6,7 +6,7 @@ import qs from "qs";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { Logger } from "winston";
 import {
-  steam,
+  // steam,
   SteamUserObject,
   sixtarGateId,
   djMaxId,
@@ -15,6 +15,7 @@ import {
   rhythmDoctorId,
   adofaiId,
 } from "./auth.object";
+import SteamAuth from "node-steam-openid";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -22,21 +23,29 @@ axios.defaults.paramsSerializer = (params) => {
 
 @Controller("auth")
 export class AuthController {
+  private steam: SteamAuth;
+
   constructor(
     private readonly authService: AuthService,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-  ) {}
+  ) {
+    this.steam = new SteamAuth({
+      realm: process.env.STEAM_REALM,
+      returnUrl: process.env.STEAM_RETURN_URL,
+      apiKey: process.env.STEAM_API_KEY,
+    });
+  }
 
   @Get("steam")
   async steamLogin(@Res() res: Response) {
-    const redirectUrl = await steam.getRedirectUrl();
+    const redirectUrl = await this.steam.getRedirectUrl();
     res.redirect(redirectUrl);
   }
 
   @Get("steam/authenticate")
   async steamAuthenticate(@Req() req: Request) {
-    const user: SteamUserObject = await steam.authenticate(req);
-    return user;
+    const user: SteamUserObject = await this.steam.authenticate(req);
+    return user._json.steamid;
   }
 
   @Get("steam/games/:id")
