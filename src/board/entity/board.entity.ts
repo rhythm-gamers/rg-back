@@ -10,8 +10,8 @@ export class Board {
   posts: Post[];
 
   @Column({ length: 10 })
-  name: string;
+  board_name: string;
 
   @Column({ length: 200, default: "" })
-  describe: string;
+  description: string;
 }
