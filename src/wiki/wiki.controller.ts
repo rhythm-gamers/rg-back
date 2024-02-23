@@ -13,7 +13,6 @@ import { ReturnWikiMetadata } from "./dto/return-wiki-metadata.dto";
 import { ReturnWikiData } from "./dto/return-wiki-data.dto";
 import { InsertWikiData } from "./dto/insert-wiki-data.dto";
 import { UpdateWikiData } from "./dto/update-wiki-data.dto";
-import { DeleteResult } from "typeorm";
 
 @Controller("wiki")
 export class WikiController {
@@ -54,17 +53,20 @@ export class WikiController {
 
   // TODO:
   //  Auth 필요
-  @Put("spec/:id")
-  async updateWikiData(@Body() wiki: UpdateWikiData, @Param("id") id: number) {
-    const result = await this.wikiService.updateWikiData(wiki, id);
+  @Put("spec/:title")
+  async updateWikiData(
+    @Body() wiki: UpdateWikiData,
+    @Param("title") title: string,
+  ) {
+    const result = await this.wikiService.updateWikiDataByTitle(wiki, title);
     return result;
   }
 
   // TODO:
   //  Auth 필요
-  @Delete("spec/:id")
-  async deleteWikiData(@Param("id") id: number): Promise<DeleteResult> {
-    const result = await this.wikiService.deleteWikiData(id);
+  @Delete("spec/:title")
+  async deleteWikiData(@Param("title") title: string) {
+    const result = await this.wikiService.deleteWikiDataByTitle(title);
     return result;
   }
 }

@@ -65,13 +65,16 @@ export class WikiService {
     }
   }
 
-  async updateWikiData(wiki: UpdateWikiData, id: number) {
+  async updateWikiDataByTitle(wiki: UpdateWikiData, title: string) {
     const data = await this.wikiRepository.findOne({
       where: {
-        uid: id,
+        title: title,
       },
     });
-    const letter = this.getChosung(wiki.title);
+    let letter = data.letter;
+    if (wiki.title) {
+      letter = this.getChosung(wiki.title);
+    }
     const update_data = { ...data, ...wiki, letter };
 
     return await this.wikiRepository.save(update_data);
@@ -79,6 +82,19 @@ export class WikiService {
 
   async deleteWikiData(id: number) {
     return await this.wikiRepository.delete(id);
+  }
+
+  async deleteWikiDataByTitle(title: string) {
+    const wiki = await this.wikiRepository.findOne({
+      where: {
+        title: title,
+      },
+    });
+    if (wiki) {
+      return await this.wikiRepository.remove(wiki);
+    } else {
+      return wiki;
+    }
   }
 }
 
