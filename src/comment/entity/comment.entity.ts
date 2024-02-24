@@ -32,7 +32,7 @@ export class Comment {
   likes: number;
 
   @Column() // 이 부분은 추후에 자기 참조 등으로 가능하게끔...
-  paternt_id: number;
+  parent_id: number;
 
   @CreateDateColumn()
   created_at: Date;

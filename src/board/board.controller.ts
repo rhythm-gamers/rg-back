@@ -13,10 +13,14 @@ import { Board } from "./entity/board.entity";
 import { CreateBoard } from "./dto/create-board.dto";
 import { DeleteBoard } from "./dto/delete-board.dto";
 import { ModifyBoard } from "./dto/modify-board.dto";
+import { PostService } from "src/post/post.service";
 
 @Controller("board")
 export class BoardController {
-  constructor(private readonly boardService: BoardService) {}
+  constructor(
+    private readonly boardService: BoardService,
+    private readonly postService: PostService,
+  ) {}
 
   @Get("spec/:path")
   async getBoardInfo(@Param("path") path: string): Promise<Board> {
