@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { CommentService } from "./comment.service";
+import { IncreaseCommentLikes } from "./dto/increase-comment-likes.dto";
 
 @Controller("comment")
 export class CommentController {
@@ -11,10 +12,15 @@ export class CommentController {
     @Query("page") page: number = 0,
     @Query("limit") limit: number = +process.env.COMMENT_LIMIT,
   ) {
-    return await this.commentService.getCommentAssociatePostID(
+    return await this.commentService.fetchCommentAssociatePostID(
       +post_id,
       +page,
       +limit,
     );
+  }
+
+  @Post("inc_like")
+  async increaseCommentLike(@Body() body: IncreaseCommentLikes) {
+    return await this.commentService.increaseCommentLikes(0, body);
   }
 }
