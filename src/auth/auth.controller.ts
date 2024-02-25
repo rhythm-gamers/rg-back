@@ -1,62 +1,61 @@
-import { Controller, Get, Param, Req, Res } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
-import SteamAuth from 'node-steam-openid';
-import axios from 'axios';
-import qs from 'qs';
-
-const steam = new SteamAuth({
-  realm: process.env.STEAM_REALM,
-  returnUrl: process.env.STEAM_RETURN_URL,
-  apiKey: process.env.STEAM_API_KEY,
-});
-
-const museDashId = 774171;
-const rhythmDoctorId = 774181;
-const djMaxId = 960170;
-const adofaiId = 977950;
-const ez2onRebootRId = 1477590;
-const sixtarGateId = 1802720;
-
-type UserObject = {
-  _json: Record<string, any>;
-  steamid: string;
-  username: string;
-  name: string;
-  profile: string;
-  avatar: {
-    small: string;
-    medium: string;
-    large: string;
-  };
-};
+import { Controller, Get, Inject, Param, Req, Res } from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { Request, Response } from "express";
+import axios from "axios";
+import qs from "qs";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { Logger } from "winston";
+import {
+  // steam,
+  SteamUserObject,
+  sixtarGateId,
+  djMaxId,
+  ez2onRebootRId,
+  museDashId,
+  rhythmDoctorId,
+  adofaiId,
+} from "./auth.object";
+import SteamAuth from "node-steam-openid";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
 };
 
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  private steam: SteamAuth;
 
-  @Get('steam')
+  constructor(
+    private readonly authService: AuthService,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+  ) {
+    this.steam = new SteamAuth({
+      realm: process.env.STEAM_REALM,
+      returnUrl: process.env.STEAM_RETURN_URL,
+      apiKey: process.env.STEAM_API_KEY,
+    });
+  }
+
+  @Get("steam")
   async steamLogin(@Res() res: Response) {
-    const redirectUrl = await steam.getRedirectUrl();
+    const redirectUrl = await this.steam.getRedirectUrl();
     res.redirect(redirectUrl);
   }
 
-  @Get('steam/authenticate')
+  @Get("steam/authenticate")
   async steamAuthenticate(@Req() req: Request) {
-    const user: UserObject = await steam.authenticate(req);
-    return user;
+    const user: SteamUserObject = await this.steam.authenticate(req);
+    return user._json.steamid;
   }
 
-  @Get('steam/games/:id')
-  async getGames(@Param('id') id: string) {
+  @Get("steam/games/:id")
+  async getGames(@Param("id") id: string) {
+    this.logger.info(`GET - /auth/steam/games/${id}`);
+
     const params = {
       key: process.env.STEAM_API_KEY,
       steamid: id,
-      format: 'json',
+      format: "json",
       include_appinfo: true,
       appids_filter: [
         sixtarGateId,

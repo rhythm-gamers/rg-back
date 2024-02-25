@@ -21,14 +21,22 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/typeorm": "^10.0.2",
     "@types/node-steam-openid": "^1.0.3",
     "axios": "^1.6.5",
+    "class-validator": "^0.14.1",
+    "mysql2": "^3.9.1",
+    "nest-winston": "^1.9.4",
     "node-steam-openid": "^1.2.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.20",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
