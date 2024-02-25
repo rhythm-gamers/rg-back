@@ -9,25 +9,32 @@ export class PostService {
     @InjectRepository(Post) private postRepository: Repository<Post>,
   ) {}
 
-  async getPostsAndCommentCountWithBoardname(
+  async fetchPostWithPostID(post_id: number): Promise<Post> {
+    const post = await this.postRepository.findOneBy({
+      post_id: post_id,
+    });
+    return post;
+  }
+
+  async fetchPostsAndCommentCountWithBoardname(
     board_name: string,
     page: number,
     limit: number,
   ) {
     const posts = await this.postRepository.findAndCount({
       select: {
-        uid: true,
+        post_id: true,
         title: true,
         views: true,
         likes: true,
         created_at: true,
         modified_at: true,
         user: {
-          uid: true,
+          user_id: true,
           name: true,
         },
         comments: {
-          uid: true,
+          comment_id: true,
         },
       },
       where: {
@@ -37,7 +44,7 @@ export class PostService {
       },
       relations: ["user", "comments"],
       order: {
-        uid: "DESC",
+        post_id: "DESC",
       },
       skip: limit * page,
       take: limit,
@@ -68,12 +75,12 @@ export class PostService {
     return result;
   }
 
-  async getPostSpecInfo(post_id: number) {
+  async fetchPostSpecInfo(post_id: number) {
     const post = await this.postRepository.findOne({
       select: {
-        uid: true,
+        post_id: true,
         user: {
-          uid: true,
+          user_id: true,
           name: true,
         },
         title: true,
@@ -84,7 +91,7 @@ export class PostService {
         modified_at: true,
       },
       where: {
-        uid: post_id,
+        post_id: post_id,
       },
       relations: {
         user: true,
