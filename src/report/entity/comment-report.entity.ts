@@ -1,6 +1,6 @@
-import { User } from "src/user/entity/user.entity";
-import { Comment } from "src/comment/entity/comment.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from 'src/user/entity/user.entity';
+import { Comment } from 'src/comment/entity/comment.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class CommentReport {

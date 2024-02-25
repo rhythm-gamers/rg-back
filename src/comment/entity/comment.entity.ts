@@ -1,6 +1,6 @@
-import { Post } from "src/post/entity/post.entity";
-import { CommentReport } from "src/report/entity/comment-report.entity";
-import { User } from "src/user/entity/user.entity";
+import { Post } from 'src/post/entity/post.entity';
+import { CommentReport } from 'src/report/entity/comment-report.entity';
+import { User } from 'src/user/entity/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,7 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
+} from 'typeorm';
 
 @Entity()
 export class Comment {
@@ -27,7 +27,7 @@ export class Comment {
 
   // TODO 해당 댓글에 추천한 유저를 어떻게 중복 체크 할 것인가?
 
-  @Column({ default: "" })
+  @Column({ default: '' })
   content: string;
 
   @Column({ default: 0 })

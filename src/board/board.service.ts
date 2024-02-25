@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Board } from "./entity/board.entity";
-import { Repository } from "typeorm";
-import { CreateBoard } from "./dto/create-board.dto";
-import { DeleteBoard } from "./dto/delete-board.dto";
-import { ModifyBoard } from "./dto/modify-board.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Board } from './entity/board.entity';
+import { Repository } from 'typeorm';
+import { CreateBoard } from './dto/create-board.dto';
+import { DeleteBoard } from './dto/delete-board.dto';
+import { ModifyBoard } from './dto/modify-board.dto';
 
 @Injectable()
 export class BoardService {

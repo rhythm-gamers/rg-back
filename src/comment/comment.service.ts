@@ -4,15 +4,15 @@ import {
   Injectable,
   forwardRef,
 } from '@nestjs/common';
-import { InjectRepository } from "@nestjs/typeorm";
-import { Comment } from "./entity/comment.entity";
-import { Repository } from "typeorm";
-import { UpdateComment } from "./dto/update-comment.dto";
-import { UserService } from "src/user/user.service";
-import { CreateComment } from "./dto/create-comment.dto";
-import { PostService } from "src/post/post.service";
-import { DeleteComment } from "./dto/delete-comment.dto";
-import { IncreaseCommentLikes } from "./dto/increase-comment-likes.dto";
+import { InjectRepository } from '@nestjs/typeorm';
+import { Comment } from './entity/comment.entity';
+import { Repository } from 'typeorm';
+import { UpdateComment } from './dto/update-comment.dto';
+import { UserService } from 'src/user/user.service';
+import { CreateComment } from './dto/create-comment.dto';
+import { PostService } from 'src/post/post.service';
+import { DeleteComment } from './dto/delete-comment.dto';
+import { IncreaseCommentLikes } from './dto/increase-comment-likes.dto';
 
 @Injectable()
 export class CommentService {
@@ -48,7 +48,7 @@ export class CommentService {
       },
       skip: page * limit,
       take: limit,
-      relations: ["user"],
+      relations: ['user'],
     });
 
     return result;
@@ -101,7 +101,7 @@ export class CommentService {
     comment_like: IncreaseCommentLikes,
   ) {
     await this.commentRepository.update(comment_like.comment_id, {
-      likes: () => "likes + 1",
+      likes: () => 'likes + 1',
     });
 
     const result = await this.commentRepository.findOne({

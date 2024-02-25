@@ -6,19 +6,19 @@ import {
   Param,
   Post,
   Put,
-} from "@nestjs/common";
-import { WikiService } from "./wiki.service";
-import { WikiMetadataOrigin } from "./obj/wiki-metadata-origin.obj";
-import { ReturnWikiMetadata } from "./dto/return-wiki-metadata.dto";
-import { ReturnWikiData } from "./dto/return-wiki-data.dto";
-import { InsertWikiData } from "./dto/insert-wiki-data.dto";
-import { UpdateWikiData } from "./dto/update-wiki-data.dto";
+} from '@nestjs/common';
+import { WikiService } from './wiki.service';
+import { WikiMetadataOrigin } from './obj/wiki-metadata-origin.obj';
+import { ReturnWikiMetadata } from './dto/return-wiki-metadata.dto';
+import { ReturnWikiData } from './dto/return-wiki-data.dto';
+import { InsertWikiData } from './dto/insert-wiki-data.dto';
+import { UpdateWikiData } from './dto/update-wiki-data.dto';
 
-@Controller("wiki")
+@Controller('wiki')
 export class WikiController {
   constructor(private readonly wikiService: WikiService) {}
 
-  @Get("metadata")
+  @Get('metadata')
   async getWikiMetadata(): Promise<ReturnWikiMetadata> {
     const metadatas: WikiMetadataOrigin[] =
       await this.wikiService.getWikiMetadata();
@@ -37,15 +37,15 @@ export class WikiController {
     return result;
   }
 
-  @Get("spec/:id")
-  async getWikiData(@Param("id") id: number): Promise<ReturnWikiData> {
+  @Get('spec/:id')
+  async getWikiData(@Param('id') id: number): Promise<ReturnWikiData> {
     const result: ReturnWikiData = await this.wikiService.getWikiData(id);
     return result;
   }
 
   // TODO:
   //  Auth 필요
-  @Post("")
+  @Post('')
   async insertWikiData(@Body() wiki: InsertWikiData) {
     const result = await this.wikiService.insertWikiData(wiki);
     return result;
@@ -53,10 +53,10 @@ export class WikiController {
 
   // TODO:
   //  Auth 필요
-  @Put("spec/:title")
+  @Put('spec/:title')
   async updateWikiData(
     @Body() wiki: UpdateWikiData,
-    @Param("title") title: string,
+    @Param('title') title: string,
   ) {
     const result = await this.wikiService.updateWikiDataByTitle(wiki, title);
     return result;
@@ -64,8 +64,8 @@ export class WikiController {
 
   // TODO:
   //  Auth 필요
-  @Delete("spec/:title")
-  async deleteWikiData(@Param("title") title: string) {
+  @Delete('spec/:title')
+  async deleteWikiData(@Param('title') title: string) {
     const result = await this.wikiService.deleteWikiDataByTitle(title);
     return result;
   }

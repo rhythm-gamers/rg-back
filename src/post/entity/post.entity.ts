@@ -1,6 +1,6 @@
-import { Board } from "src/board/entity/board.entity";
-import { User } from "src/user/entity/user.entity";
-import { Comment } from "src/comment/entity/comment.entity";
+import { Board } from 'src/board/entity/board.entity';
+import { User } from 'src/user/entity/user.entity';
+import { Comment } from 'src/comment/entity/comment.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,8 +9,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { PostReport } from "src/report/entity/post-report.entity";
+} from 'typeorm';
+import { PostReport } from 'src/report/entity/post-report.entity';
 
 @Entity()
 export class Post {
@@ -34,7 +34,7 @@ export class Post {
   @Column({ length: 100 })
   title: string;
 
-  @Column({ length: 10000, default: "" })
+  @Column({ length: 10000, default: '' })
   content: string;
 
   @Column({ default: 0 })

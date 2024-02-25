@@ -1,7 +1,7 @@
-import { LevelTest } from "src/pattern/entity/level-test.entity";
-import { Practice } from "src/pattern/entity/practice.entity";
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { LevelTest } from 'src/pattern/entity/level-test.entity';
+import { Practice } from 'src/pattern/entity/practice.entity';
+import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class PatternProgress {

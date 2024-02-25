@@ -1,4 +1,4 @@
-import { CommentInterface } from "./comment.interface";
+import { CommentInterface } from './comment.interface';
 
 export interface UpdateComment extends CommentInterface {
   content?: string;

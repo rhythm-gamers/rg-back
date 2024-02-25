@@ -1,6 +1,6 @@
-import { Post } from "src/post/entity/post.entity";
-import { User } from "src/user/entity/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Post } from 'src/post/entity/post.entity';
+import { User } from 'src/user/entity/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class PostReport {
