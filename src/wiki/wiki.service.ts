@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Wiki } from "./entity/wiki.entity";
-import { Repository } from "typeorm";
-import { WikiMetadataOrigin } from "./obj/wiki-metadata-origin.obj";
-import { ReturnWikiData } from "./dto/return-wiki-data.dto";
-import { InsertWikiData } from "./dto/insert-wiki-data.dto";
-import { UpdateWikiData } from "./dto/update-wiki-data.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Wiki } from './entity/wiki.entity';
+import { Repository } from 'typeorm';
+import { WikiMetadataOrigin } from './obj/wiki-metadata-origin.obj';
+import { ReturnWikiData } from './dto/return-wiki-data.dto';
+import { InsertWikiData } from './dto/insert-wiki-data.dto';
+import { UpdateWikiData } from './dto/update-wiki-data.dto';
 
 @Injectable()
 export class WikiService {
@@ -99,23 +99,23 @@ export class WikiService {
 }
 
 const chosungs = [
-  "ㄱ",
-  "ㄲ",
-  "ㄴ",
-  "ㄷ",
-  "ㄸ",
-  "ㄹ",
-  "ㅁ",
-  "ㅂ",
-  "ㅃ",
-  "ㅅ",
-  "ㅆ",
-  "ㅇ",
-  "ㅈ",
-  "ㅉ",
-  "ㅊ",
-  "ㅋ",
-  "ㅌ",
-  "ㅍ",
-  "ㅎ",
+  'ㄱ',
+  'ㄲ',
+  'ㄴ',
+  'ㄷ',
+  'ㄸ',
+  'ㄹ',
+  'ㅁ',
+  'ㅂ',
+  'ㅃ',
+  'ㅅ',
+  'ㅆ',
+  'ㅇ',
+  'ㅈ',
+  'ㅉ',
+  'ㅊ',
+  'ㅋ',
+  'ㅌ',
+  'ㅍ',
+  'ㅎ',
 ];

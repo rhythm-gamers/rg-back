@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Board } from "./entity/board.entity";
-import { Repository } from "typeorm";
-import { CreateBoard } from "./dto/create-board.dto";
-import { DeleteBoard } from "./dto/delete-board.dto";
-import { ModifyBoard } from "./dto/modify-board.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Board } from './entity/board.entity';
+import { Repository } from 'typeorm';
+import { CreateBoard } from './dto/create-board.dto';
+import { DeleteBoard } from './dto/delete-board.dto';
+import { ModifyBoard } from './dto/modify-board.dto';
 
 @Injectable()
 export class BoardService {
@@ -17,7 +17,7 @@ export class BoardService {
   // 문자열 비교로 해도 크게 성능 문제가 없을 것 같아용
   // */
 
-  async getBoardMetadata() {
+  async fetchBoardMetadata() {
     const board = await this.boardRepository.find({
       select: {
         board_name: true,

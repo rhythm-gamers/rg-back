@@ -1,10 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class UserTitle {
   @PrimaryGeneratedColumn()
-  uid: number;
+  user_title_id: number;
 
   @OneToOne(() => User, (user) => user.usertitle)
   user: User;

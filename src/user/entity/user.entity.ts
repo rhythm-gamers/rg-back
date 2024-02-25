@@ -6,20 +6,20 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { PlateSetting } from "./plate-setting.entity";
-import { UserTitle } from "./user-title.entity";
-import { PatternProgress } from "./pattern-progress.entity";
-import { Post } from "src/post/entity/post.entity";
-import { Comment } from "src/comment/entity/comment.entity";
-import { PostReport } from "src/report/entity/post-report.entity";
-import { CommentReport } from "src/report/entity/comment-report.entity";
-import { UserReport } from "src/report/entity/user-report.entity";
+} from 'typeorm';
+import { PlateSetting } from './plate-setting.entity';
+import { UserTitle } from './user-title.entity';
+import { PatternProgress } from './pattern-progress.entity';
+import { Post } from 'src/post/entity/post.entity';
+import { Comment } from 'src/comment/entity/comment.entity';
+import { PostReport } from 'src/report/entity/post-report.entity';
+import { CommentReport } from 'src/report/entity/comment-report.entity';
+import { UserReport } from 'src/report/entity/user-report.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  uid: number;
+  user_id: number;
 
   @OneToOne(() => PlateSetting, (platesetting) => platesetting.user)
   @JoinColumn()
@@ -38,18 +38,18 @@ export class User {
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 
-  @OneToMany(() => PostReport, (postreport) => postreport.user)
+  @OneToMany(() => PostReport, (postreport) => postreport.reporter)
   post_reports: PostReport[];
 
-  @OneToMany(() => CommentReport, (commentreport) => commentreport.user)
+  @OneToMany(() => CommentReport, (commentreport) => commentreport.reporter)
   comment_reports: CommentReport[];
 
   // 신고를 함
-  @OneToMany(() => UserReport, (userreport) => userreport.reporting_user)
+  @OneToMany(() => UserReport, (userreport) => userreport.reporter)
   reporting: UserReport[];
 
   // 신고를 당함
-  @OneToMany(() => UserReport, (userreport) => userreport.reported_user)
+  @OneToMany(() => UserReport, (userreport) => userreport.reported)
   reported: UserReport[];
 
   @Column({ length: 20 })
@@ -61,10 +61,10 @@ export class User {
   @Column({ length: 150 })
   password: string;
 
-  @Column({ default: "local", length: 20 })
+  @Column({ default: 'local', length: 20 })
   login_type: string;
 
-  @Column({ nullable: true, default: "", length: 200 })
+  @Column({ nullable: true, default: '', length: 200 })
   describe: string | null;
 
   @Column({ default: false })

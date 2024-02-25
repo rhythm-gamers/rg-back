@@ -1,12 +1,12 @@
-import { LevelTest } from "src/pattern/entity/level-test.entity";
-import { Practice } from "src/pattern/entity/practice.entity";
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { LevelTest } from 'src/pattern/entity/level-test.entity';
+import { Practice } from 'src/pattern/entity/practice.entity';
+import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class PatternProgress {
   @PrimaryGeneratedColumn()
-  uid: number;
+  pattern_progress_id: number;
 
   @ManyToOne(() => User, (user) => user.pattern_progresses)
   user: User;

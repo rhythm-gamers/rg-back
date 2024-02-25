@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Wiki {
@@ -8,12 +8,12 @@ export class Wiki {
   @Column({ length: 20 })
   title: string;
 
-  @Column({ length: 2, comment: "즈레면 ㅈ, 폭타면 ㅍ 식으로" })
+  @Column({ length: 2, comment: '즈레면 ㅈ, 폭타면 ㅍ 식으로' })
   letter: string;
 
   @Column({ default: false })
   must_read: boolean;
 
-  @Column({ length: 1000, default: "" })
+  @Column({ length: 1000, default: '' })
   content: string;
 }
