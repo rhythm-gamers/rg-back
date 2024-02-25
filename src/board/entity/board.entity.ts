@@ -4,7 +4,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class Board {
   @PrimaryGeneratedColumn()
-  uid: number;
+  board_id: number;
 
   @OneToMany(() => Post, (post) => post.board)
   posts: Post[];

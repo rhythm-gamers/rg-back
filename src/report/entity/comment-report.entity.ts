@@ -5,11 +5,11 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class CommentReport {
   @PrimaryGeneratedColumn()
-  uid: number;
+  comment_report_id: number;
 
   // 신고한 유저
   @ManyToOne(() => User, (user) => user.comment_reports)
-  user: User;
+  reporter: User;
 
   @ManyToOne(() => Comment, (comment) => comment.report_list)
   comment: Comment;

@@ -4,7 +4,7 @@ import { User } from "./user.entity";
 @Entity()
 export class PlateSetting {
   @PrimaryGeneratedColumn()
-  uid: number;
+  plate_setting_id: number;
 
   @OneToOne(() => User, (user) => user.platesetting)
   user: User;

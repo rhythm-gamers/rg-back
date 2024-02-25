@@ -5,11 +5,11 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class PostReport {
   @PrimaryGeneratedColumn()
-  uid: number;
+  post_report_id: number;
 
   // 신고한 유저
   @ManyToOne(() => User, (user) => user.post_reports)
-  user: User;
+  reporter: User;
 
   @ManyToOne(() => Post, (post) => post.report_list)
   post: Post;

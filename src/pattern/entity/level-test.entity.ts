@@ -12,7 +12,7 @@ import { PatternProgress } from "src/user/entity/pattern-progress.entity";
 @Entity()
 export class LevelTest {
   @PrimaryGeneratedColumn()
-  uid: number;
+  test_id: number;
 
   @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.level_test)
   @JoinColumn()

@@ -14,7 +14,7 @@ import {
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
-  uid: number;
+  comment_id: number;
 
   @ManyToOne(() => User, (user) => user.comments)
   user: User;
@@ -25,13 +25,15 @@ export class Comment {
   @OneToMany(() => CommentReport, (commentreport) => commentreport.comment)
   report_list: CommentReport[];
 
-  @Column()
+  // TODO 해당 댓글에 추천한 유저를 어떻게 중복 체크 할 것인가?
+
+  @Column({ default: "" })
   content: string;
 
-  @Column()
+  @Column({ default: 0 })
   likes: number;
 
-  @Column() // 이 부분은 추후에 자기 참조 등으로 가능하게끔...
+  @Column() // TODO 이 부분은 추후에 자기 참조 등으로 가능하게끔...
   parent_id: number;
 
   @CreateDateColumn()

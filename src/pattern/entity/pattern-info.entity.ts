@@ -5,7 +5,7 @@ import { LevelTest } from "./level-test.entity";
 @Entity()
 export class PatternInfo {
   @PrimaryGeneratedColumn()
-  uid: number;
+  pattern_id: number;
 
   @OneToOne(() => Practice, (practice) => practice.pattern_info, {
     nullable: true,

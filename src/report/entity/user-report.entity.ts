@@ -4,15 +4,15 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class UserReport {
   @PrimaryGeneratedColumn()
-  uid: number;
+  user_report_id: number;
 
   // 신고한 유저
   @ManyToOne(() => User, (user) => user.reporting)
-  reporting_user: User;
+  reporter: User;
 
   // 신고된 유저
   @ManyToOne(() => User, (user) => user.reported)
-  reported_user: User;
+  reported: User;
 
   @Column({ length: 200 })
   reason: string;

@@ -15,7 +15,7 @@ import { PostReport } from "src/report/entity/post-report.entity";
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
-  uid: number;
+  post_id: number;
 
   @ManyToOne(() => Board, (board) => board.posts)
   board: Board;
@@ -29,16 +29,18 @@ export class Post {
   @OneToMany(() => PostReport, (postreport) => postreport.post)
   report_list: PostReport[];
 
+  // TODO 해당 글에 추천한 유저를 어떻게 중복 체크 할 것인가?
+
   @Column({ length: 100 })
   title: string;
 
   @Column({ length: 10000, default: "" })
   content: string;
 
-  @Column()
+  @Column({ default: 0 })
   views: number;
 
-  @Column()
+  @Column({ default: 0 })
   likes: number;
 
   @CreateDateColumn()

@@ -6,7 +6,7 @@ import { User } from "./user.entity";
 @Entity()
 export class PatternProgress {
   @PrimaryGeneratedColumn()
-  uid: number;
+  pattern_progress_id: number;
 
   @ManyToOne(() => User, (user) => user.pattern_progresses)
   user: User;

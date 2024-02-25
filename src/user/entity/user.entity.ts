@@ -19,7 +19,7 @@ import { UserReport } from "src/report/entity/user-report.entity";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  uid: number;
+  user_id: number;
 
   @OneToOne(() => PlateSetting, (platesetting) => platesetting.user)
   @JoinColumn()
@@ -38,18 +38,18 @@ export class User {
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 
-  @OneToMany(() => PostReport, (postreport) => postreport.user)
+  @OneToMany(() => PostReport, (postreport) => postreport.reporter)
   post_reports: PostReport[];
 
-  @OneToMany(() => CommentReport, (commentreport) => commentreport.user)
+  @OneToMany(() => CommentReport, (commentreport) => commentreport.reporter)
   comment_reports: CommentReport[];
 
   // 신고를 함
-  @OneToMany(() => UserReport, (userreport) => userreport.reporting_user)
+  @OneToMany(() => UserReport, (userreport) => userreport.reporter)
   reporting: UserReport[];
 
   // 신고를 당함
-  @OneToMany(() => UserReport, (userreport) => userreport.reported_user)
+  @OneToMany(() => UserReport, (userreport) => userreport.reported)
   reported: UserReport[];
 
   @Column({ length: 20 })
