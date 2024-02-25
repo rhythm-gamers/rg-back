@@ -23,14 +23,14 @@ export class BoardController {
   ) {}
 
   @Get("spec/:path")
-  async getBoardInfo(@Param("path") path: string): Promise<Board> {
+  async fetchBoardInfo(@Param("path") path: string): Promise<Board> {
     const board = await this.boardService.findBoardByBoardname(path);
     return board;
   }
 
   @Get("metadata")
-  async getBoardMetadata(): Promise<ReturnBoardMetadata> {
-    const metadatas = await this.boardService.getBoardMetadata();
+  async fetchBoardMetadata(): Promise<ReturnBoardMetadata> {
+    const metadatas = await this.boardService.fetchBoardMetadata();
     const result = new ReturnBoardMetadata();
     metadatas.forEach((metadata) => {
       result.boards.push(metadata.board_name);

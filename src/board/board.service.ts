@@ -17,7 +17,7 @@ export class BoardService {
   // 문자열 비교로 해도 크게 성능 문제가 없을 것 같아용
   // */
 
-  async getBoardMetadata() {
+  async fetchBoardMetadata() {
     const board = await this.boardRepository.find({
       select: {
         board_name: true,
