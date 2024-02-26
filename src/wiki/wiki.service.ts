@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Wiki } from './entity/wiki.entity';
 import { Repository } from 'typeorm';
 import { WikiMetadataOrigin } from './obj/wiki-metadata-origin.obj';
-import { ReturnWikiData } from './dto/return-wiki-data.dto';
-import { InsertWikiData } from './dto/insert-wiki-data.dto';
-import { UpdateWikiData } from './dto/update-wiki-data.dto';
+import { ReturnWikiDataDto } from './dto/return-wiki-data.dto';
+import { CreateWikiDataDto } from './dto/create-wiki-data.dto';
+import { UpdateWikiDataDto } from './dto/update-wiki-data.dto';
 
 @Injectable()
 export class WikiService {
@@ -25,7 +25,7 @@ export class WikiService {
     return metadatas;
   }
 
-  async getWikiData(id: number): Promise<ReturnWikiData> {
+  async getWikiData(id: number): Promise<ReturnWikiDataDto> {
     const data = await this.wikiRepository.findOne({
       select: {
         title: true,
@@ -39,7 +39,7 @@ export class WikiService {
     return data;
   }
 
-  async insertWikiData(wiki: InsertWikiData) {
+  async createWikiData(wiki: CreateWikiDataDto) {
     const wiki_append: Wiki = new Wiki();
 
     wiki_append.title = wiki.title;
@@ -65,7 +65,7 @@ export class WikiService {
     }
   }
 
-  async updateWikiDataByTitle(wiki: UpdateWikiData, title: string) {
+  async updateWikiDataByTitle(wiki: UpdateWikiDataDto, title: string) {
     const data = await this.wikiRepository.findOne({
       where: {
         title: title,
@@ -80,7 +80,7 @@ export class WikiService {
     return await this.wikiRepository.save(update_data);
   }
 
-  async deleteWikiData(id: number) {
+  async deleteWikiDataById(id: number) {
     return await this.wikiRepository.delete(id);
   }
 
