@@ -1,3 +1,3 @@
 import { CommentInterface } from './comment.interface';
 
-export interface DeleteComment extends CommentInterface {}
+export interface DeleteCommentDto extends CommentInterface {}

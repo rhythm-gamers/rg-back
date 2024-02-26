@@ -1,6 +1,6 @@
 import { IsArray, IsString } from 'class-validator';
 
-export class ReturnBoardMetadata {
+export class ReturnBoardMetadataDto {
   @IsArray()
   @IsString({ each: true })
   boards: string[];

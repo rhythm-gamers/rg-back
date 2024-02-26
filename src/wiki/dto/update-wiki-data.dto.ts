@@ -1,4 +1,4 @@
-export interface UpdateWikiData {
+export interface UpdateWikiDataDto {
   title?: string;
   content?: string;
   must_read?: true;
