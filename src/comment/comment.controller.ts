@@ -1,6 +1,18 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { IncreaseCommentLikes } from './dto/increase-comment-likes.dto';
+import { IncreaseCommentLikesDto } from './dto/increase-comment-likes.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
+import { DeleteCommentDto } from './dto/delete-comment.dto';
 
 @Controller('comment')
 export class CommentController {
@@ -19,8 +31,26 @@ export class CommentController {
     );
   }
 
+  @Post()
+  async craeteComment(@Body() body: CreateCommentDto) {
+    const user_uid = 1;
+    return await this.commentService.createComment(user_uid, body);
+  }
+
+  @Put()
+  async updateComment(@Body() body: UpdateCommentDto) {
+    const user_uid = 1;
+    return await this.commentService.updateComment(user_uid, body);
+  }
+
+  @Delete()
+  async deleteComment(@Body() body: DeleteCommentDto) {
+    const user_uid = 1;
+    return await this.commentService.deleteComment(user_uid, body);
+  }
+
   @Post('inc_like')
-  async increaseCommentLike(@Body() body: IncreaseCommentLikes) {
+  async increaseCommentLike(@Body() body: IncreaseCommentLikesDto) {
     return await this.commentService.increaseCommentLikes(0, body);
   }
 }
