@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { BoardController } from './board.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,7 +8,7 @@ import { PostModule } from 'src/post/post.module';
 @Module({
   controllers: [BoardController],
   providers: [BoardService],
-  imports: [TypeOrmModule.forFeature([Board]), PostModule],
+  imports: [TypeOrmModule.forFeature([Board]), forwardRef(() => PostModule)],
   exports: [BoardService],
 })
 export class BoardModule {}

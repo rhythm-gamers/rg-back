@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './entity/board.entity';
 import { Repository } from 'typeorm';
-import { CreateBoard } from './dto/create-board.dto';
-import { DeleteBoard } from './dto/delete-board.dto';
-import { ModifyBoard } from './dto/modify-board.dto';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { DeleteBoardDto } from './dto/delete-board.dto';
+import { ModifyBoardDto } from './dto/modify-board.dto';
 
 @Injectable()
 export class BoardService {
@@ -26,14 +26,14 @@ export class BoardService {
     return board;
   }
 
-  async createBoard(board_info: CreateBoard) {
+  async createBoard(board_info: CreateBoardDto) {
     const board = new Board();
     board.board_name = board_info.board_name;
     board.description = board_info.description;
     return await this.boardRepository.insert(board);
   }
 
-  async findBoardByBoardname(board_info: string): Promise<Board> {
+  async fetchBoardByBoardname(board_info: string): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
         board_name: board_info,
@@ -42,7 +42,7 @@ export class BoardService {
     return board;
   }
 
-  async deleteBoardByBoardname(board_info: DeleteBoard): Promise<Board> {
+  async deleteBoardByBoardname(board_info: DeleteBoardDto): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
         board_name: board_info.board_name,
@@ -51,7 +51,7 @@ export class BoardService {
     return await this.boardRepository.remove(board);
   }
 
-  async modifyBoardByBoardname(board_info: ModifyBoard): Promise<Board> {
+  async modifyBoardByBoardname(board_info: ModifyBoardDto): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
         board_name: board_info.origin_name,
