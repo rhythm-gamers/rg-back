@@ -1,20 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entity/post.entity';
 import { Repository } from 'typeorm';
+import { CreatePostDto } from './dto/create-post.dto';
+import { BoardService } from 'src/board/board.service';
+import { UserService } from 'src/user/user.service';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { DeletePostDto } from './dto/delete-post.dto';
+import { IncreasePostLikesDto } from './dto/increase-post-likes.dto';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post) private postRepository: Repository<Post>,
+    @Inject(forwardRef(() => BoardService))
+    private readonly boardService: BoardService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
   ) {}
-
-  async fetchPostWithPostID(post_id: number): Promise<Post> {
-    const post = await this.postRepository.findOneBy({
-      post_id: post_id,
-    });
-    return post;
-  }
 
   async fetchPostsAndCommentCountWithBoardname(
     board_name: string,
@@ -107,6 +115,78 @@ export class PostService {
       delete post.created_at;
       delete post.modified_at;
     }
+    return post;
+  }
+
+  async createPost(user_id: number, create_post: CreatePostDto) {
+    const board = await this.boardService.fetchBoardByBoardname(
+      create_post.board_name,
+    );
+    const user = await this.userService.fetchUserWithUserID(user_id);
+    const post = new Post();
+    post.board = board;
+    post.user = user;
+    post.title = create_post.title;
+    post.content = create_post.content;
+
+    const result = await this.postRepository.save(post);
+    return result;
+  }
+
+  async updatePost(user_id: number, update_post: UpdatePostDto) {
+    const post = await this.checkPostOwnerAndGetPost(
+      user_id,
+      update_post.post_id,
+    );
+
+    const update_value: Post = { ...post, ...update_post };
+    const result = await this.postRepository.save(update_value);
+    return result;
+  }
+
+  async deletePost(user_id: number, delete_post: DeletePostDto) {
+    const post = await this.checkPostOwnerAndGetPost(
+      user_id,
+      delete_post.post_id,
+    );
+
+    const result = await this.postRepository.delete(post);
+    return result;
+  }
+
+  async fetchPostWithPostID(post_id: number): Promise<Post> {
+    const post = await this.postRepository.findOneBy({
+      post_id: post_id,
+    });
+    return post;
+  }
+
+  async increasePostLikes(user_id: number, post_likes: IncreasePostLikesDto) {
+    await this.postRepository.update(post_likes.post_id, {
+      likes: () => 'likes + 1',
+    });
+
+    const result = await this.postRepository.findOneBy({
+      post_id: post_likes.post_id,
+    });
+    return result;
+  }
+
+  private async checkPostOwnerAndGetPost(
+    user_id: number,
+    post_id: number,
+  ): Promise<Post> {
+    const post = await this.fetchPostWithPostId(post_id);
+    if (post.user.user_id !== user_id) {
+      throw new BadRequestException();
+    }
+    return post;
+  }
+
+  private async fetchPostWithPostId(post_id: number) {
+    const post = await this.postRepository.findOneBy({
+      post_id: post_id,
+    });
     return post;
   }
 }

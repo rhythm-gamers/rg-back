@@ -1,5 +1,5 @@
 import { WikiMetadata } from '../obj/wiki-metadata.obj';
 
-export interface ReturnWikiMetadata {
+export interface ReturnWikiMetadataDto {
   [key: string]: WikiMetadata[];
 }

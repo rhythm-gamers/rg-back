@@ -1,5 +1,5 @@
 import { CommentInterface } from './comment.interface';
 
-export interface UpdateComment extends CommentInterface {
+export interface UpdateCommentDto extends CommentInterface {
   content?: string;
 }

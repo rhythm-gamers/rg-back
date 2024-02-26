@@ -1,13 +1,21 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
+  Post,
+  Put,
   Query,
   forwardRef,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CommentService } from 'src/comment/comment.service';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { DeletePostDto } from './dto/delete-post.dto';
+import { IncreasePostLikesDto } from './dto/increase-post-likes.dto';
 
 @Controller('post')
 export class PostController {
@@ -39,5 +47,29 @@ export class PostController {
       post: post_spec,
       comments: comments,
     };
+  }
+
+  @Post()
+  async createPost(@Body() body: CreatePostDto) {
+    const user_uid = 1;
+    return await this.postService.createPost(user_uid, body);
+  }
+
+  @Put()
+  async updatePost(@Body() body: UpdatePostDto) {
+    const user_uid = 1;
+    return await this.postService.updatePost(user_uid, body);
+  }
+
+  @Delete()
+  async deletePost(@Body() body: DeletePostDto) {
+    const user_uid = 1;
+    return await this.postService.deletePost(user_uid, body);
+  }
+
+  @Post('inc_like')
+  async increasePostLikes(@Body() body: IncreasePostLikesDto) {
+    const user_uid = 1;
+    return await this.postService.increasePostLikes(user_uid, body);
   }
 }

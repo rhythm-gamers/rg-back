@@ -7,12 +7,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './entity/comment.entity';
 import { Repository } from 'typeorm';
-import { UpdateComment } from './dto/update-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 import { UserService } from 'src/user/user.service';
-import { CreateComment } from './dto/create-comment.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
 import { PostService } from 'src/post/post.service';
-import { DeleteComment } from './dto/delete-comment.dto';
-import { IncreaseCommentLikes } from './dto/increase-comment-likes.dto';
+import { DeleteCommentDto } from './dto/delete-comment.dto';
+import { IncreaseCommentLikesDto } from './dto/increase-comment-likes.dto';
 
 @Injectable()
 export class CommentService {
@@ -46,6 +46,9 @@ export class CommentService {
           post_id: post_id,
         },
       },
+      order: {
+        comment_id: 'DESC',
+      },
       skip: page * limit,
       take: limit,
       relations: ['user'],
@@ -54,7 +57,7 @@ export class CommentService {
     return result;
   }
 
-  async updateComment(user_id: number, comment_update: UpdateComment) {
+  async updateComment(user_id: number, comment_update: UpdateCommentDto) {
     const comment = await this.checkCommentOwnerAndGetComment(
       user_id,
       comment_update.comment_id,
@@ -64,9 +67,9 @@ export class CommentService {
     return await this.commentRepository.save(updateComment);
   }
 
-  async pushComment(
+  async createComment(
     user_id: number,
-    comment_create: CreateComment,
+    comment_create: CreateCommentDto,
   ): Promise<Comment> {
     const user = await this.userService.fetchUserWithUserID(user_id);
     const post = await this.postService.fetchPostWithPostID(
@@ -84,7 +87,7 @@ export class CommentService {
     return result;
   }
 
-  async deleteComment(user_id: number, comment_delete: DeleteComment) {
+  async deleteComment(user_id: number, comment_delete: DeleteCommentDto) {
     const comment = await this.checkCommentOwnerAndGetComment(
       user_id,
       comment_delete.comment_id,
@@ -98,7 +101,7 @@ export class CommentService {
   // TODO 이 경우 save를 하면 updated_at이 수정됨 -> 쿼리로 실행
   async increaseCommentLikes(
     user_id: number,
-    comment_like: IncreaseCommentLikes,
+    comment_like: IncreaseCommentLikesDto,
   ) {
     await this.commentRepository.update(comment_like.comment_id, {
       likes: () => 'likes + 1',

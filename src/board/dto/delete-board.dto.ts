@@ -1,3 +1,3 @@
-export interface DeleteBoard {
+export interface DeleteBoardDto {
   board_name: string;
 }
