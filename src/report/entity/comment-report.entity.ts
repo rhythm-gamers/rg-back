@@ -1,6 +1,12 @@
 import { User } from 'src/user/entity/user.entity';
 import { Comment } from 'src/comment/entity/comment.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class CommentReport {
@@ -19,4 +25,10 @@ export class CommentReport {
 
   @Column({ default: false })
   handled: boolean;
+
+  @CreateDateColumn()
+  report_recieved: Date;
+
+  @Column({ nullable: true })
+  report_confirmed: Date;
 }

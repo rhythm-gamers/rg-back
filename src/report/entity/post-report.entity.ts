@@ -1,6 +1,12 @@
 import { Post } from 'src/post/entity/post.entity';
 import { User } from 'src/user/entity/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class PostReport {
@@ -19,4 +25,10 @@ export class PostReport {
 
   @Column({ default: false })
   handled: boolean;
+
+  @CreateDateColumn()
+  report_recieved: Date;
+
+  @Column({ nullable: true })
+  report_confirmed: Date;
 }
