@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Practice } from './practice.entity';
 import { LevelTest } from './level-test.entity';
 
@@ -9,12 +15,16 @@ export class PatternInfo {
 
   @OneToOne(() => Practice, (practice) => practice.pattern_info, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
+  @JoinColumn()
   practice: Practice;
 
   @OneToOne(() => LevelTest, (leveltest) => leveltest.pattern_info, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
+  @JoinColumn()
   level_test: LevelTest;
 
   @Column({ default: 0 })
