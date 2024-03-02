@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { PostReport } from 'src/report/entity/post-report.entity';
+import { PostLike } from './post-like.entity';
 
 @Entity()
 export class Post {
@@ -28,6 +29,9 @@ export class Post {
 
   @OneToMany(() => PostReport, (postreport) => postreport.post)
   report_list: PostReport[];
+
+  @OneToMany(() => PostLike, (like) => like.post)
+  like_list: PostLike[];
 
   // TODO 해당 글에 추천한 유저를 어떻게 중복 체크 할 것인가?
 

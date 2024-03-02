@@ -16,6 +16,8 @@ import { CommentReport } from 'src/report/entity/comment-report.entity';
 import { UserReport } from 'src/report/entity/user-report.entity';
 import { LevelTestProgress } from './level-test-progress.entity';
 import { PracticeProgress } from './practice-progress.entity';
+import { CommentLike } from 'src/comment/entity/comment-like.entity';
+import { PostLike } from 'src/post/entity/post-like.entity';
 
 @Entity()
 export class User {
@@ -41,6 +43,12 @@ export class User {
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
+
+  @OneToMany(() => CommentLike, (like) => like.user)
+  comment_like_list: CommentLike[];
+
+  @OneToMany(() => PostLike, (like) => like.user)
+  post_like_list: PostLike[];
 
   @OneToMany(() => PostReport, (postreport) => postreport.reporter)
   post_reports: PostReport[];

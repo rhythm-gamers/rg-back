@@ -15,4 +15,21 @@ export class UserService {
     });
     return user;
   }
+
+  async fetchUserDetailsWithUserID(user_id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        user_id: user_id,
+      },
+      relations: {
+        comment_like_list: {
+          comment: true,
+        },
+        post_like_list: {
+          post: true,
+        },
+      },
+    });
+    return user;
+  }
 }

@@ -11,8 +11,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { UserService } from 'src/user/user.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PostService } from 'src/post/post.service';
-import { DeleteCommentDto } from './dto/delete-comment.dto';
-import { IncreaseCommentLikesDto } from './dto/increase-comment-likes.dto';
+import { CommentLikeService } from './comment-like.service';
 
 @Injectable()
 export class CommentService {
@@ -21,6 +20,7 @@ export class CommentService {
     private readonly userService: UserService,
     @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
+    private readonly commentLikeService: CommentLikeService,
   ) {}
 
   async fetchCommentAssociatePostID(
@@ -57,13 +57,36 @@ export class CommentService {
     return result;
   }
 
-  async updateComment(user_id: number, comment_update: UpdateCommentDto) {
+  async fetchCommentWithCommentID(comment_id: number) {
+    const comment = await this.commentRepository.findOneBy({
+      comment_id: comment_id,
+    });
+
+    return comment;
+  }
+
+  async updateComment(
+    user_id: number,
+    comment_id: number,
+    comment_update: UpdateCommentDto,
+  ) {
     const comment = await this.checkCommentOwnerAndGetComment(
       user_id,
-      comment_update.comment_id,
+      comment_id,
     );
 
     const updateComment = { ...comment, ...comment_update };
+
+    // const result = await this.commentRepository.update(
+    //   comment_update.comment_id,
+    //   {
+    //     content:
+    //       comment_update.content == undefined
+    //         ? content
+    //         : comment_update.content,
+    //     modified_at: new Date(),
+    //   },
+    // );
     return await this.commentRepository.save(updateComment);
   }
 
@@ -87,10 +110,10 @@ export class CommentService {
     return result;
   }
 
-  async deleteComment(user_id: number, comment_delete: DeleteCommentDto) {
+  async deleteComment(user_id: number, comment_id: number) {
     const comment = await this.checkCommentOwnerAndGetComment(
       user_id,
-      comment_delete.comment_id,
+      comment_id,
     );
     const result = await this.commentRepository.delete(comment);
     return result;
@@ -99,11 +122,17 @@ export class CommentService {
   // TODO 두 사람이 동시에 like를 누를 경우, 2가 오르는 것이 아닌 1이 오르는 경우 방지 필요
   // TODO 중복 좋아요 체크 로직 필요
   // TODO 이 경우 save를 하면 updated_at이 수정됨 -> 쿼리로 실행
-  async increaseCommentLikes(
-    user_id: number,
-    comment_like: IncreaseCommentLikesDto,
-  ) {
-    await this.commentRepository.update(comment_like.comment_id, {
+  async increaseCommentLikes(user_id: number, comment_id: number) {
+    if (
+      (await this.commentLikeService.appendUserToLikeList(
+        user_id,
+        comment_id,
+      )) !== true
+    ) {
+      throw new BadRequestException();
+    }
+
+    await this.commentRepository.update(comment_id, {
       likes: () => 'likes + 1',
     });
 
@@ -112,7 +141,7 @@ export class CommentService {
         likes: true,
       },
       where: {
-        comment_id: comment_like.comment_id,
+        comment_id: comment_id,
       },
     });
     return result;
