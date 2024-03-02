@@ -63,11 +63,18 @@ STEAM_RETURN_URL=<실제 서비스 하는 도메인>/auth/steam/authenticate
 STEAM_API_KEY=<issued_steam_id>
 
 # Databse
-DATABASE_HOST=<database_host> // 실제 데이터베이스 주소. 개발시에는 localhost
-DATABASE_PORT=<database_port> // 데이터베이스 접속 포트. 기본은 3306, 설정에 따라 다름
-DATABASE_USER=<database_user> // 데이터베이스에 로그인 하는 유저의 id. 대부분 root
-DATABASE_PASS=<database_password> // 데이터베이스에 로그인 하는 유저의 password.
-DATABASE_DATABASE=<database_name> // 접속하려는 데이터베이스의 이름.
+DATABASE_HOST=<database_host> # 실제 데이터베이스 주소. 개발시에는 localhost
+DATABASE_PORT=<database_port> # 데이터베이스 접속 포트. 기본은 3306, 설정에 따라 다름
+DATABASE_USER=<database_user> # 데이터베이스에 로그인 하는 유저의 id. 대부분 root
+DATABASE_PASS=<database_password> # 데이터베이스에 로그인 하는 유저의 password.
+DATABASE_DATABASE=<database_name> # 접속하려는 데이터베이스의 이름.
 
-IS_DEVELOPE=dev // 개발시에는 dev, 서비스시에는 prod
+IS_DEVELOPE=dev # 개발시에는 dev, 서비스시에는 prod
+
+# AWS S3
+AWS_S3_BUCKET_REGION=ap-northeast-2 # S3 버킷이 있는 지역
+AWS_S3_ACCESS_KEY_ID=<access_key> # IAM에서 발급한 버킷 접근 Key
+AWS_S3_SECRET_ACCESS_KEY=<secret_access_key> # IAM에서 발급한 버킷 접근 Secret Accecc Key
+AWS_S3_BUCKET_NAME=<bucket_name> # S3 버킷 이름
+AWS_S3_BUCKER_URL=<bucket_url> # S3 버킷 주소
 ```

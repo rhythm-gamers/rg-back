@@ -14,6 +14,7 @@ import { CommentModule } from './comment/comment.module';
 import { ReportModule } from './report/report.module';
 import { BoardModule } from './board/board.module';
 import { AuthModule } from './auth/auth.module';
+import { AwsS3Module } from './s3/aws-s3.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
     ReportModule,
     BoardModule,
     AuthModule,
+    AwsS3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
