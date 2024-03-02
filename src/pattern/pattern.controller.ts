@@ -21,9 +21,7 @@ import { LevelTest } from './entity/level-test.entity';
 import { AwsS3MoveFileDto } from 'src/s3/dao/aws-s3-move-files.dto';
 import { Practice } from './entity/practice.entity';
 
-@ApiTags('pattern')
 @Controller('pattern')
-// TODO 파일 받아오면 세이브하는 로직 추가 필요
 export class PatternController {
   constructor(
     private readonly levelTestService: LevelTestService,
@@ -34,6 +32,7 @@ export class PatternController {
 
   // level test
   @Post('level-test')
+  @ApiTags('level test')
   @ApiOperation({ summary: '레벨테스트 생성' })
   async createLevelTest(@Body() create_data: CreateLevelTestDto) {
     create_data.img_src =
@@ -65,6 +64,7 @@ export class PatternController {
   }
 
   @Get('level-test')
+  @ApiTags('level test')
   @ApiOperation({ summary: '레벨테스트 정보 가져오기' })
   async fetchLevelTestInfo(@Query('id') id: number) {
     const result = await this.levelTestService.fetchById(+id);
@@ -72,6 +72,7 @@ export class PatternController {
   }
 
   @Get('level-test/all')
+  @ApiTags('level test')
   @ApiOperation({ summary: '모든 레벨 테스트 정보 가져오기' })
   async fetchAllLevelTestInfo() {
     const result = await this.levelTestService.fetchAll();
@@ -79,6 +80,7 @@ export class PatternController {
   }
 
   @Patch('level-test/:id')
+  @ApiTags('level test')
   @ApiOperation({ summary: '레벨테스트 채보, 패턴 정보 등 업데이트' })
   async updateLevelTest(
     @Param('id') id: number,
@@ -159,6 +161,7 @@ export class PatternController {
   }
 
   @Delete('level-test/:id')
+  @ApiTags('level test')
   @ApiOperation({ summary: '레벨테스트 삭제' })
   async delete(@Param('id') id: number) {
     const level_test_info = await this.levelTestService.fetchById(+id);
@@ -172,6 +175,7 @@ export class PatternController {
 
   // practice
   @Post('practice')
+  @ApiTags('practice')
   @ApiOperation({ summary: '패턴 연습 생성' })
   async createPractice(@Body() create_data: CreatePracticeDto) {
     create_data.img_src =
@@ -203,6 +207,7 @@ export class PatternController {
   }
 
   @Get('practice')
+  @ApiTags('practice')
   @ApiOperation({ summary: '패턴 연습 정보 가져오기' })
   async fetchPracticeInfo(@Query('id') id: number) {
     const result = await this.practiceService.fetchById(+id);
@@ -210,6 +215,7 @@ export class PatternController {
   }
 
   @Get('practice/all')
+  @ApiTags('practice')
   @ApiOperation({ summary: '모든 패턴 연습 정보 가져오기' })
   async fetchAllPracticeInfo() {
     const result = await this.practiceService.fetchAll();
@@ -217,6 +223,7 @@ export class PatternController {
   }
 
   @Patch('practice/:id')
+  @ApiTags('practice')
   @ApiOperation({ summary: '패턴 연습 채보, 패턴 정보 등 업데이트' })
   async updatePractice(
     @Param('id') id: number,
@@ -286,6 +293,7 @@ export class PatternController {
   }
 
   @Delete('practice/:id')
+  @ApiTags('practice')
   @ApiOperation({ summary: '패턴 연습 제거' })
   async deletePractice(@Param('id') id: number) {
     return await this.practiceService.deleteById(+id);

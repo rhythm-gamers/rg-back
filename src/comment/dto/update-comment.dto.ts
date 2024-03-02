@@ -1,5 +1,8 @@
-import { CommentInterface } from './comment.interface';
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface UpdateCommentDto extends CommentInterface {
+export class UpdateCommentDto {
+  @ApiProperty({
+    required: false,
+  })
   content?: string;
 }
