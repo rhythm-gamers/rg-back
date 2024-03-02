@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { CommentLike } from './comment-like.entity';
 
 @Entity()
 export class Comment {
@@ -24,6 +25,9 @@ export class Comment {
 
   @OneToMany(() => CommentReport, (commentreport) => commentreport.comment)
   report_list: CommentReport[];
+
+  @OneToMany(() => CommentLike, (like) => like.comment)
+  like_list: CommentLike[];
 
   // TODO 해당 댓글에 추천한 유저를 어떻게 중복 체크 할 것인가?
 

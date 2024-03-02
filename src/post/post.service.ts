@@ -11,8 +11,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { BoardService } from 'src/board/board.service';
 import { UserService } from 'src/user/user.service';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { DeletePostDto } from './dto/delete-post.dto';
-import { IncreasePostLikesDto } from './dto/increase-post-likes.dto';
+import { PostLikeService } from './post-like.service';
 
 @Injectable()
 export class PostService {
@@ -22,6 +21,7 @@ export class PostService {
     private readonly boardService: BoardService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    private readonly postLikeService: PostLikeService,
   ) {}
 
   async fetchPostsAndCommentCountWithBoardname(
@@ -133,22 +133,20 @@ export class PostService {
     return result;
   }
 
-  async updatePost(user_id: number, update_post: UpdatePostDto) {
-    const post = await this.checkPostOwnerAndGetPost(
-      user_id,
-      update_post.post_id,
-    );
+  async updatePost(
+    user_id: number,
+    post_id: number,
+    update_post: UpdatePostDto,
+  ) {
+    const post = await this.checkPostOwnerAndGetPost(user_id, post_id);
 
     const update_value: Post = { ...post, ...update_post };
     const result = await this.postRepository.save(update_value);
     return result;
   }
 
-  async deletePost(user_id: number, delete_post: DeletePostDto) {
-    const post = await this.checkPostOwnerAndGetPost(
-      user_id,
-      delete_post.post_id,
-    );
+  async deletePost(user_id: number, post_id: number) {
+    const post = await this.checkPostOwnerAndGetPost(user_id, post_id);
 
     const result = await this.postRepository.delete(post);
     return result;
@@ -161,13 +159,20 @@ export class PostService {
     return post;
   }
 
-  async increasePostLikes(user_id: number, post_likes: IncreasePostLikesDto) {
-    await this.postRepository.update(post_likes.post_id, {
+  async increasePostLikes(user_id: number, post_id: number) {
+    if (
+      (await this.postLikeService.appendUserToLikeList(user_id, post_id)) !==
+      true
+    ) {
+      throw new BadRequestException();
+    }
+
+    await this.postRepository.update(post_id, {
       likes: () => 'likes + 1',
     });
 
     const result = await this.postRepository.findOneBy({
-      post_id: post_likes.post_id,
+      post_id: post_id,
     });
     return result;
   }
