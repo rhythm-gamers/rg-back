@@ -15,8 +15,10 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { DeleteBoardDto } from './dto/delete-board.dto';
 import { ModifyBoardDto } from './dto/modify-board.dto';
 import { PostService } from 'src/post/post.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('board')
+@ApiTags('board')
 export class BoardController {
   constructor(
     private readonly boardService: BoardService,
@@ -25,6 +27,7 @@ export class BoardController {
   ) {}
 
   @Get('spec/:board_name')
+  @ApiOperation({})
   async fetchBoardInfo(@Param('board_name') board_name: string) {
     const board = await this.boardService.fetchBoardByBoardname(board_name);
     const post = await this.postService.fetchPostsAndCommentCountWithBoardname(
@@ -40,6 +43,7 @@ export class BoardController {
   }
 
   @Get('metadata')
+  @ApiOperation({})
   async fetchBoardMetadata(): Promise<ReturnBoardMetadataDto> {
     const metadatas = await this.boardService.fetchBoardMetadata();
     const result = new ReturnBoardMetadataDto();
@@ -50,18 +54,21 @@ export class BoardController {
   }
 
   @Post()
+  @ApiOperation({})
   async createBoard(@Body() board_info: CreateBoardDto) {
     const result = await this.boardService.createBoard(board_info);
     return result;
   }
 
   @Delete()
+  @ApiOperation({})
   async deleteBoard(@Body() board_info: DeleteBoardDto) {
     const result = await this.boardService.deleteBoardByBoardname(board_info);
     return result;
   }
 
   @Put()
+  @ApiOperation({})
   async updateBoard(@Body() board_info: ModifyBoardDto) {
     const result = await this.boardService.modifyBoardByBoardname(board_info);
     return result;
