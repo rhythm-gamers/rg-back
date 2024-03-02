@@ -70,4 +70,11 @@ DATABASE_PASS=<database_password> # 데이터베이스에 로그인 하는 유�
 DATABASE_DATABASE=<database_name> # 접속하려는 데이터베이스의 이름.
 
 IS_DEVELOPE=dev # 개발시에는 dev, 서비스시에는 prod
+
+# AWS S3
+AWS_S3_BUCKET_REGION=ap-northeast-2 # S3 버킷이 있는 지역
+AWS_S3_ACCESS_KEY_ID=<access_key> # IAM에서 발급한 버킷 접근 Key
+AWS_S3_SECRET_ACCESS_KEY=<secret_access_key> # IAM에서 발급한 버킷 접근 Secret Accecc Key
+AWS_S3_BUCKET_NAME=<bucket_name> # S3 버킷 이름
+AWS_S3_BUCKER_URL=<bucket_url> # S3 버킷 주소
 ```

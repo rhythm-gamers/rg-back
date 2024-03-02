@@ -9,12 +9,13 @@ import {
 } from 'typeorm';
 import { PlateSetting } from './plate-setting.entity';
 import { UserTitle } from './user-title.entity';
-import { PatternProgress } from './pattern-progress.entity';
 import { Post } from 'src/post/entity/post.entity';
 import { Comment } from 'src/comment/entity/comment.entity';
 import { PostReport } from 'src/report/entity/post-report.entity';
 import { CommentReport } from 'src/report/entity/comment-report.entity';
 import { UserReport } from 'src/report/entity/user-report.entity';
+import { LevelTestProgress } from './level-test-progress.entity';
+import { PracticeProgress } from './practice-progress.entity';
 
 @Entity()
 export class User {
@@ -29,8 +30,11 @@ export class User {
   @JoinColumn()
   usertitle: UserTitle;
 
-  @OneToMany(() => PatternProgress, (patternprogress) => patternprogress.user)
-  pattern_progresses: PatternProgress[];
+  @OneToMany(() => LevelTestProgress, (progress) => progress.user)
+  level_test_progresses: LevelTestProgress[];
+
+  @OneToMany(() => PracticeProgress, (progress) => progress.user)
+  practice_progress: PracticeProgress[];
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];

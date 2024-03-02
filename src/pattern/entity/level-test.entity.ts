@@ -1,30 +1,27 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PatternInfo } from './pattern-info.entity';
-import { PatternProgress } from 'src/user/entity/pattern-progress.entity';
+import { LevelTestProgress } from 'src/user/entity/level-test-progress.entity';
 
 @Entity()
 export class LevelTest {
   @PrimaryGeneratedColumn()
   test_id: number;
 
-  @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.level_test)
-  @JoinColumn()
+  @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.level_test, {
+    cascade: true,
+  })
   pattern_info: PatternInfo;
 
-  @OneToMany(
-    () => PatternProgress,
-    (patternprogress) => patternprogress.level_test,
-  )
-  pattern_progresses: PatternProgress[];
+  @OneToMany(() => LevelTestProgress, (progress) => progress.current_rate)
+  user_progresses: LevelTestProgress[];
 
-  @Column({ length: 20 })
+  @Column({ length: 100 })
   title: string;
 
   @Column()
@@ -32,6 +29,9 @@ export class LevelTest {
 
   @Column({ type: 'decimal', precision: 5, scale: 2, comment: '000.00~999.99' })
   goal_rate: number; // DECIMAL(5,2) 000.00~999.99
+
+  @Column({ comment: '키 개수' })
+  key_num: number;
 
   @Column({ comment: '자켓 이미지' })
   img_src: string;
