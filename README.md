@@ -78,3 +78,85 @@ AWS_S3_SECRET_ACCESS_KEY=<secret_access_key> # IAM에서 발급한 버킷 접근
 AWS_S3_BUCKET_NAME=<bucket_name> # S3 버킷 이름
 AWS_S3_BUCKER_URL=<bucket_url> # S3 버킷 주소
 ```
+
+
+
+# 메모
+
+## Entity 관련
+
+### CASCADE 설정
+
+e.g.) 
+```ts
+@OneToOne(() => Practice, (practice) => practice.pattern_info, {
+  nullable: true,
+  onDelete: 'CASCADE',
+})
+@JoinColumn()
+```
+
+1:n의 관계 - `@OneToMany()/@ManyToOne()`
+> many인 쪽에 `onDelete: 'CASCADE'`
+
+> one인 쪽에 `cascade: true`
+
+1:1의 관계 - `@OneToMany()`
+> @JoinColumn() 사용한 쪽에 `onDelete: 'CASCADE'`
+
+> 사용하지 않은 쪽에 `cascade: true`
+
+
+## S3 관련
+
+### 초기화
+
+```ts
+s3 = new S3Client({
+  region: AWS_S3_BUCKET_REGION,
+  credentials: {
+    accessKeyId: AWS_S3_ACCESS_KEY_ID,
+    secretAccessKey: AWS_S3_SECRET_ACCESS_KEY,
+  },
+});
+
+s3.send(command);
+```
+
+### Command
+대부분 `Put(upload or modify)/Get(download)/Delete/Deletes/Copy` 로 해결된다.
+```ts
+const command = new PutObjectCommand({
+  Bucket: '버킷 이름',
+  Key: '파일 이름. 디렉터리 경로 포함',
+  Body: '파일 그 자체. 업로드에만 필요',
+  ContentType?: '파일의 타입. 이미지인가? 압축 파일인가?',
+})
+
+const command = new GetObjectCommand({
+  Bucket: '버킷 이름',
+  Key: '파일 이름. 디렉터리 경로 포함',
+})
+
+const command = new CopyObjectCommand({
+  Bucket: '버킷 이름',
+  Key: '파일 이름. 디렉터리 경로 포함',
+  CopySource: '복사할 파일 원본 경로.',
+})
+
+const command = new DeleteObjectCommand({
+  Bucket: '버킷 이름'
+  Key: '파일 이름. 디렉터리 경로 포함',
+})
+
+const command = new DeleteObjectsCommand({
+  Bucket: '버킷 이름',
+  Delete: {
+    Objects: [
+      { Key: '파일 이름', }, { Key: '파일 이름', }, ..
+    ]
+  },
+})
+
+s3.send(command); // 커맨드 전송
+```
