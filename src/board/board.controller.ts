@@ -3,16 +3,13 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
+  Patch,
   Post,
-  Put,
-  forwardRef,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { ReturnBoardMetadataDto } from './dto/return-board-metadata.dto';
 import { CreateBoardDto } from './dto/create-board.dto';
-import { DeleteBoardDto } from './dto/delete-board.dto';
 import { ModifyBoardDto } from './dto/modify-board.dto';
 import { PostService } from 'src/post/post.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -22,7 +19,6 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class BoardController {
   constructor(
     private readonly boardService: BoardService,
-    @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
   ) {}
 
@@ -60,17 +56,23 @@ export class BoardController {
     return result;
   }
 
-  @Delete()
+  @Delete(':origin_name')
   @ApiOperation({})
-  async deleteBoard(@Body() board_info: DeleteBoardDto) {
-    const result = await this.boardService.deleteBoardByBoardname(board_info);
+  async deleteBoard(@Param('origin_name') origin_name) {
+    const result = await this.boardService.deleteBoardByBoardname(origin_name);
     return result;
   }
 
-  @Put()
+  @Patch(':origin_name')
   @ApiOperation({})
-  async updateBoard(@Body() board_info: ModifyBoardDto) {
-    const result = await this.boardService.modifyBoardByBoardname(board_info);
+  async updateBoard(
+    @Body() board_info: ModifyBoardDto,
+    @Param('origin_name') origin_name: string,
+  ) {
+    const result = await this.boardService.modifyBoardByBoardname(
+      board_info,
+      origin_name,
+    );
     return result;
   }
 }

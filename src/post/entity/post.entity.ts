@@ -43,8 +43,6 @@ export class Post {
   })
   like_list: PostLike[];
 
-  // TODO 해당 글에 추천한 유저를 어떻게 중복 체크 할 것인가?
-
   @Column({ length: 100 })
   title: string;
 
