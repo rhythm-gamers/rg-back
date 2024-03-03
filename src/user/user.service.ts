@@ -16,7 +16,7 @@ export class UserService {
     return user;
   }
 
-  async fetchUserDetailsWithUserID(user_id: number) {
+  async fetchUserLikeListWithUserID(user_id: number) {
     const user = await this.userRepository.findOne({
       where: {
         user_id: user_id,
@@ -27,6 +27,34 @@ export class UserService {
         },
         post_like_list: {
           post: true,
+        },
+      },
+    });
+    return user;
+  }
+
+  async fetchUserPracticeProgressWithUserId(user_id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        user_id: user_id,
+      },
+      relations: {
+        practice_progresses: {
+          practice: true,
+        },
+      },
+    });
+    return user;
+  }
+
+  async fetchUserLevelTestProgressWithUserId(user_id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        user_id: user_id,
+      },
+      relations: {
+        level_test_progresses: {
+          level_test: true,
         },
       },
     });

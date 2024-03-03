@@ -1,6 +1,6 @@
 import { LevelTest } from 'src/pattern/entity/level-test.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../../user/entity/user.entity';
 
 @Entity()
 export class LevelTestProgress {

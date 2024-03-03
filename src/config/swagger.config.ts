@@ -13,6 +13,7 @@ export const setupSwagger = (app: INestApplication) => {
     .addTag('post', 'post operation')
     .addTag('comment', 'comment operation')
     .addTag('board', 'board operation')
+    .addTag('progress', 'progress operation')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
