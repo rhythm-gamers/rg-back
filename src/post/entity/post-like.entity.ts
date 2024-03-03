@@ -8,12 +8,12 @@ export class PostLike {
   post_like_id: number;
 
   @ManyToOne(() => Post, (post) => post.like_list, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   post: Post;
 
   @ManyToOne(() => User, (user) => user.post_like_list, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   user: User;
 }

@@ -14,10 +14,14 @@ export class PostReport {
   post_report_id: number;
 
   // 신고한 유저
-  @ManyToOne(() => User, (user) => user.post_reports)
+  @ManyToOne(() => User, (user) => user.post_reports, {
+    onDelete: 'CASCADE',
+  })
   reporter: User;
 
-  @ManyToOne(() => Post, (post) => post.report_list)
+  @ManyToOne(() => Post, (post) => post.report_list, {
+    onDelete: 'CASCADE',
+  })
   post: Post;
 
   @Column({ length: 200 })

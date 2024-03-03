@@ -32,10 +32,14 @@ export class User {
   @JoinColumn()
   usertitle: UserTitle;
 
-  @OneToMany(() => LevelTestProgress, (progress) => progress.user)
+  @OneToMany(() => LevelTestProgress, (progress) => progress.user, {
+    cascade: true,
+  })
   level_test_progresses: LevelTestProgress[];
 
-  @OneToMany(() => PracticeProgress, (progress) => progress.user)
+  @OneToMany(() => PracticeProgress, (progress) => progress.user, {
+    cascade: true,
+  })
   practice_progress: PracticeProgress[];
 
   @OneToMany(() => Post, (post) => post.user)
@@ -44,13 +48,19 @@ export class User {
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 
-  @OneToMany(() => CommentLike, (like) => like.user)
+  @OneToMany(() => CommentLike, (like) => like.user, {
+    cascade: true,
+  })
   comment_like_list: CommentLike[];
 
-  @OneToMany(() => PostLike, (like) => like.user)
+  @OneToMany(() => PostLike, (like) => like.user, {
+    cascade: true,
+  })
   post_like_list: PostLike[];
 
-  @OneToMany(() => PostReport, (postreport) => postreport.reporter)
+  @OneToMany(() => PostReport, (postreport) => postreport.reporter, {
+    cascade: true,
+  })
   post_reports: PostReport[];
 
   @OneToMany(() => CommentReport, (commentreport) => commentreport.reporter)

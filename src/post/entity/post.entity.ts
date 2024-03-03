@@ -18,19 +18,29 @@ export class Post {
   @PrimaryGeneratedColumn()
   post_id: number;
 
-  @ManyToOne(() => Board, (board) => board.posts)
+  @ManyToOne(() => Board, (board) => board.posts, {
+    onDelete: 'CASCADE',
+  })
   board: Board;
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, {
+    onDelete: 'NO ACTION',
+  })
   user: User;
 
-  @OneToMany(() => Comment, (comment) => comment.post)
+  @OneToMany(() => Comment, (comment) => comment.post, {
+    cascade: true,
+  })
   comments: Comment[];
 
-  @OneToMany(() => PostReport, (postreport) => postreport.post)
+  @OneToMany(() => PostReport, (postreport) => postreport.post, {
+    cascade: true,
+  })
   report_list: PostReport[];
 
-  @OneToMany(() => PostLike, (like) => like.post)
+  @OneToMany(() => PostLike, (like) => like.post, {
+    cascade: true,
+  })
   like_list: PostLike[];
 
   // TODO 해당 글에 추천한 유저를 어떻게 중복 체크 할 것인가?

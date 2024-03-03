@@ -18,7 +18,9 @@ export class Practice {
   })
   pattern_info: PatternInfo;
 
-  @OneToMany(() => PracticeProgress, (progress) => progress.practice)
+  @OneToMany(() => PracticeProgress, (progress) => progress.practice, {
+    cascade: true,
+  })
   user_progresses: PracticeProgress[];
 
   @Column({ length: 100 })

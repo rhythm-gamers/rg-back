@@ -18,7 +18,9 @@ export class LevelTest {
   })
   pattern_info: PatternInfo;
 
-  @OneToMany(() => LevelTestProgress, (progress) => progress.current_rate)
+  @OneToMany(() => LevelTestProgress, (progress) => progress.current_rate, {
+    cascade: true,
+  })
   user_progresses: LevelTestProgress[];
 
   @Column({ length: 100 })

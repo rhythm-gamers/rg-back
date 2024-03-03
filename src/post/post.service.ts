@@ -148,7 +148,7 @@ export class PostService {
   async deletePost(user_id: number, post_id: number) {
     const post = await this.checkPostOwnerAndGetPost(user_id, post_id);
 
-    const result = await this.postRepository.delete(post);
+    const result = await this.postRepository.delete(post.post_id);
     return result;
   }
 
@@ -189,8 +189,11 @@ export class PostService {
   }
 
   private async fetchPostWithPostId(post_id: number) {
-    const post = await this.postRepository.findOneBy({
-      post_id: post_id,
+    const post = await this.postRepository.findOne({
+      where: {
+        post_id: post_id,
+      },
+      relations: ['user'],
     });
     return post;
   }
