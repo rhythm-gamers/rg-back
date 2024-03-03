@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PatternInfo } from './pattern-info.entity';
-import { LevelTestProgress } from 'src/user/entity/level-test-progress.entity';
+import { LevelTestProgress } from 'src/progress/entity/level-test-progress.entity';
 
 @Entity()
 export class LevelTest {

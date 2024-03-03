@@ -22,6 +22,6 @@ import { AwsS3Module } from 'src/s3/aws-s3.module';
     TypeOrmModule.forFeature([LevelTest, PatternInfo, Practice]),
     AwsS3Module,
   ],
-  exports: [PatternService],
+  exports: [PatternService, LevelTestService, PracticeService],
 })
 export class PatternModule {}

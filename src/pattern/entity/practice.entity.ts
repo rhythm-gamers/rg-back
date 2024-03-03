@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PatternInfo } from './pattern-info.entity';
-import { PracticeProgress } from 'src/user/entity/practice-progress.entity';
+import { PracticeProgress } from 'src/progress/entity/practice-progress.entity';
 
 @Entity()
 export class Practice {
