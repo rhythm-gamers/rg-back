@@ -73,7 +73,7 @@ export class PostController {
     return await this.postService.createPost(user_uid, body);
   }
 
-  @Patch(':/post_id')
+  @Patch(':post_id')
   @ApiOperation({})
   @ApiParam({
     name: 'post_id',
