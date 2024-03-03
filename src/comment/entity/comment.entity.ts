@@ -20,13 +20,17 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments)
   user: User;
 
-  @ManyToOne(() => Post, (post) => post.comments)
+  @ManyToOne(() => Post, (post) => post.comments, {
+    onDelete: 'CASCADE',
+  })
   post: Post;
 
   @OneToMany(() => CommentReport, (commentreport) => commentreport.comment)
   report_list: CommentReport[];
 
-  @OneToMany(() => CommentLike, (like) => like.comment)
+  @OneToMany(() => CommentLike, (like) => like.comment, {
+    cascade: true,
+  })
   like_list: CommentLike[];
 
   // TODO 해당 댓글에 추천한 유저를 어떻게 중복 체크 할 것인가?

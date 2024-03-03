@@ -10,9 +10,13 @@ export class LevelTestProgress {
   @Column({ type: 'decimal', precision: 5, scale: 2, comment: '000.00~999.99' })
   current_rate: number;
 
-  @ManyToOne(() => User, (user) => user.level_test_progresses)
+  @ManyToOne(() => User, (user) => user.level_test_progresses, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 
-  @ManyToOne(() => LevelTest, (test) => test.user_progresses)
+  @ManyToOne(() => LevelTest, (test) => test.user_progresses, {
+    onDelete: 'CASCADE',
+  })
   level_test: LevelTest;
 }

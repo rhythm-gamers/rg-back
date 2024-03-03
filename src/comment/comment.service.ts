@@ -115,7 +115,7 @@ export class CommentService {
       user_id,
       comment_id,
     );
-    const result = await this.commentRepository.delete(comment);
+    const result = await this.commentRepository.delete(comment.comment_id);
     return result;
   }
 
@@ -159,8 +159,11 @@ export class CommentService {
   }
 
   private async fetchCommentWithCommentId(comment_id: number) {
-    const comment = await this.commentRepository.findOneBy({
-      comment_id: comment_id,
+    const comment = await this.commentRepository.findOne({
+      where: {
+        comment_id: comment_id,
+      },
+      relations: ['user'],
     });
     return comment;
   }

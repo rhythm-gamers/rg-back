@@ -9,7 +9,6 @@ import { Injectable } from '@nestjs/common';
 import { AwsS3MoveFileDto } from './dao/aws-s3-move-files.dto';
 import { AwsS3DeleteFileDto } from './dao/aws-s3-delete-files.dto';
 import { AwsS3CopyFileDto } from './dao/aws-s3-copy-files.dto';
-// import { InjectS3, S3 } from 'nestjs-s3';
 
 @Injectable()
 export class AwsS3Service {
@@ -69,7 +68,7 @@ export class AwsS3Service {
   }
 
   async move(files: AwsS3MoveFileDto[]) {
-    await this.copy(files);
+    this.copy(files);
     await this.delete(files);
     await this.delete([files[0].origin_key]);
   }
