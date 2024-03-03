@@ -14,8 +14,8 @@ import { Comment } from 'src/comment/entity/comment.entity';
 import { PostReport } from 'src/report/entity/post-report.entity';
 import { CommentReport } from 'src/report/entity/comment-report.entity';
 import { UserReport } from 'src/report/entity/user-report.entity';
-import { LevelTestProgress } from './level-test-progress.entity';
-import { PracticeProgress } from './practice-progress.entity';
+import { LevelTestProgress } from '../../progress/entity/level-test-progress.entity';
+import { PracticeProgress } from '../../progress/entity/practice-progress.entity';
 import { CommentLike } from 'src/comment/entity/comment-like.entity';
 import { PostLike } from 'src/post/entity/post-like.entity';
 
@@ -40,7 +40,7 @@ export class User {
   @OneToMany(() => PracticeProgress, (progress) => progress.user, {
     cascade: true,
   })
-  practice_progress: PracticeProgress[];
+  practice_progresses: PracticeProgress[];
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];

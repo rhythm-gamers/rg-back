@@ -15,6 +15,7 @@ import { ReportModule } from './report/report.module';
 import { BoardModule } from './board/board.module';
 import { AuthModule } from './auth/auth.module';
 import { AwsS3Module } from './s3/aws-s3.module';
+import { ProgressModule } from './progress/progress.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AwsS3Module } from './s3/aws-s3.module';
     BoardModule,
     AuthModule,
     AwsS3Module,
+    ProgressModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './entity/board.entity';
 import { Repository } from 'typeorm';
 import { CreateBoardDto } from './dto/create-board.dto';
-import { DeleteBoardDto } from './dto/delete-board.dto';
 import { ModifyBoardDto } from './dto/modify-board.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Board')
 @Injectable()
 export class BoardService {
   constructor(
@@ -42,19 +43,22 @@ export class BoardService {
     return board;
   }
 
-  async deleteBoardByBoardname(board_info: DeleteBoardDto): Promise<Board> {
+  async deleteBoardByBoardname(board_name: string): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
-        board_name: board_info.board_name,
+        board_name: board_name,
       },
     });
     return await this.boardRepository.remove(board);
   }
 
-  async modifyBoardByBoardname(board_info: ModifyBoardDto): Promise<Board> {
+  async modifyBoardByBoardname(
+    board_info: ModifyBoardDto,
+    origin_name: string,
+  ): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
-        board_name: board_info.origin_name,
+        board_name: origin_name,
       },
     });
 
