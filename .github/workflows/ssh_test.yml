@@ -23,4 +23,5 @@ jobs:
           script: |
             whoami
             echo "테스트 출력"
-            bash docker/deploy.sh
+            cd docker
+            bash deploy.sh
