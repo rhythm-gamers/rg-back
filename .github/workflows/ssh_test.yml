@@ -21,4 +21,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           timeout: 40s
           script: |
+            whoami
             echo "테스트 출력"
+            bash docker/test.sh
