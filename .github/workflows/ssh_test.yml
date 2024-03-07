@@ -22,6 +22,5 @@ jobs:
           timeout: 3m
           script: |
             whoami
-            echo "테스트 출력"
             cd docker
             bash deploy.sh
