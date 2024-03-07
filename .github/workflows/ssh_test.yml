@@ -19,6 +19,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          timeout: 40s  # 30초 기본
+          timeout: 40s
           script: |
             echo "테스트 출력"
