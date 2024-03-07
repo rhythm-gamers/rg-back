@@ -19,8 +19,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          timeout: 40s
+          timeout: 3m
           script: |
             whoami
             echo "테스트 출력"
-            bash docker/test.sh
+            bash docker/deploy.sh
