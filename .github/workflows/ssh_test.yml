@@ -1,0 +1,24 @@
+name: React build apple
+
+######### master branch에 push 되었을때만 실행#########
+on: 
+  push:            
+    branches:
+      - dev-hsh-ssh
+######### master branch에 push 되었을때만 실행#########
+
+jobs:
+  React-Build-ssh-action:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          timeout: 40s  # 30초 기본
+          script: |
+            echo "테스트 출력"
