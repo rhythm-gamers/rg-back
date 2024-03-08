@@ -21,8 +21,9 @@ jobs:
           script: |
             whoami
 
-      - name: Test Set State
-        run: echo "{NOW}={$(date +'%y.%m.%d')}" >> $GITHUB_STATE
+      - name: Test Set OUTPUT
+        id: date
+        run: echo "{now}={$(date +'%y.%m.%d')}" >> $GITHUB_OUTPUT
 
-      - name: Test Get State
-        run: echo "$NOW"
+      - name: Test Get OUTPUT
+        run: echo "{{ step.date.outputs.now }}"
