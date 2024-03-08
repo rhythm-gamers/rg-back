@@ -1,11 +1,9 @@
 name: React build apple
 
-######### master branch에 push 되었을때만 실행#########
-on: 
-  push:            
+on:
+  push:
     branches:
       - dev-hsh-ssh
-######### master branch에 push 되었을때만 실행#########
 
 jobs:
   React-Build-ssh-action:
@@ -22,5 +20,9 @@ jobs:
           timeout: 3m
           script: |
             whoami
-            cd docker
-            bash deploy.sh
+
+      - name: Test Set State
+        run: echo "{NOW}={$(date +'%y.%m.%d')}" >> $GITHUB_STATE
+
+      - name: Test Get State
+        run: echo "$NOW"
