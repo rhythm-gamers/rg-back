@@ -26,4 +26,4 @@ jobs:
         run: echo "{now}={$(date +'%y.%m.%d')}" >> $GITHUB_OUTPUT
 
       - name: Test Get OUTPUT
-        run: echo "${{ step.date.outputs.now }}"
+        run: echo "${{ steps.date.outputs.now }}"
