@@ -102,4 +102,14 @@ export class AuthController {
     this.logger.info(`POST - /auth/register`);
     return this.authService.register(registerDto);
   }
+
+  @Post("logout")
+  logout(@Res() res: Response) {
+    this.logger.info(`POST - /auth/logout`);
+    res
+      .clearCookie("access_token")
+      .clearCookie("refresh_token")
+      .status(200)
+      .send();
+  }
 }
