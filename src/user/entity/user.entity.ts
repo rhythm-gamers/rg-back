@@ -52,10 +52,10 @@ export class User {
   @OneToMany(() => UserReport, (userreport) => userreport.reported_user)
   reported: UserReport[];
 
-  @Column({ length: 20 })
-  name: string;
+  @Column({ length: 20, unique: true })
+  nickname: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, unique: true })
   register_id: string;
 
   @Column({ length: 150 })
