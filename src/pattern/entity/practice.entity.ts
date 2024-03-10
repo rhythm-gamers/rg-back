@@ -1,28 +1,30 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { PatternInfo } from "./pattern-info.entity";
-import { PatternProgress } from "src/user/entity/pattern-progress.entity";
+} from 'typeorm';
+import { PatternInfo } from './pattern-info.entity';
+import { PracticeProgress } from 'src/progress/entity/practice-progress.entity';
 
 @Entity()
 export class Practice {
   @PrimaryGeneratedColumn()
-  uid: number;
+  practice_id: number;
 
-  @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.practice)
-  @JoinColumn()
+  @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.practice, {
+    cascade: true,
+  })
   pattern_info: PatternInfo;
 
-  @OneToMany(
-    () => PatternProgress,
-    (patternprogress) => patternprogress.practice,
-  )
-  pattern_progresses: PatternProgress[];
+  @OneToMany(() => PracticeProgress, (progress) => progress.practice, {
+    cascade: true,
+  })
+  user_progresses: PracticeProgress[];
+
+  @Column({ length: 100 })
+  title: string;
 
   @Column()
   level: number;
@@ -30,9 +32,9 @@ export class Practice {
   @Column()
   key_num: number;
 
-  @Column({ comment: "자켓 이미지" })
+  @Column({ comment: '자켓 이미지' })
   img_src: string;
 
-  @Column({ comment: "노트 경로" })
+  @Column({ comment: '노트 경로' })
   note_src: string;
 }

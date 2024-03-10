@@ -1,10 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class PlateSetting {
   @PrimaryGeneratedColumn()
-  uid: number;
+  plate_setting_id: number;
 
   @OneToOne(() => User, (user) => user.platesetting)
   user: User;

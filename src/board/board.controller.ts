@@ -4,30 +4,45 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
-} from "@nestjs/common";
-import { BoardService } from "./board.service";
-import { ReturnBoardMetadata } from "./dto/return-board-metadata.dto";
-import { Board } from "./entity/board.entity";
-import { CreateBoard } from "./dto/create-board.dto";
-import { DeleteBoard } from "./dto/delete-board.dto";
-import { ModifyBoard } from "./dto/modify-board.dto";
+} from '@nestjs/common';
+import { BoardService } from './board.service';
+import { ReturnBoardMetadataDto } from './dto/return-board-metadata.dto';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { ModifyBoardDto } from './dto/modify-board.dto';
+import { PostService } from 'src/post/post.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@Controller("board")
+@Controller('board')
+@ApiTags('board')
 export class BoardController {
-  constructor(private readonly boardService: BoardService) {}
+  constructor(
+    private readonly boardService: BoardService,
+    private readonly postService: PostService,
+  ) {}
 
-  @Get("spec/:path")
-  async getBoardInfo(@Param("path") path: string): Promise<Board> {
-    const board = await this.boardService.findBoardByBoardname(path);
-    return board;
+  @Get('spec/:board_name')
+  @ApiOperation({})
+  async fetchBoardInfo(@Param('board_name') board_name: string) {
+    const board = await this.boardService.fetchBoardByBoardname(board_name);
+    const post = await this.postService.fetchPostsAndCommentCountWithBoardname(
+      board_name,
+      0,
+      20,
+    );
+    const result = {
+      board: board,
+      posts: post,
+    };
+    return result;
   }
 
-  @Get("metadata")
-  async getBoardMetadata(): Promise<ReturnBoardMetadata> {
-    const metadatas = await this.boardService.getBoardMetadata();
-    const result = new ReturnBoardMetadata();
+  @Get('metadata')
+  @ApiOperation({})
+  async fetchBoardMetadata(): Promise<ReturnBoardMetadataDto> {
+    const metadatas = await this.boardService.fetchBoardMetadata();
+    const result = new ReturnBoardMetadataDto();
     metadatas.forEach((metadata) => {
       result.boards.push(metadata.board_name);
     });
@@ -35,20 +50,29 @@ export class BoardController {
   }
 
   @Post()
-  async createBoard(@Body() board_info: CreateBoard) {
+  @ApiOperation({})
+  async createBoard(@Body() board_info: CreateBoardDto) {
     const result = await this.boardService.createBoard(board_info);
     return result;
   }
 
-  @Delete()
-  async deleteBoard(@Body() board_info: DeleteBoard) {
-    const result = await this.boardService.deleteBoardByBoardname(board_info);
+  @Delete(':origin_name')
+  @ApiOperation({})
+  async deleteBoard(@Param('origin_name') origin_name) {
+    const result = await this.boardService.deleteBoardByBoardname(origin_name);
     return result;
   }
 
-  @Put()
-  async updateBoard(@Body() board_info: ModifyBoard) {
-    const result = await this.boardService.modifyBoardByBoardname(board_info);
+  @Patch(':origin_name')
+  @ApiOperation({})
+  async updateBoard(
+    @Body() board_info: ModifyBoardDto,
+    @Param('origin_name') origin_name: string,
+  ) {
+    const result = await this.boardService.modifyBoardByBoardname(
+      board_info,
+      origin_name,
+    );
     return result;
   }
 }

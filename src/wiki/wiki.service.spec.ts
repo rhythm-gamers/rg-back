@@ -1,7 +1,7 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { WikiService } from "./wiki.service";
+import { Test, TestingModule } from '@nestjs/testing';
+import { WikiService } from './wiki.service';
 
-describe("WikiService", () => {
+describe('WikiService', () => {
   let service: WikiService;
 
   beforeEach(async () => {
@@ -12,7 +12,7 @@ describe("WikiService", () => {
     service = module.get<WikiService>(WikiService);
   });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
 });

@@ -1,20 +1,30 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Practice } from "./practice.entity";
-import { LevelTest } from "./level-test.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Practice } from './practice.entity';
+import { LevelTest } from './level-test.entity';
 
 @Entity()
 export class PatternInfo {
   @PrimaryGeneratedColumn()
-  uid: number;
+  pattern_id: number;
 
   @OneToOne(() => Practice, (practice) => practice.pattern_info, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
+  @JoinColumn()
   practice: Practice;
 
   @OneToOne(() => LevelTest, (leveltest) => leveltest.pattern_info, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
+  @JoinColumn()
   level_test: LevelTest;
 
   @Column({ default: 0 })
@@ -26,15 +36,15 @@ export class PatternInfo {
   @Column({ default: 0 })
   stairs: number;
 
-  @Column({ default: 0, comment: "폭타" })
+  @Column({ default: 0, comment: '폭타' })
   peak: number;
 
-  @Column({ default: 0, comment: "동타/동치" })
+  @Column({ default: 0, comment: '동타/동치' })
   multiples: number;
 
   @Column({ default: 0 })
   trill: number;
 
-  @Column({ default: 0, comment: "롱잡" })
+  @Column({ default: 0, comment: '롱잡' })
   hold: number;
 }
