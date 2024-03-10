@@ -4,11 +4,11 @@ import {
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
-} from '@aws-sdk/client-s3';
-import { Injectable } from '@nestjs/common';
-import { AwsS3MoveFileDto } from './dao/aws-s3-move-files.dto';
-import { AwsS3DeleteFileDto } from './dao/aws-s3-delete-files.dto';
-import { AwsS3CopyFileDto } from './dao/aws-s3-copy-files.dto';
+} from "@aws-sdk/client-s3";
+import { Injectable } from "@nestjs/common";
+import { AwsS3MoveFileDto } from "./dao/aws-s3-move-files.dto";
+import { AwsS3DeleteFileDto } from "./dao/aws-s3-delete-files.dto";
+import { AwsS3CopyFileDto } from "./dao/aws-s3-copy-files.dto";
 
 @Injectable()
 export class AwsS3Service {
@@ -53,7 +53,7 @@ export class AwsS3Service {
       Key: type !== undefined ? `${type}/${filename}` : `${filename}`,
     });
     const download_file = await this.s3.send(command);
-    const result = await download_file.Body.transformToString('base64');
+    const result = await download_file.Body.transformToString("base64");
     return result;
   }
 
@@ -87,7 +87,7 @@ export class AwsS3Service {
 
   private makeDeleteObjects(files: AwsS3DeleteFileDto[] | string[]) {
     return files.map((file) => {
-      if (typeof file === 'string') return { Key: file }; // 단순히 파일만 삭제
+      if (typeof file === "string") return { Key: file }; // 단순히 파일만 삭제
       return { Key: file.origin_key }; // 파일을 이동한 경우 원본 파일 삭제 필요
     });
   }

@@ -1,12 +1,12 @@
-import { User } from 'src/user/entity/user.entity';
-import { Comment } from 'src/comment/entity/comment.entity';
+import { User } from "src/user/entity/user.entity";
+import { Comment } from "src/comment/entity/comment.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
+} from "typeorm";
 
 @Entity()
 export class CommentReport {

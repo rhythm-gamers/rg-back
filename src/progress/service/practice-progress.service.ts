@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PracticeProgress } from '../entity/practice-progress.entity';
-import { Repository } from 'typeorm';
-import { User } from 'src/user/entity/user.entity';
-import { Practice } from 'src/pattern/entity/practice.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { PracticeProgress } from "../entity/practice-progress.entity";
+import { Repository } from "typeorm";
+import { User } from "src/user/entity/user.entity";
+import { Practice } from "src/pattern/entity/practice.entity";
 
 @Injectable()
 export class PracticeProgressService {

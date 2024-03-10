@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Board } from './entity/board.entity';
-import { Repository } from 'typeorm';
-import { CreateBoardDto } from './dto/create-board.dto';
-import { ModifyBoardDto } from './dto/modify-board.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Board } from "./entity/board.entity";
+import { Repository } from "typeorm";
+import { CreateBoardDto } from "./dto/create-board.dto";
+import { ModifyBoardDto } from "./dto/modify-board.dto";
+import { ApiTags } from "@nestjs/swagger";
 
-@ApiTags('Board')
+@ApiTags("Board")
 @Injectable()
 export class BoardService {
   constructor(

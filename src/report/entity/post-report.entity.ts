@@ -1,12 +1,12 @@
-import { Post } from 'src/post/entity/post.entity';
-import { User } from 'src/user/entity/user.entity';
+import { Post } from "src/post/entity/post.entity";
+import { User } from "src/user/entity/user.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
+} from "typeorm";
 
 @Entity()
 export class PostReport {
@@ -15,12 +15,12 @@ export class PostReport {
 
   // 신고한 유저
   @ManyToOne(() => User, (user) => user.post_reports, {
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   reporter: User;
 
   @ManyToOne(() => Post, (post) => post.report_list, {
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   post: Post;
 

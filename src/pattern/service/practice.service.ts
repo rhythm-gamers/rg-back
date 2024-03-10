@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Practice } from '../entity/practice.entity';
-import { Repository } from 'typeorm';
-import { CreatePracticeDto } from '../dto/create-practice.dto';
-import { UpdatePracticeDto } from '../dto/update-practice.dto';
-import { PatternInfo } from '../entity/pattern-info.entity';
-import { PatternInfoService } from './pattern-info.service';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Practice } from "../entity/practice.entity";
+import { Repository } from "typeorm";
+import { CreatePracticeDto } from "../dto/create-practice.dto";
+import { UpdatePracticeDto } from "../dto/update-practice.dto";
+import { PatternInfo } from "../entity/pattern-info.entity";
+import { PatternInfoService } from "./pattern-info.service";
 
 @Injectable()
 export class PracticeService {

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { CreatePatternInfoDto } from './create-pattern-info.dto';
+import { ApiProperty } from "@nestjs/swagger";
+import { CreatePatternInfoDto } from "./create-pattern-info.dto";
 
 export class UpdatePracticeDto {
   @ApiProperty({

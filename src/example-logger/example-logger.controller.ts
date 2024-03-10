@@ -7,11 +7,11 @@ import {
   Post,
   Req,
   Res,
-} from '@nestjs/common';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { Response } from 'express';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+} from "@nestjs/common";
+import { IsNumber, IsOptional, IsString } from "class-validator";
+import { Response } from "express";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { Logger } from "winston";
 
 class ExampleLoggerDto {
   @IsString()
@@ -23,7 +23,7 @@ class ExampleLoggerDto {
   age?: number;
 }
 
-@Controller('example-logger')
+@Controller("example-logger")
 export class ExampleLoggerController {
   constructor(
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
@@ -37,14 +37,14 @@ export class ExampleLoggerController {
     return logText;
   }
 
-  @Get('info')
+  @Get("info")
   async exampleInfo_Get(@Req() req: Request, @Res() res: Response) {
     const logText = this.createLogText(req);
     this.logger.info(logText);
     res.status(HttpStatus.OK).send(logText);
   }
 
-  @Post('info')
+  @Post("info")
   async exampleInfo_Post(
     @Body() dto: ExampleLoggerDto,
     @Req() req: Request,
@@ -55,14 +55,14 @@ export class ExampleLoggerController {
     res.status(HttpStatus.OK).send(logText);
   }
 
-  @Get('warn')
+  @Get("warn")
   async exampleWarn_Get(@Req() req: Request, @Res() res: Response) {
     const logText = this.createLogText(req);
     this.logger.info(logText);
     res.status(HttpStatus.OK).send(logText);
   }
 
-  @Post('warn')
+  @Post("warn")
   async exampleWarn_Post(
     @Body() dto: ExampleLoggerDto,
     @Req() req: Request,
@@ -73,14 +73,14 @@ export class ExampleLoggerController {
     res.status(HttpStatus.OK).send(logText);
   }
 
-  @Get('error')
+  @Get("error")
   async exampleError_Get(@Req() req: Request, @Res() res: Response) {
     const logText = this.createLogText(req);
     this.logger.info(logText);
     res.status(HttpStatus.OK).send(logText);
   }
 
-  @Post('error')
+  @Post("error")
   async exampleError_Post(
     @Body() dto: ExampleLoggerDto,
     @Req() req: Request,

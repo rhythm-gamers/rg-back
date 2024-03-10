@@ -1,17 +1,17 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CommentReport } from './entity/comment-report.entity';
-import { Repository } from 'typeorm';
-import { PostReport } from './entity/post-report.entity';
-import { UserReport } from './entity/user-report.entity';
-import { UserService } from 'src/user/user.service';
-import { PostService } from 'src/post/post.service';
-import { CommentService } from 'src/comment/comment.service';
-import { HandleReportedDao } from './dao/handle-reported.dao';
-import { ReportDao } from './dao/report.dao';
-import { FetchNotProceedListDao } from './dao/fetch-not-proceed-list.dao';
-import { HandleReportedCommentDto } from './dto/handle-reported-comment.dto';
-import { HandleReportedUserDto } from './dto/handle-reported-user.dto';
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { CommentReport } from "./entity/comment-report.entity";
+import { Repository } from "typeorm";
+import { PostReport } from "./entity/post-report.entity";
+import { UserReport } from "./entity/user-report.entity";
+import { UserService } from "src/user/user.service";
+import { PostService } from "src/post/post.service";
+import { CommentService } from "src/comment/comment.service";
+import { HandleReportedDao } from "./dao/handle-reported.dao";
+import { ReportDao } from "./dao/report.dao";
+import { FetchNotProceedListDao } from "./dao/fetch-not-proceed-list.dao";
+import { HandleReportedCommentDto } from "./dto/handle-reported-comment.dto";
+import { HandleReportedUserDto } from "./dto/handle-reported-user.dto";
 
 interface TargerQueryOptions {
   post?: {
@@ -72,7 +72,7 @@ export class ReportService {
       skip: paging.page * paging.limit,
       take: paging.limit,
       relations: relations,
-      orderBy: 'DESC',
+      orderBy: "DESC",
     };
   };
 
@@ -102,7 +102,7 @@ export class ReportService {
           post_report_id: true,
         },
         paging,
-        ['reporter', 'post'],
+        ["reporter", "post"],
       ),
     );
     return reported_list;
@@ -145,7 +145,7 @@ export class ReportService {
           comment_report_id: true,
         },
         paging,
-        ['reporter', 'comment'],
+        ["reporter", "comment"],
       ),
     );
     return reported_list;
@@ -188,7 +188,7 @@ export class ReportService {
           user_report_id: true,
         },
         paging,
-        ['reporter', 'reported'],
+        ["reporter", "reported"],
       ),
     );
     return reported_list;
@@ -212,13 +212,13 @@ export class ReportService {
       where: {
         user_report_id: +reported_info.report_id,
       },
-      relations: ['reported'],
+      relations: ["reported"],
     });
     const reported_user_id = reported_user.reported.user_id;
     const reason = reported_info.reason;
     const duration = +reported_info.duration;
 
-    // TODO: UserService에 정지 기간, 사유 update문 필요 <= 
+    // TODO: UserService에 정지 기간, 사유 update문 필요 <=
     // TODO: User entity에 정지 사유 추가
 
     return result;

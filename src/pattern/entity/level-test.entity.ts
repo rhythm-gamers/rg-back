@@ -4,9 +4,9 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { PatternInfo } from './pattern-info.entity';
-import { LevelTestProgress } from 'src/progress/entity/level-test-progress.entity';
+} from "typeorm";
+import { PatternInfo } from "./pattern-info.entity";
+import { LevelTestProgress } from "src/progress/entity/level-test-progress.entity";
 
 @Entity()
 export class LevelTest {
@@ -29,15 +29,15 @@ export class LevelTest {
   @Column()
   level: number;
 
-  @Column({ type: 'decimal', precision: 5, scale: 2, comment: '000.00~999.99' })
+  @Column({ type: "decimal", precision: 5, scale: 2, comment: "000.00~999.99" })
   goal_rate: number; // DECIMAL(5,2) 000.00~999.99
 
-  @Column({ comment: '키 개수' })
+  @Column({ comment: "키 개수" })
   key_num: number;
 
-  @Column({ comment: '자켓 이미지' })
+  @Column({ comment: "자켓 이미지" })
   img_src: string;
 
-  @Column({ comment: '노트 경로' })
+  @Column({ comment: "노트 경로" })
   note_src: string;
 }

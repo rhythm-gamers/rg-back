@@ -1,12 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Post } from './entity/post.entity';
-import { Repository } from 'typeorm';
-import { CreatePostDto } from './dto/create-post.dto';
-import { BoardService } from 'src/board/board.service';
-import { UserService } from 'src/user/user.service';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { PostLikeService } from './post-like.service';
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Post } from "./entity/post.entity";
+import { Repository } from "typeorm";
+import { CreatePostDto } from "./dto/create-post.dto";
+import { BoardService } from "src/board/board.service";
+import { UserService } from "src/user/user.service";
+import { UpdatePostDto } from "./dto/update-post.dto";
+import { PostLikeService } from "./post-like.service";
 
 @Injectable()
 export class PostService {
@@ -43,9 +43,9 @@ export class PostService {
           board_name: board_name,
         },
       },
-      relations: ['user', 'comments'],
+      relations: ["user", "comments"],
       order: {
-        post_id: 'DESC',
+        post_id: "DESC",
       },
       skip: limit * page,
       take: limit,
@@ -60,11 +60,11 @@ export class PostService {
     });
 
     posts[0].forEach((post) => {
-      post['modified'] = post.created_at === post.modified_at ? false : true;
-      post['time'] = post.modified_at;
+      post["modified"] = post.created_at === post.modified_at ? false : true;
+      post["time"] = post.modified_at;
       delete post.created_at;
       delete post.modified_at;
-      post['comment_count'] = post.comments.length;
+      post["comment_count"] = post.comments.length;
       delete post.comments;
     });
 
@@ -98,13 +98,13 @@ export class PostService {
         user: true,
       },
       order: {
-        created_at: 'DESC',
+        created_at: "DESC",
       },
     });
 
     if (post) {
-      post['modified'] = post.created_at === post.modified_at ? false : true;
-      post['show_date'] = post.modified_at;
+      post["modified"] = post.created_at === post.modified_at ? false : true;
+      post["show_date"] = post.modified_at;
       delete post.created_at;
       delete post.modified_at;
     }
@@ -161,7 +161,7 @@ export class PostService {
     }
 
     await this.postRepository.update(post_id, {
-      likes: () => 'likes + 1',
+      likes: () => "likes + 1",
     });
 
     const result = await this.postRepository.findOneBy({
@@ -186,7 +186,7 @@ export class PostService {
       where: {
         post_id: post_id,
       },
-      relations: ['user'],
+      relations: ["user"],
     });
     return post;
   }

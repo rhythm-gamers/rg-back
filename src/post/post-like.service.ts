@@ -1,9 +1,9 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PostLike } from './entity/post-like.entity';
-import { UserService } from 'src/user/user.service';
-import { PostService } from './post.service';
-import { Repository } from 'typeorm';
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { PostLike } from "./entity/post-like.entity";
+import { UserService } from "src/user/user.service";
+import { PostService } from "./post.service";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class PostLikeService {

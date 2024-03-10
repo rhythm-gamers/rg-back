@@ -7,21 +7,21 @@ import {
   Patch,
   Post,
   Query,
-} from '@nestjs/common';
-import { LevelTestService } from './service/level-test.service';
-import { CreateLevelTestDto } from './dto/create-level-test.dto';
-import { UpdateLevelTestDto } from './dto/update-level-test.dto';
-import { PracticeService } from './service/practice.service';
-import { UpdatePracticeDto } from './dto/update-practice.dto';
-import { CreatePracticeDto } from './dto/create-practice.dto';
-import { AwsS3Service } from 'src/s3/aws-s3.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PatternService } from './pattern.service';
-import { LevelTest } from './entity/level-test.entity';
-import { AwsS3MoveFileDto } from 'src/s3/dao/aws-s3-move-files.dto';
-import { Practice } from './entity/practice.entity';
+} from "@nestjs/common";
+import { LevelTestService } from "./service/level-test.service";
+import { CreateLevelTestDto } from "./dto/create-level-test.dto";
+import { UpdateLevelTestDto } from "./dto/update-level-test.dto";
+import { PracticeService } from "./service/practice.service";
+import { UpdatePracticeDto } from "./dto/update-practice.dto";
+import { CreatePracticeDto } from "./dto/create-practice.dto";
+import { AwsS3Service } from "src/s3/aws-s3.service";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { PatternService } from "./pattern.service";
+import { LevelTest } from "./entity/level-test.entity";
+import { AwsS3MoveFileDto } from "src/s3/dao/aws-s3-move-files.dto";
+import { Practice } from "./entity/practice.entity";
 
-@Controller('pattern')
+@Controller("pattern")
 export class PatternController {
   constructor(
     private readonly levelTestService: LevelTestService,
@@ -31,59 +31,59 @@ export class PatternController {
   ) {}
 
   // level test
-  @Post('level-test')
-  @ApiTags('level test')
-  @ApiOperation({ summary: '레벨테스트 생성' })
+  @Post("level-test")
+  @ApiTags("level test")
+  @ApiOperation({ summary: "레벨테스트 생성" })
   async createLevelTest(@Body() create_data: CreateLevelTestDto) {
     create_data.img_src =
       create_data.img_src !== undefined
         ? await this.patternService.upload(
-            'level-test',
+            "level-test",
             create_data.title,
-            'img',
+            "img",
             create_data.img_src,
           )
         : await this.patternService.copy(
-            'level-test',
+            "level-test",
             `${create_data.title}/img`,
           );
     create_data.note_src =
       create_data.note_src !== undefined
         ? await this.patternService.upload(
-            'level-test',
+            "level-test",
             create_data.title,
-            'note',
+            "note",
             create_data.note_src,
           )
         : await this.patternService.copy(
-            'level-test',
+            "level-test",
             `${create_data.title}/note`,
           );
     const result = await this.levelTestService.createEntity(create_data);
     return result;
   }
 
-  @Get('level-test')
-  @ApiTags('level test')
-  @ApiOperation({ summary: '레벨테스트 정보 가져오기' })
-  async fetchLevelTestInfo(@Query('id') id: number) {
+  @Get("level-test")
+  @ApiTags("level test")
+  @ApiOperation({ summary: "레벨테스트 정보 가져오기" })
+  async fetchLevelTestInfo(@Query("id") id: number) {
     const result = await this.levelTestService.fetchById(+id);
     return result;
   }
 
-  @Get('level-test/all')
-  @ApiTags('level test')
-  @ApiOperation({ summary: '모든 레벨 테스트 정보 가져오기' })
+  @Get("level-test/all")
+  @ApiTags("level test")
+  @ApiOperation({ summary: "모든 레벨 테스트 정보 가져오기" })
   async fetchAllLevelTestInfo() {
     const result = await this.levelTestService.fetchAll();
     return result;
   }
 
-  @Patch('level-test/:id')
-  @ApiTags('level test')
-  @ApiOperation({ summary: '레벨테스트 채보, 패턴 정보 등 업데이트' })
+  @Patch("level-test/:id")
+  @ApiTags("level test")
+  @ApiOperation({ summary: "레벨테스트 채보, 패턴 정보 등 업데이트" })
   async updateLevelTest(
-    @Param('id') id: number,
+    @Param("id") id: number,
     @Body() update_data: UpdateLevelTestDto,
   ) {
     // 1. 원본 entity fetch
@@ -106,9 +106,9 @@ export class PatternController {
       update_data.note_src =
         update_data.note_src !== undefined
           ? await this.patternService.upload(
-              'level-test',
+              "level-test",
               update_data.title,
-              'note',
+              "note",
               update_data.note_src,
             )
           : level_test_info.note_src;
@@ -116,9 +116,9 @@ export class PatternController {
       update_data.img_src =
         update_data.img_src !== undefined
           ? await this.patternService.upload(
-              'level-test',
+              "level-test",
               update_data.title,
-              'img',
+              "img",
               update_data.img_src,
             )
           : level_test_info.img_src;
@@ -140,18 +140,18 @@ export class PatternController {
       update_data.img_src =
         update_data.img_src !== undefined
           ? await this.patternService.upload(
-              'level-test',
+              "level-test",
               update_data.title,
-              'img',
+              "img",
               update_data.img_src,
             )
           : `level-test/${update_data.title}/img`;
       update_data.note_src =
         update_data.note_src !== undefined
           ? await this.patternService.upload(
-              'level-test',
+              "level-test",
               update_data.title,
-              'note',
+              "note",
               update_data.note_src,
             )
           : `level-test/${update_data.title}/note`;
@@ -160,73 +160,73 @@ export class PatternController {
     return result;
   }
 
-  @Delete('level-test/:id')
-  @ApiTags('level test')
-  @ApiOperation({ summary: '레벨테스트 삭제' })
-  async delete(@Param('id') id: number) {
+  @Delete("level-test/:id")
+  @ApiTags("level test")
+  @ApiOperation({ summary: "레벨테스트 삭제" })
+  async delete(@Param("id") id: number) {
     const level_test_info = await this.levelTestService.fetchById(+id);
     await this.awsS3Service.delete([
       level_test_info.img_src,
       level_test_info.note_src,
-      level_test_info.img_src.split('/').slice(0, -1).join('/').padEnd(1, '/'),
+      level_test_info.img_src.split("/").slice(0, -1).join("/").padEnd(1, "/"),
     ]);
     return await this.levelTestService.deleteById(+id);
   }
 
   // practice
-  @Post('practice')
-  @ApiTags('practice')
-  @ApiOperation({ summary: '패턴 연습 생성' })
+  @Post("practice")
+  @ApiTags("practice")
+  @ApiOperation({ summary: "패턴 연습 생성" })
   async createPractice(@Body() create_data: CreatePracticeDto) {
     create_data.img_src =
       create_data.img_src !== undefined
         ? await this.patternService.upload(
-            'practice',
+            "practice",
             create_data.title,
-            'img',
+            "img",
             create_data.img_src,
           )
         : await this.patternService.copy(
-            'practice',
+            "practice",
             `${create_data.title}/img`,
           );
     create_data.note_src =
       create_data.note_src !== undefined
         ? await this.patternService.upload(
-            'practice',
+            "practice",
             create_data.title,
-            'note',
+            "note",
             create_data.note_src,
           )
         : await this.patternService.copy(
-            'practice',
+            "practice",
             `${create_data.title}/note`,
           );
     const result = await this.practiceService.createEntity(create_data);
     return result;
   }
 
-  @Get('practice')
-  @ApiTags('practice')
-  @ApiOperation({ summary: '패턴 연습 정보 가져오기' })
-  async fetchPracticeInfo(@Query('id') id: number) {
+  @Get("practice")
+  @ApiTags("practice")
+  @ApiOperation({ summary: "패턴 연습 정보 가져오기" })
+  async fetchPracticeInfo(@Query("id") id: number) {
     const result = await this.practiceService.fetchById(+id);
     return result;
   }
 
-  @Get('practice/all')
-  @ApiTags('practice')
-  @ApiOperation({ summary: '모든 패턴 연습 정보 가져오기' })
+  @Get("practice/all")
+  @ApiTags("practice")
+  @ApiOperation({ summary: "모든 패턴 연습 정보 가져오기" })
   async fetchAllPracticeInfo() {
     const result = await this.practiceService.fetchAll();
     return result;
   }
 
-  @Patch('practice/:id')
-  @ApiTags('practice')
-  @ApiOperation({ summary: '패턴 연습 채보, 패턴 정보 등 업데이트' })
+  @Patch("practice/:id")
+  @ApiTags("practice")
+  @ApiOperation({ summary: "패턴 연습 채보, 패턴 정보 등 업데이트" })
   async updatePractice(
-    @Param('id') id: number,
+    @Param("id") id: number,
     @Body() update_data: UpdatePracticeDto,
   ) {
     const practice_info: Practice = await this.practiceService.fetchById(+id);
@@ -238,9 +238,9 @@ export class PatternController {
       update_data.note_src =
         update_data.note_src !== undefined
           ? await this.patternService.upload(
-              'level-test',
+              "level-test",
               update_data.title,
-              'note',
+              "note",
               update_data.note_src,
             )
           : practice_info.note_src;
@@ -248,9 +248,9 @@ export class PatternController {
       update_data.img_src =
         update_data.img_src !== undefined
           ? await this.patternService.upload(
-              'level-test',
+              "level-test",
               update_data.title,
-              'img',
+              "img",
               update_data.img_src,
             )
           : practice_info.img_src;
@@ -272,18 +272,18 @@ export class PatternController {
       update_data.img_src =
         update_data.img_src !== undefined
           ? await this.patternService.upload(
-              'level-test',
+              "level-test",
               update_data.title,
-              'img',
+              "img",
               update_data.img_src,
             )
           : `level-test/${update_data.title}/img`;
       update_data.note_src =
         update_data.note_src !== undefined
           ? await this.patternService.upload(
-              'level-test',
+              "level-test",
               update_data.title,
-              'note',
+              "note",
               update_data.note_src,
             )
           : `level-test/${update_data.title}/note`;
@@ -292,40 +292,40 @@ export class PatternController {
     return result;
   }
 
-  @Delete('practice/:id')
-  @ApiTags('practice')
-  @ApiOperation({ summary: '패턴 연습 제거' })
-  async deletePractice(@Param('id') id: number) {
+  @Delete("practice/:id")
+  @ApiTags("practice")
+  @ApiOperation({ summary: "패턴 연습 제거" })
+  async deletePractice(@Param("id") id: number) {
     return await this.practiceService.deleteById(+id);
   }
 
-  @ApiTags('test')
-  @Post('test')
+  @ApiTags("test")
+  @Post("test")
   async uploadTest(@Body() body: CreateLevelTestDto) {
     body.img_src = body.img_src
       ? await this.patternService.upload(
-          'test',
+          "test",
           body.title,
-          'img',
+          "img",
           body.img_src,
         )
-      : 'undefined.png';
+      : "undefined.png";
     body.note_src = body.note_src
       ? await this.patternService.upload(
-          'test',
+          "test",
           body.title,
-          'note',
+          "note",
           body.note_src,
         )
-      : 'undefined.note';
+      : "undefined.note";
 
     const result = await this.levelTestService.createEntity(body);
     return result;
   }
 
-  @ApiTags('test')
-  @Get('test')
-  async downloadTest(@Query('filename') filename: string) {
+  @ApiTags("test")
+  @Get("test")
+  async downloadTest(@Query("filename") filename: string) {
     const practice_result = await this.practiceService.fetchById(11);
     const file_result = await this.awsS3Service.download(filename);
 

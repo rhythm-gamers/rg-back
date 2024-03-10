@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { LevelTestProgress } from '../entity/level-test-progress.entity';
-import { User } from 'src/user/entity/user.entity';
-import { Repository } from 'typeorm';
-import { LevelTest } from 'src/pattern/entity/level-test.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { LevelTestProgress } from "../entity/level-test-progress.entity";
+import { User } from "src/user/entity/user.entity";
+import { Repository } from "typeorm";
+import { LevelTest } from "src/pattern/entity/level-test.entity";
 
 @Injectable()
 export class LevelTestProgressService {

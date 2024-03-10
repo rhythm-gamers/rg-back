@@ -4,9 +4,9 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Practice } from './practice.entity';
-import { LevelTest } from './level-test.entity';
+} from "typeorm";
+import { Practice } from "./practice.entity";
+import { LevelTest } from "./level-test.entity";
 
 @Entity()
 export class PatternInfo {
@@ -15,14 +15,14 @@ export class PatternInfo {
 
   @OneToOne(() => Practice, (practice) => practice.pattern_info, {
     nullable: true,
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   @JoinColumn()
   practice: Practice;
 
   @OneToOne(() => LevelTest, (leveltest) => leveltest.pattern_info, {
     nullable: true,
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   @JoinColumn()
   level_test: LevelTest;
@@ -36,15 +36,15 @@ export class PatternInfo {
   @Column({ default: 0 })
   stairs: number;
 
-  @Column({ default: 0, comment: '폭타' })
+  @Column({ default: 0, comment: "폭타" })
   peak: number;
 
-  @Column({ default: 0, comment: '동타/동치' })
+  @Column({ default: 0, comment: "동타/동치" })
   multiples: number;
 
   @Column({ default: 0 })
   trill: number;
 
-  @Column({ default: 0, comment: '롱잡' })
+  @Column({ default: 0, comment: "롱잡" })
   hold: number;
 }

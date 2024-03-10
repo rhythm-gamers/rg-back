@@ -1,11 +1,11 @@
-import { User } from 'src/user/entity/user.entity';
+import { User } from "src/user/entity/user.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
+} from "typeorm";
 
 @Entity()
 export class UserReport {
