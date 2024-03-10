@@ -27,6 +27,7 @@ import {
 import SteamAuth from "node-steam-openid";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
+import { ApiTags, ApiOperation } from "@nestjs/swagger";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -86,6 +87,8 @@ export class AuthController {
     return games.data;
   }
 
+  @ApiTags("auth")
+  @ApiOperation({ summary: "사용자 로그인" })
   @Post("login")
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
     this.logger.info(`POST - /auth/login`);
@@ -97,12 +100,16 @@ export class AuthController {
       .send();
   }
 
+  @ApiTags("auth")
+  @ApiOperation({ summary: "사용자 회원가입" })
   @Post("register")
   register(@Body() registerDto: RegisterDto) {
     this.logger.info(`POST - /auth/register`);
     return this.authService.register(registerDto);
   }
 
+  @ApiTags("auth")
+  @ApiOperation({ summary: "사용자 로그아웃" })
   @Post("logout")
   logout(@Res() res: Response) {
     this.logger.info(`POST - /auth/logout`);
