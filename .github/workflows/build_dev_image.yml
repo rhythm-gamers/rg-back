@@ -36,8 +36,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            han990401/rgback-dev:latest-dev
-            han990401/rgback-dev:${{ steps.date.outputs.now }}-dev
+            han990401/rgback-dev:latest
+            han990401/rgback-dev:${{ steps.now.outputs.now }}
 
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v0.1.4
