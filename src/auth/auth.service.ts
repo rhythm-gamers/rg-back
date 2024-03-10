@@ -30,14 +30,14 @@ export class AuthService {
     if (bcrypt.compareSync(loginDto.password, user.password)) {
       let accessToken = await this.jwtService.signAsync(
         {
-          uid: user.uid,
+          uid: user.user_id,
           username: user.register_id,
         },
         { expiresIn: '1h' },
       );
       let refreshToken = await this.jwtService.signAsync(
         {
-          uid: user.uid,
+          uid: user.user_id,
           username: user.register_id,
         },
         { expiresIn: '7d' },

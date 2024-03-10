@@ -32,7 +32,7 @@ export class CommentService {
         modified_at: true,
         user: {
           user_id: true,
-          name: true,
+          nickname: true,
         },
       },
       where: {

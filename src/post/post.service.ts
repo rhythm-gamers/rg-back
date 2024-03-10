@@ -32,7 +32,7 @@ export class PostService {
         modified_at: true,
         user: {
           user_id: true,
-          name: true,
+          nickname: true,
         },
         comments: {
           comment_id: true,
@@ -82,7 +82,7 @@ export class PostService {
         post_id: true,
         user: {
           user_id: true,
-          name: true,
+          nickname: true,
         },
         title: true,
         content: true,
