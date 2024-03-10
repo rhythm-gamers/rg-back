@@ -37,7 +37,7 @@ jobs:
           push: true
           tags: |
             han990401/rgback:latest
-            han990401/rgback:${{ steps.date.outputs.now }}
+            han990401/rgback:${{ steps.now.outputs.now }}
 
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v0.1.4
