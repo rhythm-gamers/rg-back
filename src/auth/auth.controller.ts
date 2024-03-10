@@ -1,4 +1,13 @@
-import { Controller, Get, Inject, Param, Req, Res } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Req,
+  Res,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
 import axios from "axios";
@@ -16,6 +25,8 @@ import {
   adofaiId,
 } from "./auth.object";
 import SteamAuth from "node-steam-openid";
+import { LoginDto } from "./dto/login.dto";
+import { RegisterDto } from "./dto/register.dto";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -73,5 +84,32 @@ export class AuthController {
     );
 
     return games.data;
+  }
+
+  @Post("login")
+  async login(@Body() loginDto: LoginDto, @Res() res: Response) {
+    this.logger.info(`POST - /auth/login`);
+    const tokens = await this.authService.login(loginDto);
+    res
+      .cookie("access_token", tokens.accessToken, { httpOnly: true })
+      .cookie("refresh_token", tokens.refreshToken, { httpOnly: true })
+      .status(200)
+      .send();
+  }
+
+  @Post("register")
+  register(@Body() registerDto: RegisterDto) {
+    this.logger.info(`POST - /auth/register`);
+    return this.authService.register(registerDto);
+  }
+
+  @Post("logout")
+  logout(@Res() res: Response) {
+    this.logger.info(`POST - /auth/logout`);
+    res
+      .clearCookie("access_token")
+      .clearCookie("refresh_token")
+      .status(200)
+      .send();
   }
 }
