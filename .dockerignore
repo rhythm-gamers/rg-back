@@ -1,0 +1,21 @@
+# git
+.git
+.gitignore
+
+# project
+.vscode
+dist
+logs
+node_modules
+
+test
+src/**/*.spec.ts
+
+.prettierrc
+.eslintrc.js
+*.md
+
+# docker
+
+Dockerfile
+.dockerignore

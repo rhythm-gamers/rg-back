@@ -1,10 +1,10 @@
-import { Post } from "src/post/entity/post.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Post } from 'src/post/entity/post.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Board {
   @PrimaryGeneratedColumn()
-  uid: number;
+  board_id: number;
 
   @OneToMany(() => Post, (post) => post.board)
   posts: Post[];
@@ -12,6 +12,6 @@ export class Board {
   @Column({ length: 10 })
   board_name: string;
 
-  @Column({ length: 200, default: "" })
+  @Column({ length: 200, default: '' })
   description: string;
 }
