@@ -18,30 +18,30 @@ export class CommentService {
   ) {}
 
   async fetchCommentAssociatePostID(
-    post_id: number,
+    postId: number,
     page: number = 0,
     limit: number = +process.env.COMMENT_LIMIT,
   ) {
     const result = await this.commentRepository.findAndCount({
       select: {
-        comment_id: true,
+        commentId: true,
         content: true,
         likes: true,
-        parent_id: true,
-        created_at: true,
-        modified_at: true,
+        parentId: true,
+        createdAt: true,
+        modifiedAt: true,
         user: {
-          user_id: true,
+          userId: true,
           name: true,
         },
       },
       where: {
         post: {
-          post_id: post_id,
+          postId: postId,
         },
       },
       order: {
-        comment_id: 'DESC',
+        commentId: 'DESC',
       },
       skip: page * limit,
       take: limit,
@@ -51,82 +51,82 @@ export class CommentService {
     return result;
   }
 
-  async fetchCommentWithCommentID(comment_id: number) {
+  async fetchCommentWithCommentID(commentId: number) {
     const comment = await this.commentRepository.findOneBy({
-      comment_id: comment_id,
+      commentId: commentId,
     });
 
     return comment;
   }
 
   async updateComment(
-    user_id: number,
-    comment_id: number,
-    comment_update: UpdateCommentDto,
+    userId: number,
+    commentId: number,
+    commentUpdate: UpdateCommentDto,
   ) {
     const comment = await this.checkCommentOwnerAndGetComment(
-      user_id,
-      comment_id,
+      userId,
+      commentId,
     );
 
-    const updateComment = { ...comment, ...comment_update };
+    const updateComment = { ...comment, ...commentUpdate };
 
     // const result = await this.commentRepository.update(
-    //   comment_update.comment_id,
+    //   commentUpdate.commentId,
     //   {
     //     content:
-    //       comment_update.content == undefined
+    //       commentUpdate.content == undefined
     //         ? content
-    //         : comment_update.content,
-    //     modified_at: new Date(),
+    //         : commentUpdate.content,
+    //     modifiedAt: new Date(),
     //   },
     // );
     return await this.commentRepository.save(updateComment);
   }
 
   async createComment(
-    user_id: number,
-    comment_create: CreateCommentDto,
+    userId: number,
+    commentCreate: CreateCommentDto,
   ): Promise<Comment> {
-    const user = await this.userService.fetchUserWithUserID(user_id);
+    const user = await this.userService.fetchUserWithUserID(userId);
     const post = await this.postService.fetchPostWithPostID(
-      comment_create.post_uid,
+      commentCreate.postUid,
     );
 
     const comment = new Comment();
     comment.user = user;
     comment.post = post;
-    comment.content = comment_create.content;
-    comment.parent_id =
-      comment_create.parent_id == null ? 0 : comment_create.parent_id;
+    comment.content = commentCreate.content;
+    comment.parentId =
+      commentCreate.parentId == null ? 0 : commentCreate.parentId;
 
     const result = await this.commentRepository.save(comment);
     return result;
   }
 
-  async deleteComment(user_id: number, comment_id: number) {
+  async deleteComment(userId: number, commentId: number) {
     const comment = await this.checkCommentOwnerAndGetComment(
-      user_id,
-      comment_id,
+      userId,
+      commentId,
     );
-    const result = await this.commentRepository.delete(comment.comment_id);
+    const result = await this.commentRepository.delete(comment.commentId);
     return result;
   }
 
   // TODO 두 사람이 동시에 like를 누를 경우, 2가 오르는 것이 아닌 1이 오르는 경우 방지 필요
   // TODO 중복 좋아요 체크 로직 필요
-  // TODO 이 경우 save를 하면 updated_at이 수정됨 -> 쿼리로 실행
-  async increaseCommentLikes(user_id: number, comment_id: number) {
+  // TODO 이 경우 save를 하면 updatedAt이 수정됨 -> 쿼리로 실행
+  async increaseCommentLikes(userId: number, commentId: number) {
     if (
       (await this.commentLikeService.appendUserToLikeList(
-        user_id,
-        comment_id,
+        userId,
+        commentId,
       )) !== true
     ) {
       throw new BadRequestException();
     }
 
-    await this.commentRepository.update(comment_id, {
+    await this.commentRepository.update(commentId, {
       likes: () => 'likes + 1',
     });
 
@@ -135,27 +135,27 @@ export class CommentService {
         likes: true,
       },
       where: {
-        comment_id: comment_id,
+        commentId: commentId,
       },
     });
     return result;
   }
 
   private async checkCommentOwnerAndGetComment(
-    user_id: number,
-    comment_id: number,
+    userId: number,
+    commentId: number,
   ): Promise<Comment> {
-    const comment = await this.fetchCommentWithCommentId(comment_id);
-    if (comment.user.user_id !== user_id) {
+    const comment = await this.fetchCommentWithCommentId(commentId);
+    if (comment.user.userId !== userId) {
       throw new BadRequestException();
     }
     return comment;
   }
 
-  private async fetchCommentWithCommentId(comment_id: number) {
+  private async fetchCommentWithCommentId(commentId: number) {
     const comment = await this.commentRepository.findOne({
       where: {
-        comment_id: comment_id,
+        commentId: commentId,
       },
       relations: ['user'],
     });

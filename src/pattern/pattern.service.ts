@@ -22,8 +22,8 @@ export class PatternService {
     const filetype = destination.split('/').pop();
     this.awsS3Service.copy([
       {
-        origin_key: `undefined.${filetype}`,
-        destination_key: `${type}/${destination}`,
+        originKey: `undefined.${filetype}`,
+        destinationKey: `${type}/${destination}`,
       } as AwsS3MoveFileDto,
     ]);
     return `${type}/${destination}`;

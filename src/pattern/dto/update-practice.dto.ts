@@ -15,20 +15,20 @@ export class UpdatePracticeDto {
   @ApiProperty({
     required: false,
   })
-  key_num?: number;
+  keyNum?: number;
 
   @ApiProperty({
     required: false,
   })
-  pattern_info?: CreatePatternInfoDto;
+  patternInfo?: CreatePatternInfoDto;
 
   @ApiProperty({
     required: false,
   })
-  img_src?: string;
+  imgSrc?: string;
 
   @ApiProperty({
     required: false,
   })
-  note_src?: string;
+  noteSrc?: string;
 }

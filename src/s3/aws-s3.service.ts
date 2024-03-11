@@ -43,8 +43,8 @@ export class AwsS3Service {
       Key: type !== undefined ? `${type}/${filename}` : `${filename}`, // fileName. 여기서 폴더 생성 가능
       Body: filebody, // fileContent
     });
-    const upload_file = await this.s3.send(command);
-    return upload_file;
+    const uploadFile = await this.s3.send(command);
+    return uploadFile;
   }
 
   async download(filename: string, type?: string) {
@@ -52,8 +52,8 @@ export class AwsS3Service {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: type !== undefined ? `${type}/${filename}` : `${filename}`,
     });
-    const download_file = await this.s3.send(command);
-    const result = await download_file.Body.transformToString('base64');
+    const downloadFile = await this.s3.send(command);
+    const result = await downloadFile.Body.transformToString('base64');
     return result;
   }
 
@@ -70,16 +70,16 @@ export class AwsS3Service {
   async move(files: AwsS3MoveFileDto[]) {
     this.copy(files);
     await this.delete(files);
-    await this.delete([files[0].origin_key]);
+    await this.delete([files[0].originKey]);
   }
 
   async copy(files: AwsS3CopyFileDto[]) {
     files.forEach((file) => {
       // 비동기 처리 시 delete 먼저 실행됨 ㅋㅋㄹ
       const command: CopyObjectCommand = new CopyObjectCommand({
-        CopySource: `${process.env.AWS_S3_BUCKET_NAME}/${file.origin_key}`,
+        CopySource: `${process.env.AWS_S3_BUCKET_NAME}/${file.originKey}`,
         Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: file.destination_key,
+        Key: file.destinationKey,
       });
       this.s3.send(command);
     });
@@ -88,7 +88,7 @@ export class AwsS3Service {
   private makeDeleteObjects(files: AwsS3DeleteFileDto[] | string[]) {
     return files.map((file) => {
       if (typeof file === 'string') return { Key: file }; // 단순히 파일만 삭제
-      return { Key: file.origin_key }; // 파일을 이동한 경우 원본 파일 삭제 필요
+      return { Key: file.originKey }; // 파일을 이동한 경우 원본 파일 삭제 필요
     });
   }
 }

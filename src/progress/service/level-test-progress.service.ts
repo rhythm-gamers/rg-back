@@ -12,29 +12,29 @@ export class LevelTestProgressService {
     private progressRepo: Repository<LevelTestProgress>,
   ) {}
 
-  async update(progress: number, user: User, level_test: LevelTest) {
+  async update(progress: number, user: User, levelTest: LevelTest) {
     let entity: LevelTestProgress;
     if (
-      !user.level_test_progresses.some(
-        (progress) => progress.level_test.test_id === level_test.test_id,
+      !user.levelTestProgresses.some(
+        (progress) => progress.levelTest.testId === levelTest.testId,
       )
     ) {
       entity = new LevelTestProgress();
       entity.user = user;
-      entity.level_test = level_test;
-      entity.current_rate = progress;
+      entity.levelTest = levelTest;
+      entity.currentRate = progress;
       entity = await this.progressRepo.save(entity);
     } else {
-      entity = user.level_test_progresses.find(
-        (progress) => progress.level_test.test_id === level_test.test_id,
+      entity = user.levelTestProgresses.find(
+        (progress) => progress.levelTest.testId === levelTest.testId,
       );
-      this.progressRepo.update(entity.level_test_progress_id, {
-        current_rate: progress,
+      this.progressRepo.update(entity.levelTestProgressId, {
+        currentRate: progress,
       });
     }
     return await this.progressRepo.findOne({
       where: {
-        level_test_progress_id: entity.level_test_progress_id,
+        levelTestProgressId: entity.levelTestProgressId,
       },
     });
   }

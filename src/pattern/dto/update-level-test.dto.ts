@@ -18,28 +18,28 @@ export class UpdateLevelTestDto {
     description: '목표치',
     required: false,
   })
-  goal_rate?: number;
+  goalRate?: number;
 
   @ApiProperty({
     required: false,
   })
-  key_num?: number;
+  keyNum?: number;
 
   @ApiProperty({
     description: '어느 패턴이 등장하는가?',
     required: false,
   })
-  pattern_info?: CreatePatternInfoDto;
+  patternInfo?: CreatePatternInfoDto;
 
   @ApiProperty({
     description: 'base64로 인코딩된 이미지',
     required: false,
   })
-  img_src?: string;
+  imgSrc?: string;
 
   @ApiProperty({
     description: 'base64로 인코딩된 채보 파일',
     required: false,
   })
-  note_src?: string;
+  noteSrc?: string;
 }

@@ -11,17 +11,17 @@ import { LevelTestProgress } from 'src/progress/entity/level-test-progress.entit
 @Entity()
 export class LevelTest {
   @PrimaryGeneratedColumn()
-  test_id: number;
+  testId: number;
 
-  @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.level_test, {
+  @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.levelTest, {
     cascade: true,
   })
-  pattern_info: PatternInfo;
+  patternInfo: PatternInfo;
 
-  @OneToMany(() => LevelTestProgress, (progress) => progress.current_rate, {
+  @OneToMany(() => LevelTestProgress, (progress) => progress.currentRate, {
     cascade: true,
   })
-  user_progresses: LevelTestProgress[];
+  userProgresses: LevelTestProgress[];
 
   @Column({ length: 100 })
   title: string;
@@ -30,14 +30,14 @@ export class LevelTest {
   level: number;
 
   @Column({ type: 'decimal', precision: 5, scale: 2, comment: '000.00~999.99' })
-  goal_rate: number; // DECIMAL(5,2) 000.00~999.99
+  goalRate: number; // DECIMAL(5,2) 000.00~999.99
 
   @Column({ comment: '키 개수' })
-  key_num: number;
+  keyNum: number;
 
   @Column({ comment: '자켓 이미지' })
-  img_src: string;
+  imgSrc: string;
 
   @Column({ comment: '노트 경로' })
-  note_src: string;
+  noteSrc: string;
 }

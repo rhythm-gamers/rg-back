@@ -24,8 +24,8 @@ export class AwsS3Controller {
   @Post() // 파일 이름이 같다면 덮어쓰기 동작
   async uploadFile(@Body() file: Base64Test) {
     console.log(file);
-    const file_buffer = Buffer.from(file.file, 'base64');
-    return this.awsS3Service.upload(file.filename, file_buffer, 'test');
+    const fileBuffer = Buffer.from(file.file, 'base64');
+    return this.awsS3Service.upload(file.filename, fileBuffer, 'test');
   }
 
   @Get()

@@ -5,10 +5,10 @@ export class CreateCommentDto {
   content: string;
 
   @ApiProperty()
-  post_uid: number;
+  postUid: number;
 
   @ApiProperty({
     required: false,
   })
-  parent_id?: number;
+  parentId?: number;
 }

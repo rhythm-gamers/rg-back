@@ -15,22 +15,22 @@ import { HandleReportedUserDto } from './dto/handle-reported-user.dto';
 
 interface TargerQueryOptions {
   post?: {
-    post_id: boolean;
+    postId: boolean;
     title: boolean;
   };
-  post_report_id?: boolean;
+  postReportId?: boolean;
 
   comment?: {
-    comment_id: boolean;
+    commentId: boolean;
     content: boolean;
   };
-  comment_report_id?: boolean;
+  commentReportId?: boolean;
 
   reported?: {
-    user_id: boolean;
+    userId: boolean;
     name: boolean;
   };
-  user_report_id?: boolean;
+  userReportId?: boolean;
 }
 
 @Injectable()
@@ -51,7 +51,7 @@ export class ReportService {
     private readonly commentService: CommentService,
   ) {}
 
-  private fetch_not_proceed_list_format = (
+  private fetchNotProceedListFormat = (
     selecter: TargerQueryOptions,
     paging: FetchNotProceedListDao,
     relations: string[],
@@ -59,11 +59,11 @@ export class ReportService {
     return {
       select: {
         reporter: {
-          user_id: true,
+          userId: true,
           name: true,
         },
         reason: true,
-        report_recieved: true,
+        reportRecieved: true,
         ...selecter,
       },
       where: {
@@ -76,149 +76,149 @@ export class ReportService {
     };
   };
 
-  async reportPost(report_info: ReportDao, reporter_id: number) {
-    const reporter = await this.userService.fetchUserWithUserID(reporter_id);
+  async reportPost(reportInfo: ReportDao, reporterId: number) {
+    const reporter = await this.userService.fetchUserWithUserID(reporterId);
     const post = await this.postService.fetchPostWithPostID(
-      +report_info.target_id,
+      +reportInfo.targetId,
     );
 
     const postReport = new PostReport();
     postReport.post = post;
     postReport.reporter = reporter;
-    postReport.reason = report_info.reason;
+    postReport.reason = reportInfo.reason;
 
     const result = await this.postReportRepository.save(postReport);
     return result;
   }
 
   async fetchNotProceedReportedPostList(paging: FetchNotProceedListDao) {
-    const reported_list = await this.postReportRepository.findAndCount(
-      this.fetch_not_proceed_list_format(
+    const reportedList = await this.postReportRepository.findAndCount(
+      this.fetchNotProceedListFormat(
         {
           post: {
-            post_id: true,
+            postId: true,
             title: true,
           },
-          post_report_id: true,
+          postReportId: true,
         },
         paging,
         ['reporter', 'post'],
       ),
     );
-    return reported_list;
+    return reportedList;
   }
 
-  async handleReportedPost(reported_info: HandleReportedDao) {
+  async handleReportedPost(reportedInfo: HandleReportedDao) {
     const result = await this.postReportRepository.update(
-      +reported_info.report_id,
+      +reportedInfo.reportId,
       {
         handled: true,
-        report_confirmed: new Date(),
+        reportConfirmed: new Date(),
       },
     );
     return result;
   }
 
-  async reportComment(report_info: ReportDao, reporter_id: number) {
-    const reporter = await this.userService.fetchUserWithUserID(reporter_id);
+  async reportComment(reportInfo: ReportDao, reporterId: number) {
+    const reporter = await this.userService.fetchUserWithUserID(reporterId);
     const comment = await this.commentService.fetchCommentWithCommentID(
-      +report_info.target_id,
+      +reportInfo.targetId,
     );
 
     const commentReport = new CommentReport();
     commentReport.comment = comment;
     commentReport.reporter = reporter;
-    commentReport.reason = report_info.reason;
+    commentReport.reason = reportInfo.reason;
 
     const result = await this.commentReportRepository.save(commentReport);
     return result;
   }
 
   async fetchNotProceedReportedCommentList(paging: FetchNotProceedListDao) {
-    const reported_list = await this.commentReportRepository.find(
-      this.fetch_not_proceed_list_format(
+    const reportedList = await this.commentReportRepository.find(
+      this.fetchNotProceedListFormat(
         {
           comment: {
-            comment_id: true,
+            commentId: true,
             content: true,
           },
-          comment_report_id: true,
+          commentReportId: true,
         },
         paging,
         ['reporter', 'comment'],
       ),
     );
-    return reported_list;
+    return reportedList;
   }
 
-  async handleReportedComment(reported_info: HandleReportedCommentDto) {
+  async handleReportedComment(reportedInfo: HandleReportedCommentDto) {
     const result = await this.commentReportRepository.update(
-      +reported_info.report_id,
+      +reportedInfo.reportId,
       {
         handled: true,
-        report_confirmed: new Date(),
+        reportConfirmed: new Date(),
       },
     );
     return result;
   }
 
-  async reportUser(report_info: ReportDao, reporter_id: number) {
-    const reporter = await this.userService.fetchUserWithUserID(reporter_id);
+  async reportUser(reportInfo: ReportDao, reporterId: number) {
+    const reporter = await this.userService.fetchUserWithUserID(reporterId);
     const reported = await this.userService.fetchUserWithUserID(
-      +report_info.target_id,
+      +reportInfo.targetId,
     );
 
     const userReport = new UserReport();
     userReport.reported = reported;
     userReport.reporter = reporter;
-    userReport.reason = report_info.reason;
+    userReport.reason = reportInfo.reason;
 
     const result = await this.userReportRepository.save(userReport);
     return result;
   }
 
   async fetchNotProceedReportedUserList(paging: FetchNotProceedListDao) {
-    const reported_list = await this.userReportRepository.findAndCount(
-      this.fetch_not_proceed_list_format(
+    const reportedList = await this.userReportRepository.findAndCount(
+      this.fetchNotProceedListFormat(
         {
           reported: {
-            user_id: true,
+            userId: true,
             name: true,
           },
-          user_report_id: true,
+          userReportId: true,
         },
         paging,
         ['reporter', 'reported'],
       ),
     );
-    return reported_list;
+    return reportedList;
   }
 
-  async handleReportedUser(reported_info: HandleReportedUserDto) {
+  async handleReportedUser(reportedInfo: HandleReportedUserDto) {
     const result = await this.userReportRepository.update(
-      +reported_info.report_id,
+      +reportedInfo.reportId,
       {
         handled: true,
-        report_confirmed: new Date(),
+        reportConfirmed: new Date(),
       },
     );
 
-    const reported_user = await this.userReportRepository.findOne({
+    const reportedUser = await this.userReportRepository.findOne({
       select: {
         reported: {
-          user_id: true,
+          userId: true,
         },
       },
       where: {
-        user_report_id: +reported_info.report_id,
+        userReportId: +reportedInfo.reportId,
       },
       relations: ['reported'],
     });
-    const reported_user_id = reported_user.reported.user_id;
-    const reason = reported_info.reason;
-    const duration = +reported_info.duration;
+    const reportedUserId = reportedUser.reported.userId;
+    const reason = reportedInfo.reason;
+    const duration = +reportedInfo.duration;
 
-    // TODO: UserService에 정지 기간, 사유 update문 필요 <= 
+    // TODO: UserService에 정지 기간, 사유 update문 필요 <=
     // TODO: User entity에 정지 사유 추가
 
     return result;

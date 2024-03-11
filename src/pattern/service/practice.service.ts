@@ -14,19 +14,19 @@ export class PracticeService {
     private readonly patternInfoService: PatternInfoService,
   ) {}
 
-  async createEntity(create_data: CreatePracticeDto): Promise<Practice> {
-    const { pattern_info, ...other_info } = create_data;
+  async createEntity(createData: CreatePracticeDto): Promise<Practice> {
+    const { patternInfo, ...otherInfo } = createData;
 
     const practice: Practice = {
       ...new Practice(),
-      ...other_info,
+      ...otherInfo,
     };
-    const pattern_info_entity: PatternInfo =
-      await this.patternInfoService.createPatternInfoEntity(pattern_info);
+    const patternInfoEntity: PatternInfo =
+      await this.patternInfoService.createPatternInfoEntity(patternInfo);
 
-    // practice.img_src = img_src;
-    // practice.note_src = note_src;
-    practice.pattern_info = pattern_info_entity;
+    // practice.imgSrc = imgSrc;
+    // practice.noteSrc = noteSrc;
+    practice.patternInfo = patternInfoEntity;
     return await this.practiceRepo.save(practice);
   }
 
@@ -37,30 +37,30 @@ export class PracticeService {
   async fetchAll() {
     return await this.practiceRepo.find({
       relations: {
-        pattern_info: true,
+        patternInfo: true,
       },
     });
   }
 
   async updateData(
     id: number,
-    update_data: UpdatePracticeDto,
+    updateData: UpdatePracticeDto,
   ): Promise<Practice> {
     const practice: Practice = await this.findPractice(id);
 
-    if (update_data.pattern_info !== undefined) {
+    if (updateData.patternInfo !== undefined) {
       await this.patternInfoService.updatePatternInfoData(
-        practice.pattern_info.pattern_id,
-        update_data.pattern_info,
+        practice.patternInfo.patternId,
+        updateData.patternInfo,
       );
-      delete update_data.pattern_info;
+      delete updateData.patternInfo;
     }
 
-    const update_practice_data: Practice = {
+    const updatePracticeData: Practice = {
       ...practice,
-      ...update_data,
+      ...updateData,
     } as Practice;
-    await this.practiceRepo.update(id, update_practice_data);
+    await this.practiceRepo.update(id, updatePracticeData);
     return await this.findPractice(id);
   }
 
@@ -71,10 +71,10 @@ export class PracticeService {
   async findPractice(id: number): Promise<Practice> {
     return await this.practiceRepo.findOne({
       where: {
-        practice_id: id,
+        practiceId: id,
       },
       relations: {
-        pattern_info: true,
+        patternInfo: true,
       },
     });
   }
