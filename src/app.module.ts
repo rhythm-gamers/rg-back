@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { WinstonModule } from 'nest-winston';
-import { loggerConfig } from './config/logger.config';
-import { ExampleLoggerModule } from './example-logger/example-logger.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConnection } from './config/typeorm.config';
 import { UserModule } from './user/user.module';
@@ -16,12 +13,13 @@ import { BoardModule } from './board/board.module';
 import { AuthModule } from './auth/auth.module';
 import { AwsS3Module } from './s3/aws-s3.module';
 import { ProgressModule } from './progress/progress.module';
+import { CommonModule } from './common/common.module';
+import { APP_FILTER } from '@nestjs/core';
+import { ExceptionFilter } from './common/filters/exception.filter';
 
 @Module({
   imports: [
-    WinstonModule.forRoot(loggerConfig),
     TypeOrmModule.forRoot(databaseConnection),
-    ExampleLoggerModule,
     UserModule,
     PatternModule,
     WikiModule,
@@ -32,8 +30,9 @@ import { ProgressModule } from './progress/progress.module';
     AuthModule,
     AwsS3Module,
     ProgressModule,
+    CommonModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_FILTER, useClass: ExceptionFilter }],
 })
 export class AppModule {}
