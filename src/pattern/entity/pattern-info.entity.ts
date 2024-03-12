@@ -11,27 +11,27 @@ import { LevelTest } from './level-test.entity';
 @Entity()
 export class PatternInfo {
   @PrimaryGeneratedColumn()
-  pattern_id: number;
+  patternId: number;
 
-  @OneToOne(() => Practice, (practice) => practice.pattern_info, {
+  @OneToOne(() => Practice, (practice) => practice.patternInfo, {
     nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn()
   practice: Practice;
 
-  @OneToOne(() => LevelTest, (leveltest) => leveltest.pattern_info, {
+  @OneToOne(() => LevelTest, (leveltest) => leveltest.patternInfo, {
     nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  level_test: LevelTest;
+  levelTest: LevelTest;
 
   @Column({ default: 0 })
   roll: number;
 
   @Column({ default: 0 })
-  off_grid: number;
+  offGrid: number;
 
   @Column({ default: 0 })
   stairs: number;

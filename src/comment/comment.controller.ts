@@ -18,7 +18,7 @@ import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Get('post/:post_id')
+  @Get('post/:postId')
   @ApiQuery({
     name: 'page',
     required: false,
@@ -31,12 +31,12 @@ export class CommentController {
   })
   @ApiOperation({ summary: '특정 게시글의 댓글 가져오기' })
   async getCommentAtAssociatePost(
-    @Param('post_id') post_id: number,
+    @Param('postId') postId: number,
     @Query('page') page: number = 0,
     @Query('limit') limit: number = +process.env.COMMENT_LIMIT,
   ) {
     return await this.commentService.fetchCommentAssociatePostID(
-      +post_id,
+      +postId,
       +page,
       +limit,
     );
@@ -45,34 +45,31 @@ export class CommentController {
   @Post()
   @ApiOperation({ summary: '댓글 생성' })
   async craeteComment(@Body() body: CreateCommentDto) {
-    const user_uid = 1;
-    return await this.commentService.createComment(user_uid, body);
+    const userUid = 1;
+    return await this.commentService.createComment(userUid, body);
   }
 
-  @Patch(':comment_id')
+  @Patch(':commentId')
   @ApiOperation({ summary: '댓글 수정' })
   async updateComment(
-    @Param('comment_id') comment_id: number,
+    @Param('commentId') commentId: number,
     @Body() body: UpdateCommentDto,
   ) {
-    const user_uid = 1;
-    return await this.commentService.updateComment(user_uid, +comment_id, body);
+    const userUid = 1;
+    return await this.commentService.updateComment(userUid, +commentId, body);
   }
 
-  @Delete(':comment_id')
+  @Delete(':commentId')
   @ApiOperation({ summary: '댓글 삭제' })
-  async deleteComment(@Param('comment_id') comment_id: number) {
-    const user_uid = 1;
-    return await this.commentService.deleteComment(user_uid, +comment_id);
+  async deleteComment(@Param('commentId') commentId: number) {
+    const userUid = 1;
+    return await this.commentService.deleteComment(userUid, +commentId);
   }
 
-  @Post('inc_like/:comment_id')
+  @Post('inc_like/:commentId')
   @ApiOperation({ summary: '댓글 좋아요 증가' })
-  async increaseCommentLike(@Param('comment_id') comment_id: number) {
-    const user_uid = 1;
-    return await this.commentService.increaseCommentLikes(
-      user_uid,
-      +comment_id,
-    );
+  async increaseCommentLike(@Param('commentId') commentId: number) {
+    const userUid = 1;
+    return await this.commentService.increaseCommentLikes(userUid, +commentId);
   }
 }

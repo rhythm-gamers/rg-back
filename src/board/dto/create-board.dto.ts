@@ -1,4 +1,4 @@
 export interface CreateBoardDto {
-  board_name: string;
+  boardName: string;
   description?: string;
 }

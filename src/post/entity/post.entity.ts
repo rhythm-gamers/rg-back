@@ -16,7 +16,7 @@ import { PostLike } from './post-like.entity';
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
-  post_id: number;
+  postId: number;
 
   @ManyToOne(() => Board, (board) => board.posts, {
     onDelete: 'CASCADE',
@@ -36,12 +36,12 @@ export class Post {
   @OneToMany(() => PostReport, (postreport) => postreport.post, {
     cascade: true,
   })
-  report_list: PostReport[];
+  reportList: PostReport[];
 
   @OneToMany(() => PostLike, (like) => like.post, {
     cascade: true,
   })
-  like_list: PostLike[];
+  likeList: PostLike[];
 
   @Column({ length: 100 })
   title: string;
@@ -56,8 +56,8 @@ export class Post {
   likes: number;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  modified_at: Date;
+  modifiedAt: Date;
 }

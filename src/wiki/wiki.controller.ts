@@ -35,7 +35,7 @@ export class WikiController {
       result[metadata.letter].push({
         uid: metadata.uid,
         title: metadata.title,
-        must_read: metadata.must_read,
+        mustRead: metadata.mustRead,
       });
     });
     return result;
@@ -70,12 +70,12 @@ export class WikiController {
   // TODO Auth 필요
   @Delete()
   @ApiOperation({ description: '제목 또는 인덱스로 제거할 수 있도록 함' })
-  async deleteWikiData(@Body() wiki_delete: DeleteWikiDataDto) {
+  async deleteWikiData(@Body() wikiDelete: DeleteWikiDataDto) {
     let result;
-    if (wiki_delete.title) {
-      result = await this.wikiService.deleteWikiDataByTitle(wiki_delete.title);
-    } else if (wiki_delete.wiki_id) {
-      result = await this.wikiService.deleteWikiDataById(+wiki_delete.wiki_id);
+    if (wikiDelete.title) {
+      result = await this.wikiService.deleteWikiDataByTitle(wikiDelete.title);
+    } else if (wikiDelete.wikiId) {
+      result = await this.wikiService.deleteWikiDataById(+wikiDelete.wikiId);
     }
 
     return result;
