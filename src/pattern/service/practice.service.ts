@@ -24,8 +24,6 @@ export class PracticeService {
     const patternInfoEntity: PatternInfo =
       await this.patternInfoService.createPatternInfoEntity(patternInfo);
 
-    // practice.imgSrc = imgSrc;
-    // practice.noteSrc = noteSrc;
     practice.patternInfo = patternInfoEntity;
     return await this.practiceRepo.save(practice);
   }
@@ -43,35 +41,35 @@ export class PracticeService {
   }
 
   async updateData(
-    id: number,
+    practiceId: number,
     updateData: UpdatePracticeDto,
   ): Promise<Practice> {
-    const practice: Practice = await this.findPractice(id);
+    const practice: Practice = await this.findPractice(practiceId);
 
     if (updateData.patternInfo !== undefined) {
-      await this.patternInfoService.updatePatternInfoData(
-        practice.patternInfo.patternId,
-        updateData.patternInfo,
-      );
-      delete updateData.patternInfo;
+      updateData.patternInfo =
+        await this.patternInfoService.updatePatternInfoData(
+          practice.patternInfo.patternId,
+          updateData.patternInfo,
+        );
     }
 
-    const updatePracticeData: Practice = {
+    const updatePracticeData = {
       ...practice,
       ...updateData,
-    } as Practice;
-    await this.practiceRepo.update(id, updatePracticeData);
-    return await this.findPractice(id);
+    };
+    await this.practiceRepo.save(updatePracticeData);
+    return await this.findPractice(practiceId);
   }
 
   async deleteById(id: number) {
     return await this.practiceRepo.delete(id);
   }
 
-  async findPractice(id: number): Promise<Practice> {
+  async findPractice(practiceId: number): Promise<Practice> {
     return await this.practiceRepo.findOne({
       where: {
-        practiceId: id,
+        practiceId: practiceId,
       },
       relations: {
         patternInfo: true,

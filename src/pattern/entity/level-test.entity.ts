@@ -35,9 +35,12 @@ export class LevelTest {
   @Column({ comment: '키 개수' })
   keyNum: number;
 
-  @Column({ comment: '자켓 이미지' })
+  @Column({ comment: '자켓 이미지 경로' })
   imgSrc: string;
 
   @Column({ comment: '노트 경로' })
   noteSrc: string;
+
+  @Column({ comment: '음원 파일 경로' })
+  musicSrc: string;
 }

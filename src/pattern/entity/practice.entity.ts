@@ -37,4 +37,7 @@ export class Practice {
 
   @Column({ comment: '노트 경로' })
   noteSrc: string;
+
+  @Column({ comment: '음원 파일 경로' })
+  musicSrc: string;
 }

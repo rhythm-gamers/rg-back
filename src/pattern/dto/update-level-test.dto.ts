@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CreatePatternInfoDto } from './create-pattern-info.dto';
+import { PatternSourceObject } from '../obj/pattern-source.obj';
 
-export class UpdateLevelTestDto {
+export class UpdateLevelTestDto extends PatternSourceObject {
   @ApiProperty({
     description: '채보 이름',
     required: false,
@@ -21,6 +22,7 @@ export class UpdateLevelTestDto {
   goalRate?: number;
 
   @ApiProperty({
+    description: '키 개수',
     required: false,
   })
   keyNum?: number;
@@ -30,16 +32,4 @@ export class UpdateLevelTestDto {
     required: false,
   })
   patternInfo?: CreatePatternInfoDto;
-
-  @ApiProperty({
-    description: 'base64로 인코딩된 이미지',
-    required: false,
-  })
-  imgSrc?: string;
-
-  @ApiProperty({
-    description: 'base64로 인코딩된 채보 파일',
-    required: false,
-  })
-  noteSrc?: string;
 }
