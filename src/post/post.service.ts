@@ -18,173 +18,168 @@ export class PostService {
   ) {}
 
   async fetchPostsAndCommentCountWithBoardname(
-    board_name: string,
+    boardName: string,
     page: number,
     limit: number,
   ) {
     const posts = await this.postRepository.findAndCount({
       select: {
-        post_id: true,
+        postId: true,
         title: true,
         views: true,
         likes: true,
-        created_at: true,
-        modified_at: true,
+        createdAt: true,
+        modifiedAt: true,
         user: {
-          user_id: true,
+          userId: true,
           nickname: true,
         },
         comments: {
-          comment_id: true,
+          commentId: true,
         },
       },
       where: {
         board: {
-          board_name: board_name,
+          boardName: boardName,
         },
       },
       relations: ["user", "comments"],
       order: {
-        post_id: "DESC",
+        postId: "DESC",
       },
       skip: limit * page,
       take: limit,
     });
 
-    const all_articles = await this.postRepository.count({
+    const allArticles = await this.postRepository.count({
       where: {
         board: {
-          board_name: board_name,
+          boardName: boardName,
         },
       },
     });
 
     posts[0].forEach((post) => {
-      post["modified"] = post.created_at === post.modified_at ? false : true;
-      post["time"] = post.modified_at;
-      delete post.created_at;
-      delete post.modified_at;
-      post["comment_count"] = post.comments.length;
+      post["modified"] = post.createdAt === post.modifiedAt ? false : true;
+      post["time"] = post.modifiedAt;
+      delete post.createdAt;
+      delete post.modifiedAt;
+      post["commentCount"] = post.comments.length;
       delete post.comments;
     });
 
     const result = {
       posts: posts,
-      all_count: all_articles,
+      allCount: allArticles,
     };
 
     return result;
   }
 
-  async fetchPostSpecInfo(post_id: number) {
+  async fetchPostSpecInfo(postId: number) {
     const post = await this.postRepository.findOne({
       select: {
-        post_id: true,
+        postId: true,
         user: {
-          user_id: true,
+          userId: true,
           nickname: true,
         },
         title: true,
         content: true,
         views: true,
         likes: true,
-        created_at: true,
-        modified_at: true,
+        createdAt: true,
+        modifiedAt: true,
       },
       where: {
-        post_id: post_id,
+        postId: postId,
       },
       relations: {
         user: true,
       },
       order: {
-        created_at: "DESC",
+        createdAt: "DESC",
       },
     });
 
     if (post) {
-      post["modified"] = post.created_at === post.modified_at ? false : true;
-      post["show_date"] = post.modified_at;
-      delete post.created_at;
-      delete post.modified_at;
+      post["modified"] = post.createdAt === post.modifiedAt ? false : true;
+      post["showDate"] = post.modifiedAt;
+      delete post.createdAt;
+      delete post.modifiedAt;
     }
     return post;
   }
 
-  async createPost(user_id: number, create_post: CreatePostDto) {
+  async createPost(userId: number, createPost: CreatePostDto) {
     const board = await this.boardService.fetchBoardByBoardname(
-      create_post.board_name,
+      createPost.boardName,
     );
-    const user = await this.userService.fetchUserWithUserID(user_id);
+    const user = await this.userService.fetchUserWithUserID(userId);
     const post = new Post();
     post.board = board;
     post.user = user;
-    post.title = create_post.title;
-    post.content = create_post.content;
+    post.title = createPost.title;
+    post.content = createPost.content;
 
     const result = await this.postRepository.save(post);
     return result;
   }
 
-  async updatePost(
-    user_id: number,
-    post_id: number,
-    update_post: UpdatePostDto,
-  ) {
-    const post = await this.checkPostOwnerAndGetPost(user_id, post_id);
+  async updatePost(userId: number, postId: number, updatePost: UpdatePostDto) {
+    const post = await this.checkPostOwnerAndGetPost(userId, postId);
 
-    const update_value: Post = { ...post, ...update_post };
-    const result = await this.postRepository.save(update_value);
+    const updateValue: Post = { ...post, ...updatePost };
+    const result = await this.postRepository.save(updateValue);
     return result;
   }
 
-  async deletePost(user_id: number, post_id: number) {
-    const post = await this.checkPostOwnerAndGetPost(user_id, post_id);
+  async deletePost(userId: number, postId: number) {
+    const post = await this.checkPostOwnerAndGetPost(userId, postId);
 
-    const result = await this.postRepository.delete(post.post_id);
+    const result = await this.postRepository.delete(post.postId);
     return result;
   }
 
-  async fetchPostWithPostID(post_id: number): Promise<Post> {
+  async fetchPostWithPostID(postId: number): Promise<Post> {
     const post = await this.postRepository.findOneBy({
-      post_id: post_id,
+      postId: postId,
     });
     return post;
   }
 
-  async increasePostLikes(user_id: number, post_id: number) {
+  async increasePostLikes(userId: number, postId: number) {
     if (
-      (await this.postLikeService.appendUserToLikeList(user_id, post_id)) !==
-      true
+      (await this.postLikeService.appendUserToLikeList(userId, postId)) !== true
     ) {
       throw new BadRequestException();
     }
 
-    await this.postRepository.update(post_id, {
+    await this.postRepository.update(postId, {
       likes: () => "likes + 1",
     });
 
     const result = await this.postRepository.findOneBy({
-      post_id: post_id,
+      postId: postId,
     });
     return result;
   }
 
   private async checkPostOwnerAndGetPost(
-    user_id: number,
-    post_id: number,
+    userId: number,
+    postId: number,
   ): Promise<Post> {
-    const post = await this.fetchPostWithPostId(post_id);
-    if (post.user.user_id !== user_id) {
+    const post = await this.fetchPostWithPostId(postId);
+    if (post.user.userId !== userId) {
       throw new BadRequestException();
     }
     return post;
   }
 
-  private async fetchPostWithPostId(post_id: number) {
+  private async fetchPostWithPostId(postId: number) {
     const post = await this.postRepository.findOne({
       where: {
-        post_id: post_id,
+        postId: postId,
       },
       relations: ["user"],
     });

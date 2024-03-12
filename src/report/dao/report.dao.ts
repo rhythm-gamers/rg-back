@@ -1,4 +1,4 @@
 export interface ReportDao {
-  target_id: number;
+  targetId: number;
   reason: string;
 }

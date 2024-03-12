@@ -5,14 +5,14 @@ import { Post } from "./post.entity";
 @Entity()
 export class PostLike {
   @PrimaryGeneratedColumn()
-  post_like_id: number;
+  postLikeId: number;
 
-  @ManyToOne(() => Post, (post) => post.like_list, {
+  @ManyToOne(() => Post, (post) => post.likeList, {
     onDelete: "CASCADE",
   })
   post: Post;
 
-  @ManyToOne(() => User, (user) => user.post_like_list, {
+  @ManyToOne(() => User, (user) => user.postLikeList, {
     onDelete: "CASCADE",
   })
   user: User;

@@ -9,7 +9,7 @@ export class UpdatePatternInfoDto {
   @ApiProperty({
     required: false,
   })
-  off_grid: number;
+  offGrid: number;
 
   @ApiProperty({
     required: false,
@@ -38,7 +38,7 @@ export class UpdatePatternInfoDto {
 
   constructor() {
     this.roll = 0;
-    this.off_grid = 0;
+    this.offGrid = 0;
     this.stairs = 0;
     this.peak = 0;
     this.multiples = 0;

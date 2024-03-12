@@ -19,7 +19,7 @@ export class WikiService {
         uid: true,
         letter: true,
         title: true,
-        must_read: true,
+        mustRead: true,
       },
     });
     return metadatas;
@@ -30,7 +30,7 @@ export class WikiService {
       select: {
         title: true,
         content: true,
-        must_read: true,
+        mustRead: true,
       },
       where: {
         uid: id,
@@ -40,23 +40,23 @@ export class WikiService {
   }
 
   async createWikiData(wiki: CreateWikiDataDto) {
-    const wiki_append: Wiki = new Wiki();
+    const wikiAppend: Wiki = new Wiki();
 
-    wiki_append.title = wiki.title;
-    wiki_append.letter = this.getChosung(wiki.title);
-    wiki_append.content = wiki.content;
-    if (wiki.must_read) {
-      wiki_append.must_read = wiki.must_read;
+    wikiAppend.title = wiki.title;
+    wikiAppend.letter = this.getChosung(wiki.title);
+    wikiAppend.content = wiki.content;
+    if (wiki.mustRead) {
+      wikiAppend.mustRead = wiki.mustRead;
     }
 
-    return await this.wikiRepository.insert(wiki_append);
+    return await this.wikiRepository.insert(wikiAppend);
   }
 
   private getChosung(input: string): string {
-    const char_code = input.charCodeAt(0);
-    if (char_code >= 0xac00 && char_code <= 0xd7a3) {
+    const charCode = input.charCodeAt(0);
+    if (charCode >= 0xac00 && charCode <= 0xd7a3) {
       // '가'로부터의 거리를 구하고, 초성의 인덱스를 계산
-      const index = Math.floor((char_code - 0xac00) / 28 / 21);
+      const index = Math.floor((charCode - 0xac00) / 28 / 21);
       // 초성 반환
       return chosungs[index];
     } else {
@@ -75,9 +75,9 @@ export class WikiService {
     if (wiki.title) {
       letter = this.getChosung(wiki.title);
     }
-    const update_data = { ...data, ...wiki, letter };
+    const updateData = { ...data, ...wiki, letter };
 
-    return await this.wikiRepository.save(update_data);
+    return await this.wikiRepository.save(updateData);
   }
 
   async deleteWikiDataById(id: number) {

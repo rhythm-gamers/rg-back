@@ -22,12 +22,12 @@ export class BoardController {
     private readonly postService: PostService,
   ) {}
 
-  @Get("spec/:board_name")
+  @Get("spec/:boardName")
   @ApiOperation({})
-  async fetchBoardInfo(@Param("board_name") board_name: string) {
-    const board = await this.boardService.fetchBoardByBoardname(board_name);
+  async fetchBoardInfo(@Param("boardName") boardName: string) {
+    const board = await this.boardService.fetchBoardByBoardname(boardName);
     const post = await this.postService.fetchPostsAndCommentCountWithBoardname(
-      board_name,
+      boardName,
       0,
       20,
     );
@@ -44,34 +44,34 @@ export class BoardController {
     const metadatas = await this.boardService.fetchBoardMetadata();
     const result = new ReturnBoardMetadataDto();
     metadatas.forEach((metadata) => {
-      result.boards.push(metadata.board_name);
+      result.boards.push(metadata.boardName);
     });
     return result;
   }
 
   @Post()
   @ApiOperation({})
-  async createBoard(@Body() board_info: CreateBoardDto) {
-    const result = await this.boardService.createBoard(board_info);
+  async createBoard(@Body() boardInfo: CreateBoardDto) {
+    const result = await this.boardService.createBoard(boardInfo);
     return result;
   }
 
-  @Delete(":origin_name")
+  @Delete(":originName")
   @ApiOperation({})
-  async deleteBoard(@Param("origin_name") origin_name) {
-    const result = await this.boardService.deleteBoardByBoardname(origin_name);
+  async deleteBoard(@Param("originName") originName) {
+    const result = await this.boardService.deleteBoardByBoardname(originName);
     return result;
   }
 
-  @Patch(":origin_name")
+  @Patch(":originName")
   @ApiOperation({})
   async updateBoard(
-    @Body() board_info: ModifyBoardDto,
-    @Param("origin_name") origin_name: string,
+    @Body() boardInfo: ModifyBoardDto,
+    @Param("originName") originName: string,
   ) {
     const result = await this.boardService.modifyBoardByBoardname(
-      board_info,
-      origin_name,
+      boardInfo,
+      originName,
     );
     return result;
   }

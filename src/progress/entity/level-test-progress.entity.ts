@@ -5,18 +5,18 @@ import { User } from "../../user/entity/user.entity";
 @Entity()
 export class LevelTestProgress {
   @PrimaryGeneratedColumn()
-  level_test_progress_id: number;
+  levelTestProgressId: number;
 
   @Column({ type: "decimal", precision: 5, scale: 2, comment: "000.00~999.99" })
-  current_rate: number;
+  currentRate: number;
 
-  @ManyToOne(() => User, (user) => user.level_test_progresses, {
+  @ManyToOne(() => User, (user) => user.levelTestProgresses, {
     onDelete: "CASCADE",
   })
   user: User;
 
-  @ManyToOne(() => LevelTest, (test) => test.user_progresses, {
+  @ManyToOne(() => LevelTest, (test) => test.userProgresses, {
     onDelete: "CASCADE",
   })
-  level_test: LevelTest;
+  levelTest: LevelTest;
 }

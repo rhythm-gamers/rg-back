@@ -14,20 +14,20 @@ export class PostLikeService {
     private readonly postService: PostService,
   ) {}
 
-  async appendUserToLikeList(user_id: number, post_id: number) {
-    const user = await this.userService.fetchUserLikeListWithUserID(user_id);
+  async appendUserToLikeList(userId: number, postId: number) {
+    const user = await this.userService.fetchUserLikeListWithUserID(userId);
     if (
-      user.post_like_list.some((like) => like.post.post_id === post_id) === true
+      user.postLikeList.some((like) => like.post.postId === postId) === true
     ) {
       return false;
     }
-    const post = await this.postService.fetchPostWithPostID(post_id);
+    const post = await this.postService.fetchPostWithPostID(postId);
 
-    const like_list = new PostLike();
-    like_list.post = post;
-    like_list.user = user;
+    const likeList = new PostLike();
+    likeList.post = post;
+    likeList.user = user;
 
-    await this.postLikeRepo.save(like_list);
+    await this.postLikeRepo.save(likeList);
     return true;
   }
 }

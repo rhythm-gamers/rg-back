@@ -11,15 +11,15 @@ import {
 @Entity()
 export class PostReport {
   @PrimaryGeneratedColumn()
-  post_report_id: number;
+  postReportId: number;
 
   // 신고한 유저
-  @ManyToOne(() => User, (user) => user.post_reports, {
+  @ManyToOne(() => User, (user) => user.postReports, {
     onDelete: "CASCADE",
   })
   reporter: User;
 
-  @ManyToOne(() => Post, (post) => post.report_list, {
+  @ManyToOne(() => Post, (post) => post.reportList, {
     onDelete: "CASCADE",
   })
   post: Post;
@@ -31,8 +31,8 @@ export class PostReport {
   handled: boolean;
 
   @CreateDateColumn()
-  report_recieved: Date;
+  reportRecieved: Date;
 
   @Column({ nullable: true })
-  report_confirmed: Date;
+  reportConfirmed: Date;
 }

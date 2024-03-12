@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CreatePatternInfoDto } from "./create-pattern-info.dto";
+import { PatternSourceObject } from "../obj/pattern-source.obj";
 
-export class UpdateLevelTestDto {
+export class UpdateLevelTestDto extends PatternSourceObject {
   @ApiProperty({
     description: "채보 이름",
     required: false,
@@ -18,12 +19,13 @@ export class UpdateLevelTestDto {
     description: "목표치",
     required: false,
   })
-  goal_rate?: number;
+  goalRate?: number;
 
   @ApiProperty({
+    description: "키 개수",
     required: false,
   })
-  key_num?: number;
+  keyNum?: number;
 
   @ApiProperty({
     description: "어느 패턴이 등장하는가?",
@@ -42,4 +44,5 @@ export class UpdateLevelTestDto {
     required: false,
   })
   note_src?: string;
+  patternInfo?: CreatePatternInfoDto;
 }

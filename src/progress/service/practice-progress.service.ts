@@ -15,26 +15,26 @@ export class PracticeProgressService {
   async update(progress: number, user: User, practice: Practice) {
     let entity: PracticeProgress;
     if (
-      !user.practice_progresses.some(
-        (progress) => progress.practice.practice_id === practice.practice_id,
+      !user.practiceProgresses.some(
+        (progress) => progress.practice.practiceId === practice.practiceId,
       )
     ) {
       entity = new PracticeProgress();
       entity.user = user;
       entity.practice = practice;
-      entity.current_rate = progress;
+      entity.currentRate = progress;
       entity = await this.progressRepo.save(entity);
     } else {
-      entity = user.practice_progresses.find(
-        (progress) => progress.practice.practice_id === practice.practice_id,
+      entity = user.practiceProgresses.find(
+        (progress) => progress.practice.practiceId === practice.practiceId,
       );
-      this.progressRepo.update(entity.practice_progress_id, {
-        current_rate: progress,
+      this.progressRepo.update(entity.practiceProgressId, {
+        currentRate: progress,
       });
     }
     return await this.progressRepo.findOne({
       where: {
-        practice_progress_id: entity.practice_progress_id,
+        practiceProgressId: entity.practiceProgressId,
       },
     });
   }

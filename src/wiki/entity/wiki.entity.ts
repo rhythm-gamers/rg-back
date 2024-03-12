@@ -12,7 +12,7 @@ export class Wiki {
   letter: string;
 
   @Column({ default: false })
-  must_read: boolean;
+  mustRead: boolean;
 
   @Column({ length: 1000, default: "" })
   content: string;

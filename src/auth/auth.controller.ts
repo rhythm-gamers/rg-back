@@ -1,19 +1,8 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Param,
-  Post,
-  Req,
-  Res,
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request, Response } from "express";
 import axios from "axios";
 import qs from "qs";
-import { WINSTON_MODULE_PROVIDER } from "nest-winston";
-import { Logger } from "winston";
 import {
   // steam,
   SteamUserObject,
@@ -37,10 +26,7 @@ axios.defaults.paramsSerializer = (params) => {
 export class AuthController {
   private steam: SteamAuth;
 
-  constructor(
-    private readonly authService: AuthService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-  ) {
+  constructor(private readonly authService: AuthService) {
     this.steam = new SteamAuth({
       realm: process.env.STEAM_REALM,
       returnUrl: process.env.STEAM_RETURN_URL,
@@ -62,8 +48,6 @@ export class AuthController {
 
   @Get("steam/games/:id")
   async getGames(@Param("id") id: string) {
-    this.logger.info(`GET - /auth/steam/games/${id}`);
-
     const params = {
       key: process.env.STEAM_API_KEY,
       steamid: id,
@@ -91,7 +75,6 @@ export class AuthController {
   @ApiOperation({ summary: "사용자 로그인" })
   @Post("login")
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
-    this.logger.info(`POST - /auth/login`);
     const tokens = await this.authService.login(loginDto);
     res
       .cookie("access_token", tokens.accessToken, { httpOnly: true })
@@ -104,7 +87,6 @@ export class AuthController {
   @ApiOperation({ summary: "사용자 회원가입" })
   @Post("register")
   register(@Body() registerDto: RegisterDto) {
-    this.logger.info(`POST - /auth/register`);
     return this.authService.register(registerDto);
   }
 
@@ -112,7 +94,6 @@ export class AuthController {
   @ApiOperation({ summary: "사용자 로그아웃" })
   @Post("logout")
   logout(@Res() res: Response) {
-    this.logger.info(`POST - /auth/logout`);
     res
       .clearCookie("access_token")
       .clearCookie("refresh_token")

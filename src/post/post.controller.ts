@@ -25,7 +25,7 @@ export class PostController {
     private readonly commentService: CommentService,
   ) {}
 
-  @Get("board/:board_name")
+  @Get("board/:boardName")
   @ApiQuery({
     name: "page",
     required: false,
@@ -38,30 +38,30 @@ export class PostController {
   })
   @ApiOperation({})
   async fetchPostAndCommentCountInBoard(
-    @Param("board_name") board_name: string,
+    @Param("boardName") boardName: string,
     @Query("page") page: number = 0,
     @Query("limit") limit: number = +process.env.COMMENT_LIMIT,
   ) {
     return await this.postService.fetchPostsAndCommentCountWithBoardname(
-      board_name,
+      boardName,
       +page,
       +limit,
     );
   }
 
-  @Get("spec/:post_id")
+  @Get("spec/:postId")
   @ApiOperation({})
   @ApiParam({
-    name: "post_id",
+    name: "postId",
     required: true,
     description: "조회하는 글의 id",
   })
-  async fetchPostSpecWithPostID(@Param("post_id") post_id: number) {
-    const post_spec = await this.postService.fetchPostSpecInfo(+post_id);
+  async fetchPostSpecWithPostID(@Param("postId") postId: number) {
+    const postSpec = await this.postService.fetchPostSpecInfo(+postId);
     const comments =
-      await this.commentService.fetchCommentAssociatePostID(post_id);
+      await this.commentService.fetchCommentAssociatePostID(postId);
     return {
-      post: post_spec,
+      post: postSpec,
       comments: comments,
     };
   }
@@ -69,46 +69,46 @@ export class PostController {
   @Post()
   @ApiOperation({})
   async createPost(@Body() body: CreatePostDto) {
-    const user_uid = 1;
-    return await this.postService.createPost(user_uid, body);
+    const userUid = 1;
+    return await this.postService.createPost(userUid, body);
   }
 
-  @Patch(":post_id")
+  @Patch(":postId")
   @ApiOperation({})
   @ApiParam({
-    name: "post_id",
+    name: "postId",
     required: true,
     description: "수정하는 글의 id",
   })
   async updatePost(
-    @Param("post_id") post_id: number,
+    @Param("postId") postId: number,
     @Body() body: UpdatePostDto,
   ) {
-    const user_uid = 1;
-    return await this.postService.updatePost(user_uid, +post_id, body);
+    const userUid = 1;
+    return await this.postService.updatePost(userUid, +postId, body);
   }
 
-  @Delete(":post_id")
+  @Delete(":postId")
   @ApiOperation({})
   @ApiParam({
-    name: "post_id",
+    name: "postId",
     required: true,
     description: "삭제하는 글의 id",
   })
-  async deletePost(@Param("post_id") post_id: number) {
-    const user_uid = 1;
-    return await this.postService.deletePost(user_uid, +post_id);
+  async deletePost(@Param("postId") postId: number) {
+    const userUid = 1;
+    return await this.postService.deletePost(userUid, +postId);
   }
 
-  @Post("inc_like/:post_id")
+  @Post("inc-like/:postId")
   @ApiOperation({})
   @ApiParam({
-    name: "post_id",
+    name: "postId",
     required: true,
     description: "좋아요를 증가시키려는 글의 id",
   })
-  async increasePostLikes(@Param("post_id") post_id: number) {
-    const user_uid = 1;
-    return await this.postService.increasePostLikes(user_uid, +post_id);
+  async increasePostLikes(@Param("postId") postId: number) {
+    const userUid = 1;
+    return await this.postService.increasePostLikes(userUid, +postId);
   }
 }

@@ -4,23 +4,23 @@ import { User } from "./user.entity";
 @Entity()
 export class PlateSetting {
   @PrimaryGeneratedColumn()
-  plate_setting_id: number;
+  plateSettingId: number;
 
   @OneToOne(() => User, (user) => user.platesetting)
   user: User;
 
   @Column({ default: false })
-  show_comment: boolean;
+  showComment: boolean;
 
   @Column({ default: false })
-  show_level: boolean;
+  showLevel: boolean;
 
   @Column({ default: false })
-  show_chingho: boolean;
+  showChingho: boolean;
 
   @Column({ default: false })
-  show_chingho_ico: boolean;
+  showChinghoIco: boolean;
 
   @Column({ default: 0 })
-  show_bgdesign: number;
+  showBgdesign: number;
 }

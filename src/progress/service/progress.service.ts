@@ -15,23 +15,23 @@ export class ProgressService {
     private readonly userService: UserService,
   ) {}
 
-  async updatePractice(progress: number, user_id: number, practice_id: number) {
-    const practice = await this.practiceService.fetchById(practice_id);
+  async updatePractice(progress: number, userId: number, practiceId: number) {
+    const practice = await this.practiceService.fetchById(practiceId);
     const user =
-      await this.userService.fetchUserPracticeProgressWithUserId(user_id);
+      await this.userService.fetchUserPracticeProgressWithUserId(userId);
 
     return await this.practiceProgressService.update(progress, user, practice);
   }
 
-  async updateLeveltest(progress: number, user_id: number, test_id: number) {
-    const level_test = await this.levelTestService.fetchById(test_id);
+  async updateLeveltest(progress: number, userId: number, testId: number) {
+    const levelTest = await this.levelTestService.fetchById(testId);
     const user =
-      await this.userService.fetchUserLevelTestProgressWithUserId(user_id);
+      await this.userService.fetchUserLevelTestProgressWithUserId(userId);
 
     return await this.levelTestProgressService.update(
       progress,
       user,
-      level_test,
+      levelTest,
     );
   }
 }

@@ -8,5 +8,5 @@ export class CreatePostDto {
   content: string;
 
   @ApiProperty()
-  board_name: string;
+  boardName: string;
 }

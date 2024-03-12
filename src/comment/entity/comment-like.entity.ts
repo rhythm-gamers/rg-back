@@ -5,14 +5,14 @@ import { Comment } from "./comment.entity";
 @Entity()
 export class CommentLike {
   @PrimaryGeneratedColumn()
-  comment_like_id: number;
+  commentLikeId: number;
 
-  @ManyToOne(() => Comment, (comment) => comment.like_list, {
+  @ManyToOne(() => Comment, (comment) => comment.likeList, {
     onDelete: "CASCADE",
   })
   comment: Comment;
 
-  @ManyToOne(() => User, (user) => user.comment_like_list, {
+  @ManyToOne(() => User, (user) => user.commentLikeList, {
     onDelete: "CASCADE",
   })
   user: User;

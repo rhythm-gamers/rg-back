@@ -1,26 +1,25 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CreatePatternInfoDto } from "../dto/create-pattern-info.dto";
+import { PatternSourceObject } from "../obj/pattern-source.obj";
 
-export class CreatePracticeDto {
-  @ApiProperty()
+export class CreatePracticeDto extends PatternSourceObject {
+  @ApiProperty({
+    description: "채보 이름",
+  })
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: "레벨",
+  })
   level: number;
 
-  @ApiProperty()
-  key_num: number;
-
-  @ApiProperty()
-  pattern_info: CreatePatternInfoDto;
+  @ApiProperty({
+    description: "키 개수",
+  })
+  keyNum: number;
 
   @ApiProperty({
-    required: false,
+    description: "어느 패턴이 등장하는가?",
   })
-  img_src?: string;
-
-  @ApiProperty({
-    required: false,
-  })
-  note_src?: string;
+  patternInfo: CreatePatternInfoDto;
 }

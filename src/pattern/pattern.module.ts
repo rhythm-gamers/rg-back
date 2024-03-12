@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 import { PatternService } from "./pattern.service";
-import { PatternController } from "./pattern.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { LevelTest } from "./entity/level-test.entity";
 import { PatternInfo } from "./entity/pattern-info.entity";
@@ -9,9 +8,11 @@ import { LevelTestService } from "./service/level-test.service";
 import { PatternInfoService } from "./service/pattern-info.service";
 import { PracticeService } from "./service/practice.service";
 import { AwsS3Module } from "src/s3/aws-s3.module";
+import { PracticeController } from "./controller/practice.controller";
+import { LevelTestController } from "./controller/level-test.controller";
 
 @Module({
-  controllers: [PatternController],
+  controllers: [PracticeController, LevelTestController],
   providers: [
     PatternService,
     LevelTestService,

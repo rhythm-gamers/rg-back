@@ -8,7 +8,6 @@ export const setupSwagger = (app: INestApplication) => {
     .setVersion("0.2")
     .addTag("level test", "level test operation")
     .addTag("practice", "practice operation")
-    .addTag("AWS S3", "AWS S3 operation")
     .addTag("wiki", "wiki operation")
     .addTag("post", "post operation")
     .addTag("comment", "comment operation")

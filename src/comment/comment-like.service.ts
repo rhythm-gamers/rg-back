@@ -15,24 +15,22 @@ export class CommentLikeService {
     private readonly commentService: CommentService,
   ) {}
 
-  async appendUserToLikeList(user_id: number, comment_id: number) {
-    const user = await this.userService.fetchUserLikeListWithUserID(user_id);
+  async appendUserToLikeList(userId: number, commentId: number) {
+    const user = await this.userService.fetchUserLikeListWithUserID(userId);
     if (
-      user.comment_like_list.some(
-        (like) => like.comment.comment_id === comment_id,
-      )
+      user.commentLikeList.some((like) => like.comment.commentId === commentId)
     ) {
       return false;
     }
 
     const comment =
-      await this.commentService.fetchCommentWithCommentID(comment_id);
+      await this.commentService.fetchCommentWithCommentID(commentId);
 
-    const like_list = new CommentLike();
-    like_list.user = user;
-    like_list.comment = comment;
+    const likeList = new CommentLike();
+    likeList.user = user;
+    likeList.comment = comment;
 
-    await this.commentLikeRepo.save(like_list);
+    await this.commentLikeRepo.save(likeList);
     return true;
   }
 }

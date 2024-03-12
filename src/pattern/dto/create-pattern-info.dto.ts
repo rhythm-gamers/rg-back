@@ -9,7 +9,7 @@ export class CreatePatternInfoDto {
   @ApiProperty({
     required: false,
   })
-  off_grid: number;
+  offGrid: number;
 
   @ApiProperty({
     required: false,

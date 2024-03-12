@@ -5,17 +5,17 @@ import { Practice } from "src/pattern/entity/practice.entity";
 @Entity()
 export class PracticeProgress {
   @PrimaryGeneratedColumn()
-  practice_progress_id: number;
+  practiceProgressId: number;
 
   @Column({ type: "decimal", precision: 5, scale: 2, comment: "000.00~999.99" })
-  current_rate: number;
+  currentRate: number;
 
-  @ManyToOne(() => User, (user) => user.practice_progresses, {
+  @ManyToOne(() => User, (user) => user.practiceProgresses, {
     onDelete: "CASCADE",
   })
   user: User;
 
-  @ManyToOne(() => Practice, (practice) => practice.user_progresses, {
+  @ManyToOne(() => Practice, (practice) => practice.userProgresses, {
     onDelete: "CASCADE",
   })
   practice: Practice;

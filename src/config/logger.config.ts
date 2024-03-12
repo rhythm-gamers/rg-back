@@ -1,42 +1,41 @@
 import * as winston from "winston";
-import { utilities as nestWinstonModuleUtilities } from "nest-winston";
+import {
+  WinstonModule,
+  utilities as nestWinstonModuleUtilities,
+} from "nest-winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
-const __CONSOLE = true;
-const __LOG_SAVE = false;
+const logDir = __dirname + "/../../logs";
+const isDevelope = process.env.IS_DEVELOPE === "dev";
 
-const loggerLevel = "silly";
-
-const loggerFormatter = (isConsole: boolean) => {
-  return winston.format.combine(
-    isConsole === true
-      ? winston.format.colorize()
-      : winston.format.uncolorize(),
-    winston.format.timestamp({
-      format: "YYYY-MM-DD HH:mm:ss",
-    }),
-    nestWinstonModuleUtilities.format.nestLike("MyApp", {
-      prettyPrint: false,
-    }),
-  );
-};
-
-const loggerSetting = (isConsole: boolean) => {
+const dailyOptions = (level: string) => {
   return {
-    level: loggerLevel,
-    format: loggerFormatter(isConsole),
+    level,
+    datePattern: "YYYY-MM-DD",
+    dirname: logDir + `/${level}`,
+    filename: `%DATE%.${level}.log`,
+    zippedArchive: true, // 로그를 분석할 일은 거의 없다. 압축해서 저장
+    maxSize: "20m",
   };
 };
 
-export const loggerConfig = {
+export const winstonLogger = WinstonModule.createLogger({
   transports: [
-    new winston.transports.Console(loggerSetting(__CONSOLE)),
-    new DailyRotateFile({
-      filename: "logs/%DATE%.log",
-      datePattern: "YYYY-MM-DD",
-      maxSize: "20m",
-      // maxFiles: '14d',
-      ...loggerSetting(__LOG_SAVE),
+    new winston.transports.Console({
+      level: isDevelope ? "silly" : "info",
+      format: isDevelope
+        ? winston.format.combine(
+            winston.format.timestamp({ format: "YYYY-MM-DD" }),
+            winston.format.ms(),
+            nestWinstonModuleUtilities.format.nestLike("RGBack", {
+              colors: true,
+              prettyPrint: true,
+            }),
+          )
+        : winston.format.simple(),
     }),
+    new DailyRotateFile(dailyOptions("info")),
+    new DailyRotateFile(dailyOptions("warn")),
+    new DailyRotateFile(dailyOptions("error")),
   ],
-};
+});

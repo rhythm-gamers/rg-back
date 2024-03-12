@@ -1,4 +1,4 @@
 export interface ModifyBoardDto {
-  board_name?: string;
+  boardName?: string;
   description?: string;
 }

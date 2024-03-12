@@ -14,10 +14,10 @@ export class ProgressController {
     @Body() body: UpdateProgressDto,
     @Param("id") id: number,
   ) {
-    const user_id = 1;
+    const userId = 1;
     return await this.progressService.updateLeveltest(
       +body.progress,
-      +user_id,
+      +userId,
       +id,
     );
   }
@@ -28,10 +28,10 @@ export class ProgressController {
     @Body() body: UpdateProgressDto,
     @Param("id") id: number,
   ) {
-    const user_id = 1;
+    const userId = 1;
     return await this.progressService.updatePractice(
       +body.progress,
-      +user_id,
+      +userId,
       +id,
     );
   }

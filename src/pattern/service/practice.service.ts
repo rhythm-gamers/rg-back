@@ -14,19 +14,17 @@ export class PracticeService {
     private readonly patternInfoService: PatternInfoService,
   ) {}
 
-  async createEntity(create_data: CreatePracticeDto): Promise<Practice> {
-    const { pattern_info, ...other_info } = create_data;
+  async createEntity(createData: CreatePracticeDto): Promise<Practice> {
+    const { patternInfo, ...otherInfo } = createData;
 
     const practice: Practice = {
       ...new Practice(),
-      ...other_info,
+      ...otherInfo,
     };
-    const pattern_info_entity: PatternInfo =
-      await this.patternInfoService.createPatternInfoEntity(pattern_info);
+    const patternInfoEntity: PatternInfo =
+      await this.patternInfoService.createPatternInfoEntity(patternInfo);
 
-    // practice.img_src = img_src;
-    // practice.note_src = note_src;
-    practice.pattern_info = pattern_info_entity;
+    practice.patternInfo = patternInfoEntity;
     return await this.practiceRepo.save(practice);
   }
 
@@ -37,44 +35,44 @@ export class PracticeService {
   async fetchAll() {
     return await this.practiceRepo.find({
       relations: {
-        pattern_info: true,
+        patternInfo: true,
       },
     });
   }
 
   async updateData(
-    id: number,
-    update_data: UpdatePracticeDto,
+    practiceId: number,
+    updateData: UpdatePracticeDto,
   ): Promise<Practice> {
-    const practice: Practice = await this.findPractice(id);
+    const practice: Practice = await this.findPractice(practiceId);
 
-    if (update_data.pattern_info !== undefined) {
-      await this.patternInfoService.updatePatternInfoData(
-        practice.pattern_info.pattern_id,
-        update_data.pattern_info,
-      );
-      delete update_data.pattern_info;
+    if (updateData.patternInfo !== undefined) {
+      updateData.patternInfo =
+        await this.patternInfoService.updatePatternInfoData(
+          practice.patternInfo.patternId,
+          updateData.patternInfo,
+        );
     }
 
-    const update_practice_data: Practice = {
+    const updatePracticeData = {
       ...practice,
-      ...update_data,
-    } as Practice;
-    await this.practiceRepo.update(id, update_practice_data);
-    return await this.findPractice(id);
+      ...updateData,
+    };
+    await this.practiceRepo.save(updatePracticeData);
+    return await this.findPractice(practiceId);
   }
 
   async deleteById(id: number) {
     return await this.practiceRepo.delete(id);
   }
 
-  async findPractice(id: number): Promise<Practice> {
+  async findPractice(practiceId: number): Promise<Practice> {
     return await this.practiceRepo.findOne({
       where: {
-        practice_id: id,
+        practiceId: practiceId,
       },
       relations: {
-        pattern_info: true,
+        patternInfo: true,
       },
     });
   }

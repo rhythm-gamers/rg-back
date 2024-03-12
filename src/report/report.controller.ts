@@ -11,13 +11,13 @@ import { ReportUserDto } from "./dto/report-user.dto";
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  private default_page: number = 0;
-  private default_limit: number = 20;
+  private defaultPage: number = 0;
+  private defaultLimit: number = 20;
 
   @Get("comments")
   async getNotProceedCommentList(
-    @Query("page") page: number = this.default_page,
-    @Query("limit") limit: number = this.default_limit,
+    @Query("page") page: number = this.defaultPage,
+    @Query("limit") limit: number = this.defaultLimit,
   ) {
     const result = await this.reportService.fetchNotProceedReportedCommentList({
       page: +page,
@@ -28,8 +28,8 @@ export class ReportController {
 
   @Post("comment")
   async reportComment(@Body() body: ReportCommentDto) {
-    const reporter_id: number = 1;
-    const result = await this.reportService.reportComment(body, reporter_id);
+    const reporterId: number = 1;
+    const result = await this.reportService.reportComment(body, reporterId);
     return result;
   }
 
@@ -41,8 +41,8 @@ export class ReportController {
 
   @Get("posts")
   async getNotProceedPostList(
-    @Query("page") page: number = this.default_page,
-    @Query("limit") limit: number = this.default_limit,
+    @Query("page") page: number = this.defaultPage,
+    @Query("limit") limit: number = this.defaultLimit,
   ) {
     const result = await this.reportService.fetchNotProceedReportedPostList({
       page: +page,
@@ -53,8 +53,8 @@ export class ReportController {
 
   @Post("post")
   async reportPost(@Body() body: ReportPostDto) {
-    const reporter_id: number = 1;
-    const result = await this.reportService.reportPost(body, reporter_id);
+    const reporterId: number = 1;
+    const result = await this.reportService.reportPost(body, reporterId);
     return result;
   }
 
@@ -66,8 +66,8 @@ export class ReportController {
 
   @Get("users")
   async getNotProceedUserList(
-    @Query("page") page: number = this.default_page,
-    @Query("limit") limit: number = this.default_limit,
+    @Query("page") page: number = this.defaultPage,
+    @Query("limit") limit: number = this.defaultLimit,
   ) {
     const result = await this.reportService.fetchNotProceedReportedUserList({
       page: +page,
@@ -78,8 +78,8 @@ export class ReportController {
 
   @Post("user")
   async reportUser(@Body() body: ReportUserDto) {
-    const reporter_id: number = 1;
-    const result = await this.reportService.reportUser(body, reporter_id);
+    const reporterId: number = 1;
+    const result = await this.reportService.reportUser(body, reporterId);
     return result;
   }
 

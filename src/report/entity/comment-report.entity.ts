@@ -11,13 +11,13 @@ import {
 @Entity()
 export class CommentReport {
   @PrimaryGeneratedColumn()
-  comment_report_id: number;
+  commentReportId: number;
 
   // 신고한 유저
-  @ManyToOne(() => User, (user) => user.comment_reports)
+  @ManyToOne(() => User, (user) => user.commentReports)
   reporter: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.report_list)
+  @ManyToOne(() => Comment, (comment) => comment.reportList)
   comment: Comment;
 
   @Column({ length: 200 })
@@ -27,8 +27,8 @@ export class CommentReport {
   handled: boolean;
 
   @CreateDateColumn()
-  report_recieved: Date;
+  reportRecieved: Date;
 
   @Column({ nullable: true })
-  report_confirmed: Date;
+  reportConfirmed: Date;
 }
