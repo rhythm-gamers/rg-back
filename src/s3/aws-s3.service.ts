@@ -5,11 +5,11 @@ import {
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
-} from '@aws-sdk/client-s3';
-import { Injectable } from '@nestjs/common';
-import { AwsS3MoveFileDto } from './dto/aws-s3-move-file.dto';
-import { AwsS3DeleteFileDto } from './dto/aws-s3-delete-file.dto';
-import { AwsS3CopyFileDto } from './dto/aws-s3-copy-file.dto';
+} from "@aws-sdk/client-s3";
+import { Injectable } from "@nestjs/common";
+import { AwsS3MoveFileDto } from "./dto/aws-s3-move-file.dto";
+import { AwsS3DeleteFileDto } from "./dto/aws-s3-delete-file.dto";
+import { AwsS3CopyFileDto } from "./dto/aws-s3-copy-file.dto";
 
 @Injectable()
 export class AwsS3Service {
@@ -57,7 +57,7 @@ export class AwsS3Service {
           : encodeURI(`${filename}`),
     });
     const downloadFile = await this.s3.send(command);
-    const result = await downloadFile.Body.transformToString('base64');
+    const result = await downloadFile.Body.transformToString("base64");
     return result;
   }
 
@@ -79,7 +79,7 @@ export class AwsS3Service {
     try {
       await this.s3.send(command);
     } catch (err) {
-      console.error('Error deleting object:', err);
+      console.error("Error deleting object:", err);
       throw err;
     }
   }
@@ -96,7 +96,7 @@ export class AwsS3Service {
     try {
       await this.s3.send(command);
     } catch (err) {
-      console.error('Error deleting object:', err);
+      console.error("Error deleting object:", err);
       throw err;
     }
   }
@@ -119,6 +119,6 @@ export class AwsS3Service {
   }
 
   private makeDeleteObject(file: AwsS3DeleteFileDto | string) {
-    return typeof file === 'string' ? file : file.originKey;
+    return typeof file === "string" ? file : file.originKey;
   }
 }

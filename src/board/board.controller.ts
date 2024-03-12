@@ -6,25 +6,25 @@ import {
   Param,
   Patch,
   Post,
-} from '@nestjs/common';
-import { BoardService } from './board.service';
-import { ReturnBoardMetadataDto } from './dto/return-board-metadata.dto';
-import { CreateBoardDto } from './dto/create-board.dto';
-import { ModifyBoardDto } from './dto/modify-board.dto';
-import { PostService } from 'src/post/post.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+} from "@nestjs/common";
+import { BoardService } from "./board.service";
+import { ReturnBoardMetadataDto } from "./dto/return-board-metadata.dto";
+import { CreateBoardDto } from "./dto/create-board.dto";
+import { ModifyBoardDto } from "./dto/modify-board.dto";
+import { PostService } from "src/post/post.service";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
-@Controller('board')
-@ApiTags('board')
+@Controller("board")
+@ApiTags("board")
 export class BoardController {
   constructor(
     private readonly boardService: BoardService,
     private readonly postService: PostService,
   ) {}
 
-  @Get('spec/:boardName')
+  @Get("spec/:boardName")
   @ApiOperation({})
-  async fetchBoardInfo(@Param('boardName') boardName: string) {
+  async fetchBoardInfo(@Param("boardName") boardName: string) {
     const board = await this.boardService.fetchBoardByBoardname(boardName);
     const post = await this.postService.fetchPostsAndCommentCountWithBoardname(
       boardName,
@@ -38,7 +38,7 @@ export class BoardController {
     return result;
   }
 
-  @Get('metadata')
+  @Get("metadata")
   @ApiOperation({})
   async fetchBoardMetadata(): Promise<ReturnBoardMetadataDto> {
     const metadatas = await this.boardService.fetchBoardMetadata();
@@ -56,18 +56,18 @@ export class BoardController {
     return result;
   }
 
-  @Delete(':originName')
+  @Delete(":originName")
   @ApiOperation({})
-  async deleteBoard(@Param('originName') originName) {
+  async deleteBoard(@Param("originName") originName) {
     const result = await this.boardService.deleteBoardByBoardname(originName);
     return result;
   }
 
-  @Patch(':originName')
+  @Patch(":originName")
   @ApiOperation({})
   async updateBoard(
     @Body() boardInfo: ModifyBoardDto,
-    @Param('originName') originName: string,
+    @Param("originName") originName: string,
   ) {
     const result = await this.boardService.modifyBoardByBoardname(
       boardInfo,

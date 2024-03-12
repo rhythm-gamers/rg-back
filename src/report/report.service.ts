@@ -1,17 +1,17 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CommentReport } from './entity/comment-report.entity';
-import { Repository } from 'typeorm';
-import { PostReport } from './entity/post-report.entity';
-import { UserReport } from './entity/user-report.entity';
-import { UserService } from 'src/user/user.service';
-import { PostService } from 'src/post/post.service';
-import { CommentService } from 'src/comment/comment.service';
-import { HandleReportedDao } from './dao/handle-reported.dao';
-import { ReportDao } from './dao/report.dao';
-import { FetchNotProceedListDao } from './dao/fetch-not-proceed-list.dao';
-import { HandleReportedCommentDto } from './dto/handle-reported-comment.dto';
-import { HandleReportedUserDto } from './dto/handle-reported-user.dto';
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { CommentReport } from "./entity/comment-report.entity";
+import { Repository } from "typeorm";
+import { PostReport } from "./entity/post-report.entity";
+import { UserReport } from "./entity/user-report.entity";
+import { UserService } from "src/user/user.service";
+import { PostService } from "src/post/post.service";
+import { CommentService } from "src/comment/comment.service";
+import { HandleReportedDao } from "./dao/handle-reported.dao";
+import { ReportDao } from "./dao/report.dao";
+import { FetchNotProceedListDao } from "./dao/fetch-not-proceed-list.dao";
+import { HandleReportedCommentDto } from "./dto/handle-reported-comment.dto";
+import { HandleReportedUserDto } from "./dto/handle-reported-user.dto";
 
 interface TargerQueryOptions {
   post?: {
@@ -72,7 +72,7 @@ export class ReportService {
       skip: paging.page * paging.limit,
       take: paging.limit,
       relations: relations,
-      orderBy: 'DESC',
+      orderBy: "DESC",
     };
   };
 
@@ -102,7 +102,7 @@ export class ReportService {
           postReportId: true,
         },
         paging,
-        ['reporter', 'post'],
+        ["reporter", "post"],
       ),
     );
     return reportedList;
@@ -145,7 +145,7 @@ export class ReportService {
           commentReportId: true,
         },
         paging,
-        ['reporter', 'comment'],
+        ["reporter", "comment"],
       ),
     );
     return reportedList;
@@ -188,7 +188,7 @@ export class ReportService {
           userReportId: true,
         },
         paging,
-        ['reporter', 'reported'],
+        ["reporter", "reported"],
       ),
     );
     return reportedList;
@@ -212,7 +212,7 @@ export class ReportService {
       where: {
         userReportId: +reportedInfo.reportId,
       },
-      relations: ['reported'],
+      relations: ["reported"],
     });
     const reportedUserId = reportedUser.reported.userId;
     const reason = reportedInfo.reason;

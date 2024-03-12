@@ -1,6 +1,6 @@
-import { Board } from 'src/board/entity/board.entity';
-import { User } from 'src/user/entity/user.entity';
-import { Comment } from 'src/comment/entity/comment.entity';
+import { Board } from "src/board/entity/board.entity";
+import { User } from "src/user/entity/user.entity";
+import { Comment } from "src/comment/entity/comment.entity";
 import {
   Column,
   CreateDateColumn,
@@ -9,9 +9,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { PostReport } from 'src/report/entity/post-report.entity';
-import { PostLike } from './post-like.entity';
+} from "typeorm";
+import { PostReport } from "src/report/entity/post-report.entity";
+import { PostLike } from "./post-like.entity";
 
 @Entity()
 export class Post {
@@ -19,12 +19,12 @@ export class Post {
   postId: number;
 
   @ManyToOne(() => Board, (board) => board.posts, {
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   board: Board;
 
   @ManyToOne(() => User, (user) => user.posts, {
-    onDelete: 'NO ACTION',
+    onDelete: "NO ACTION",
   })
   user: User;
 
@@ -46,7 +46,7 @@ export class Post {
   @Column({ length: 100 })
   title: string;
 
-  @Column({ length: 10000, default: '' })
+  @Column({ length: 10000, default: "" })
   content: string;
 
   @Column({ default: 0 })

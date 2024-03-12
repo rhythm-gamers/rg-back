@@ -1,12 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Comment } from './entity/comment.entity';
-import { Repository } from 'typeorm';
-import { UpdateCommentDto } from './dto/update-comment.dto';
-import { UserService } from 'src/user/user.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { PostService } from 'src/post/post.service';
-import { CommentLikeService } from './comment-like.service';
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Comment } from "./entity/comment.entity";
+import { Repository } from "typeorm";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { UserService } from "src/user/user.service";
+import { CreateCommentDto } from "./dto/create-comment.dto";
+import { PostService } from "src/post/post.service";
+import { CommentLikeService } from "./comment-like.service";
 
 @Injectable()
 export class CommentService {
@@ -32,7 +32,7 @@ export class CommentService {
         modifiedAt: true,
         user: {
           userId: true,
-          name: true,
+          nickname: true,
         },
       },
       where: {
@@ -41,11 +41,11 @@ export class CommentService {
         },
       },
       order: {
-        commentId: 'DESC',
+        commentId: "DESC",
       },
       skip: page * limit,
       take: limit,
-      relations: ['user'],
+      relations: ["user"],
     });
 
     return result;
@@ -127,7 +127,7 @@ export class CommentService {
     }
 
     await this.commentRepository.update(commentId, {
-      likes: () => 'likes + 1',
+      likes: () => "likes + 1",
     });
 
     const result = await this.commentRepository.findOne({
@@ -157,7 +157,7 @@ export class CommentService {
       where: {
         commentId: commentId,
       },
-      relations: ['user'],
+      relations: ["user"],
     });
     return comment;
   }

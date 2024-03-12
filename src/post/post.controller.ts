@@ -9,15 +9,15 @@ import {
   Post,
   Query,
   forwardRef,
-} from '@nestjs/common';
-import { PostService } from './post.service';
-import { CommentService } from 'src/comment/comment.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+} from "@nestjs/common";
+import { PostService } from "./post.service";
+import { CommentService } from "src/comment/comment.service";
+import { CreatePostDto } from "./dto/create-post.dto";
+import { UpdatePostDto } from "./dto/update-post.dto";
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 
-@ApiTags('post')
-@Controller('post')
+@ApiTags("post")
+@Controller("post")
 export class PostController {
   constructor(
     private readonly postService: PostService,
@@ -25,22 +25,22 @@ export class PostController {
     private readonly commentService: CommentService,
   ) {}
 
-  @Get('board/:boardName')
+  @Get("board/:boardName")
   @ApiQuery({
-    name: 'page',
+    name: "page",
     required: false,
-    description: '페이지. 기본은 0',
+    description: "페이지. 기본은 0",
   })
   @ApiQuery({
-    name: 'limit',
+    name: "limit",
     required: false,
-    description: '한 페이지에서 보일 글 수. 기본은 0',
+    description: "한 페이지에서 보일 글 수. 기본은 0",
   })
   @ApiOperation({})
   async fetchPostAndCommentCountInBoard(
-    @Param('boardName') boardName: string,
-    @Query('page') page: number = 0,
-    @Query('limit') limit: number = +process.env.COMMENT_LIMIT,
+    @Param("boardName") boardName: string,
+    @Query("page") page: number = 0,
+    @Query("limit") limit: number = +process.env.COMMENT_LIMIT,
   ) {
     return await this.postService.fetchPostsAndCommentCountWithBoardname(
       boardName,
@@ -49,14 +49,14 @@ export class PostController {
     );
   }
 
-  @Get('spec/:postId')
+  @Get("spec/:postId")
   @ApiOperation({})
   @ApiParam({
-    name: 'postId',
+    name: "postId",
     required: true,
-    description: '조회하는 글의 id',
+    description: "조회하는 글의 id",
   })
-  async fetchPostSpecWithPostID(@Param('postId') postId: number) {
+  async fetchPostSpecWithPostID(@Param("postId") postId: number) {
     const postSpec = await this.postService.fetchPostSpecInfo(+postId);
     const comments =
       await this.commentService.fetchCommentAssociatePostID(postId);
@@ -73,41 +73,41 @@ export class PostController {
     return await this.postService.createPost(userUid, body);
   }
 
-  @Patch(':postId')
+  @Patch(":postId")
   @ApiOperation({})
   @ApiParam({
-    name: 'postId',
+    name: "postId",
     required: true,
-    description: '수정하는 글의 id',
+    description: "수정하는 글의 id",
   })
   async updatePost(
-    @Param('postId') postId: number,
+    @Param("postId") postId: number,
     @Body() body: UpdatePostDto,
   ) {
     const userUid = 1;
     return await this.postService.updatePost(userUid, +postId, body);
   }
 
-  @Delete(':postId')
+  @Delete(":postId")
   @ApiOperation({})
   @ApiParam({
-    name: 'postId',
+    name: "postId",
     required: true,
-    description: '삭제하는 글의 id',
+    description: "삭제하는 글의 id",
   })
-  async deletePost(@Param('postId') postId: number) {
+  async deletePost(@Param("postId") postId: number) {
     const userUid = 1;
     return await this.postService.deletePost(userUid, +postId);
   }
 
-  @Post('inc-like/:postId')
+  @Post("inc-like/:postId")
   @ApiOperation({})
   @ApiParam({
-    name: 'postId',
+    name: "postId",
     required: true,
-    description: '좋아요를 증가시키려는 글의 id',
+    description: "좋아요를 증가시키려는 글의 id",
   })
-  async increasePostLikes(@Param('postId') postId: number) {
+  async increasePostLikes(@Param("postId") postId: number) {
     const userUid = 1;
     return await this.postService.increasePostLikes(userUid, +postId);
   }

@@ -6,18 +6,18 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { PlateSetting } from './plate-setting.entity';
-import { UserTitle } from './user-title.entity';
-import { Post } from 'src/post/entity/post.entity';
-import { Comment } from 'src/comment/entity/comment.entity';
-import { PostReport } from 'src/report/entity/post-report.entity';
-import { CommentReport } from 'src/report/entity/comment-report.entity';
-import { UserReport } from 'src/report/entity/user-report.entity';
-import { LevelTestProgress } from '../../progress/entity/level-test-progress.entity';
-import { PracticeProgress } from '../../progress/entity/practice-progress.entity';
-import { CommentLike } from 'src/comment/entity/comment-like.entity';
-import { PostLike } from 'src/post/entity/post-like.entity';
+} from "typeorm";
+import { PlateSetting } from "./plate-setting.entity";
+import { UserTitle } from "./user-title.entity";
+import { Post } from "src/post/entity/post.entity";
+import { Comment } from "src/comment/entity/comment.entity";
+import { PostReport } from "src/report/entity/post-report.entity";
+import { CommentReport } from "src/report/entity/comment-report.entity";
+import { UserReport } from "src/report/entity/user-report.entity";
+import { LevelTestProgress } from "../../progress/entity/level-test-progress.entity";
+import { PracticeProgress } from "../../progress/entity/practice-progress.entity";
+import { CommentLike } from "src/comment/entity/comment-like.entity";
+import { PostLike } from "src/post/entity/post-like.entity";
 
 @Entity()
 export class User {
@@ -74,8 +74,8 @@ export class User {
   @OneToMany(() => UserReport, (userreport) => userreport.reported)
   reported: UserReport[];
 
-  @Column({ length: 20 })
-  name: string;
+  @Column({ length: 20, unique: true })
+  nickname: string;
 
   @Column({ length: 20 })
   registerId: string;
@@ -83,10 +83,10 @@ export class User {
   @Column({ length: 150 })
   password: string;
 
-  @Column({ default: 'local', length: 20 })
+  @Column({ default: "local", length: 20 })
   loginType: string;
 
-  @Column({ nullable: true, default: '', length: 200 })
+  @Column({ nullable: true, default: "", length: 200 })
   describe: string | null;
 
   @Column({ default: false })

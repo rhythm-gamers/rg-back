@@ -4,9 +4,9 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { PatternInfo } from './pattern-info.entity';
-import { PracticeProgress } from 'src/progress/entity/practice-progress.entity';
+} from "typeorm";
+import { PatternInfo } from "./pattern-info.entity";
+import { PracticeProgress } from "src/progress/entity/practice-progress.entity";
 
 @Entity()
 export class Practice {
@@ -32,12 +32,12 @@ export class Practice {
   @Column()
   keyNum: number;
 
-  @Column({ comment: '자켓 이미지' })
+  @Column({ comment: "자켓 이미지" })
   imgSrc: string;
 
-  @Column({ comment: '노트 경로' })
+  @Column({ comment: "노트 경로" })
   noteSrc: string;
 
-  @Column({ comment: '음원 파일 경로' })
+  @Column({ comment: "음원 파일 경로" })
   musicSrc: string;
 }

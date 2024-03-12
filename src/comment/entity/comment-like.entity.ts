@@ -1,6 +1,6 @@
-import { User } from 'src/user/entity/user.entity';
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Comment } from './comment.entity';
+import { User } from "src/user/entity/user.entity";
+import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "./comment.entity";
 
 @Entity()
 export class CommentLike {
@@ -8,12 +8,12 @@ export class CommentLike {
   commentLikeId: number;
 
   @ManyToOne(() => Comment, (comment) => comment.likeList, {
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   comment: Comment;
 
   @ManyToOne(() => User, (user) => user.commentLikeList, {
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   user: User;
 }

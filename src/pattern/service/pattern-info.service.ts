@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PatternInfo } from '../entity/pattern-info.entity';
-import { Repository } from 'typeorm';
-import { CreatePatternInfoDto } from '../dto/create-pattern-info.dto';
-import { UpdatePatternInfoDto } from '../dto/update-pattern-info.dto';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { PatternInfo } from "../entity/pattern-info.entity";
+import { Repository } from "typeorm";
+import { CreatePatternInfoDto } from "../dto/create-pattern-info.dto";
+import { UpdatePatternInfoDto } from "../dto/update-pattern-info.dto";
 
 @Injectable()
 export class PatternInfoService {

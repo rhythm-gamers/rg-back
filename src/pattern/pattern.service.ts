@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { AwsS3Service } from 'src/s3/aws-s3.service';
-import { CreateLevelTestDto } from './dto/create-level-test.dto';
-import { CreatePracticeDto } from './dto/create-practice.dto';
-import { UpdateLevelTestDto } from './dto/update-level-test.dto';
-import { UpdatePracticeDto } from './dto/update-practice.dto';
-import { Practice } from './entity/practice.entity';
-import { LevelTest } from './entity/level-test.entity';
+import { Injectable } from "@nestjs/common";
+import { AwsS3Service } from "src/s3/aws-s3.service";
+import { CreateLevelTestDto } from "./dto/create-level-test.dto";
+import { CreatePracticeDto } from "./dto/create-practice.dto";
+import { UpdateLevelTestDto } from "./dto/update-level-test.dto";
+import { UpdatePracticeDto } from "./dto/update-practice.dto";
+import { Practice } from "./entity/practice.entity";
+import { LevelTest } from "./entity/level-test.entity";
 
 type CreateDto = CreatePracticeDto | CreateLevelTestDto;
 type UpdateDto = UpdatePracticeDto | UpdateLevelTestDto;
@@ -19,16 +19,16 @@ export class PatternService {
   async upload(
     rootDir: string, // practice, level-test
     data: CreateDto | UpdateDto,
-    mime: string | ('img' | 'note' | 'mp3'),
+    mime: string | ("img" | "note" | "mp3"),
   ): Promise<string> {
-    const file = Buffer.from(data[`${mime}Src`], 'base64');
+    const file = Buffer.from(data[`${mime}Src`], "base64");
     const filepath = this.generateDestinationPath(rootDir, data, mime);
     await this.awsS3Service.upload(filepath, file);
     return filepath;
   }
 
   async copyDefaultFile(destination: string): Promise<string> {
-    const mime = destination.split('/').pop();
+    const mime = destination.split("/").pop();
     this.awsS3Service.copy({
       originKey: `undefined.${mime}`,
       destinationKey: destination,
@@ -37,15 +37,15 @@ export class PatternService {
   }
 
   async buildCreateData(data: CreateDto, directory: string) {
-    data.imgSrc = await this.create(data, directory, 'img');
-    data.noteSrc = await this.create(data, directory, 'note');
-    data.musicSrc = await this.create(data, directory, 'music');
+    data.imgSrc = await this.create(data, directory, "img");
+    data.noteSrc = await this.create(data, directory, "note");
+    data.musicSrc = await this.create(data, directory, "music");
   }
 
   async buildUpdateData(data: UpdateDto, directory: string) {
-    data.imgSrc = await this.update(data, directory, 'img');
-    data.noteSrc = await this.update(data, directory, 'note');
-    data.musicSrc = await this.update(data, directory, 'music');
+    data.imgSrc = await this.update(data, directory, "img");
+    data.noteSrc = await this.update(data, directory, "note");
+    data.musicSrc = await this.update(data, directory, "music");
   }
 
   async create(data: CreateDto, type: string, mime: string) {
@@ -63,7 +63,7 @@ export class PatternService {
   }
 
   async move(entity: LevelTest | Practice, data: UpdateDto, directory: string) {
-    const mimes = ['img', 'note', 'music'];
+    const mimes = ["img", "note", "music"];
     for (const mime of mimes) {
       await this.awsS3Service.move({
         originKey: entity[`${mime}Src`],

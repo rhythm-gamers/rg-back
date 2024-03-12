@@ -1,3 +1,3 @@
-import { ReportDao } from '../dao/report.dao';
+import { ReportDao } from "../dao/report.dao";
 
 export interface ReportPostDto extends ReportDao {}

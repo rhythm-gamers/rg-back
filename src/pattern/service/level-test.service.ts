@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { LevelTest } from '../entity/level-test.entity';
-import { Repository } from 'typeorm';
-import { CreateLevelTestDto } from '../dto/create-level-test.dto';
-import { PatternInfoService } from './pattern-info.service';
-import { UpdateLevelTestDto } from '../dto/update-level-test.dto';
-import { PatternInfo } from '../entity/pattern-info.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { LevelTest } from "../entity/level-test.entity";
+import { Repository } from "typeorm";
+import { CreateLevelTestDto } from "../dto/create-level-test.dto";
+import { PatternInfoService } from "./pattern-info.service";
+import { UpdateLevelTestDto } from "../dto/update-level-test.dto";
+import { PatternInfo } from "../entity/pattern-info.entity";
 
 @Injectable()
 export class LevelTestService {
