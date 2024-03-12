@@ -1,10 +1,9 @@
-import { Controller, Get, Inject, Param, Req, Res } from '@nestjs/common';
+import { Controller, Get, Param, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import axios from 'axios';
 import qs from 'qs';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+
 import {
   // steam,
   SteamUserObject,
@@ -25,10 +24,7 @@ axios.defaults.paramsSerializer = (params) => {
 export class AuthController {
   private steam: SteamAuth;
 
-  constructor(
-    private readonly authService: AuthService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-  ) {
+  constructor(private readonly authService: AuthService) {
     this.steam = new SteamAuth({
       realm: process.env.STEAM_REALM,
       returnUrl: process.env.STEAM_RETURN_URL,
@@ -50,8 +46,6 @@ export class AuthController {
 
   @Get('steam/games/:id')
   async getGames(@Param('id') id: string) {
-    this.logger.info(`GET - /auth/steam/games/${id}`);
-
     const params = {
       key: process.env.STEAM_API_KEY,
       steamid: id,

@@ -9,23 +9,23 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async fetchUserWithUserID(user_id: number): Promise<User> {
+  async fetchUserWithUserID(userId: number): Promise<User> {
     const user = await this.userRepository.findOneBy({
-      user_id: user_id,
+      userId: userId,
     });
     return user;
   }
 
-  async fetchUserLikeListWithUserID(user_id: number) {
+  async fetchUserLikeListWithUserID(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        user_id: user_id,
+        userId: userId,
       },
       relations: {
-        comment_like_list: {
+        commentLikeList: {
           comment: true,
         },
-        post_like_list: {
+        postLikeList: {
           post: true,
         },
       },
@@ -33,13 +33,13 @@ export class UserService {
     return user;
   }
 
-  async fetchUserPracticeProgressWithUserId(user_id: number) {
+  async fetchUserPracticeProgressWithUserId(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        user_id: user_id,
+        userId: userId,
       },
       relations: {
-        practice_progresses: {
+        practiceProgresses: {
           practice: true,
         },
       },
@@ -47,14 +47,14 @@ export class UserService {
     return user;
   }
 
-  async fetchUserLevelTestProgressWithUserId(user_id: number) {
+  async fetchUserLevelTestProgressWithUserId(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        user_id: user_id,
+        userId: userId,
       },
       relations: {
-        level_test_progresses: {
-          level_test: true,
+        levelTestProgresses: {
+          levelTest: true,
         },
       },
     });

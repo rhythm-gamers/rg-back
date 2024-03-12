@@ -15,7 +15,7 @@ import { CommentLike } from './comment-like.entity';
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
-  comment_id: number;
+  commentId: number;
 
   @ManyToOne(() => User, (user) => user.comments)
   user: User;
@@ -26,12 +26,12 @@ export class Comment {
   post: Post;
 
   @OneToMany(() => CommentReport, (commentreport) => commentreport.comment)
-  report_list: CommentReport[];
+  reportList: CommentReport[];
 
   @OneToMany(() => CommentLike, (like) => like.comment, {
     cascade: true,
   })
-  like_list: CommentLike[];
+  likeList: CommentLike[];
 
   // TODO 해당 댓글에 추천한 유저를 어떻게 중복 체크 할 것인가?
 
@@ -42,11 +42,11 @@ export class Comment {
   likes: number;
 
   @Column() // TODO 이 부분은 추후에 자기 참조 등으로 가능하게끔...
-  parent_id: number;
+  parentId: number;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  modified_at: Date;
+  modifiedAt: Date;
 }

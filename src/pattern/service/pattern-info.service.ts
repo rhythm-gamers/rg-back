@@ -13,27 +13,27 @@ export class PatternInfoService {
   ) {}
 
   async createPatternInfoEntity(
-    pattern_info_data: CreatePatternInfoDto,
+    patternInfoData: CreatePatternInfoDto,
   ): Promise<PatternInfo> {
-    const pattern_info: PatternInfo = {
+    const patternInfo: PatternInfo = {
       ...new PatternInfo(),
-      ...pattern_info_data,
+      ...patternInfoData,
     };
-    return await this.patternInfoRepo.save(pattern_info);
+    return await this.patternInfoRepo.save(patternInfo);
   }
 
   async updatePatternInfoData(
     id: number,
-    update_data: UpdatePatternInfoDto,
+    updateData: UpdatePatternInfoDto,
   ): Promise<PatternInfo> {
-    const update_pattern_info_data: UpdatePatternInfoDto = {
+    const updatePatternInfoData: UpdatePatternInfoDto = {
       ...new UpdatePatternInfoDto(),
-      ...update_data,
+      ...updateData,
     };
-    await this.patternInfoRepo.update(id, update_pattern_info_data);
+    await this.patternInfoRepo.update(id, updatePatternInfoData);
     return await this.patternInfoRepo.findOne({
       where: {
-        pattern_id: id,
+        patternId: id,
       },
     });
   }

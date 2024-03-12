@@ -4,7 +4,7 @@ import { User } from './user.entity';
 @Entity()
 export class UserTitle {
   @PrimaryGeneratedColumn()
-  user_title_id: number;
+  userTitleId: number;
 
   @OneToOne(() => User, (user) => user.usertitle)
   user: User;

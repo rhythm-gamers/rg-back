@@ -11,17 +11,17 @@ import { PracticeProgress } from 'src/progress/entity/practice-progress.entity';
 @Entity()
 export class Practice {
   @PrimaryGeneratedColumn()
-  practice_id: number;
+  practiceId: number;
 
   @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.practice, {
     cascade: true,
   })
-  pattern_info: PatternInfo;
+  patternInfo: PatternInfo;
 
   @OneToMany(() => PracticeProgress, (progress) => progress.practice, {
     cascade: true,
   })
-  user_progresses: PracticeProgress[];
+  userProgresses: PracticeProgress[];
 
   @Column({ length: 100 })
   title: string;
@@ -30,11 +30,14 @@ export class Practice {
   level: number;
 
   @Column()
-  key_num: number;
+  keyNum: number;
 
   @Column({ comment: '자켓 이미지' })
-  img_src: string;
+  imgSrc: string;
 
   @Column({ comment: '노트 경로' })
-  note_src: string;
+  noteSrc: string;
+
+  @Column({ comment: '음원 파일 경로' })
+  musicSrc: string;
 }

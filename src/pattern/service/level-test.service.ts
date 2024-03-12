@@ -14,21 +14,18 @@ export class LevelTestService {
     private readonly patternInfoService: PatternInfoService,
   ) {}
 
-  async createEntity(create_data: CreateLevelTestDto): Promise<LevelTest> {
-    const { pattern_info, ...other_info } = create_data;
-    delete create_data.pattern_info;
+  async createEntity(createData: CreateLevelTestDto): Promise<LevelTest> {
+    const { patternInfo, ...otherInfo } = createData;
 
-    const level_test: LevelTest = {
+    const levelTest: LevelTest = {
       ...new LevelTest(),
-      ...other_info,
+      ...otherInfo,
     };
-    const pattern_info_entity: PatternInfo =
-      await this.patternInfoService.createPatternInfoEntity(pattern_info);
+    const patternInfoEntity: PatternInfo =
+      await this.patternInfoService.createPatternInfoEntity(patternInfo);
 
-    // level_test.img_src = img_src;
-    // level_test.note_src = note_src;
-    level_test.pattern_info = pattern_info_entity;
-    return await this.levelTestRepo.save(level_test);
+    levelTest.patternInfo = patternInfoEntity;
+    return await this.levelTestRepo.save(levelTest);
   }
 
   async fetchById(id: number): Promise<LevelTest> {
@@ -38,64 +35,44 @@ export class LevelTestService {
   async fetchAll() {
     return await this.levelTestRepo.find({
       relations: {
-        pattern_info: true,
+        patternInfo: true,
       },
     });
   }
 
   async updateData(
     id: number,
-    update_data: UpdateLevelTestDto,
+    updateData: UpdateLevelTestDto,
   ): Promise<LevelTest> {
-    const level_test: LevelTest = await this.findLevelTest(id);
+    const levelTest: LevelTest = await this.findLevelTest(id);
 
-    if (update_data.pattern_info !== undefined) {
-      await this.patternInfoService.updatePatternInfoData(
-        level_test.pattern_info.pattern_id,
-        update_data.pattern_info,
-      );
+    if (updateData.patternInfo !== undefined) {
+      updateData.patternInfo =
+        await this.patternInfoService.updatePatternInfoData(
+          levelTest.patternInfo.patternId,
+          updateData.patternInfo,
+        );
     }
 
-    const update_level_test_data: LevelTest = {
-      ...level_test,
-      ...update_data,
-    } as LevelTest;
-    delete update_level_test_data.pattern_info;
-    console.log(update_level_test_data);
-    await this.levelTestRepo.update(id, update_level_test_data);
+    const updateLevelTestData = {
+      ...levelTest,
+      ...updateData,
+    };
+    await this.levelTestRepo.save(updateLevelTestData);
     return await this.findLevelTest(id);
   }
 
   async deleteById(id: number) {
-    /* 나중에 제거가 되지 않을 경우 대비
-    const remove_target = await this.levelTestRepo.findOne({
-      select: {
-        pattern_info: {
-          pattern_id: true,
-        },
-      },
-      where: {
-        test_id: id,
-      },
-      relations: {
-        pattern_info: true,
-      },
-    });
-    if (!remove_target) {
-      return [];
-    }
-    const pattern_info_remove = await this.patternInfoService.deletePatternInfo(remove_target.pattern_info.pattern_id);
-     */
     return await this.levelTestRepo.delete(id);
   }
 
   async findLevelTest(id: number): Promise<LevelTest> {
     return await this.levelTestRepo.findOne({
       where: {
-        test_id: id,
+        testId: id,
       },
       relations: {
-        pattern_info: true,
+        patternInfo: true,
       },
     });
   }

@@ -22,7 +22,7 @@ import { PostLike } from 'src/post/entity/post-like.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  user_id: number;
+  userId: number;
 
   @OneToOne(() => PlateSetting, (platesetting) => platesetting.user)
   @JoinColumn()
@@ -35,12 +35,12 @@ export class User {
   @OneToMany(() => LevelTestProgress, (progress) => progress.user, {
     cascade: true,
   })
-  level_test_progresses: LevelTestProgress[];
+  levelTestProgresses: LevelTestProgress[];
 
   @OneToMany(() => PracticeProgress, (progress) => progress.user, {
     cascade: true,
   })
-  practice_progresses: PracticeProgress[];
+  practiceProgresses: PracticeProgress[];
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
@@ -51,20 +51,20 @@ export class User {
   @OneToMany(() => CommentLike, (like) => like.user, {
     cascade: true,
   })
-  comment_like_list: CommentLike[];
+  commentLikeList: CommentLike[];
 
   @OneToMany(() => PostLike, (like) => like.user, {
     cascade: true,
   })
-  post_like_list: PostLike[];
+  postLikeList: PostLike[];
 
   @OneToMany(() => PostReport, (postreport) => postreport.reporter, {
     cascade: true,
   })
-  post_reports: PostReport[];
+  postReports: PostReport[];
 
   @OneToMany(() => CommentReport, (commentreport) => commentreport.reporter)
-  comment_reports: CommentReport[];
+  commentReports: CommentReport[];
 
   // 신고를 함
   @OneToMany(() => UserReport, (userreport) => userreport.reporter)
@@ -78,26 +78,26 @@ export class User {
   name: string;
 
   @Column({ length: 20 })
-  register_id: string;
+  registerId: string;
 
   @Column({ length: 150 })
   password: string;
 
   @Column({ default: 'local', length: 20 })
-  login_type: string;
+  loginType: string;
 
   @Column({ nullable: true, default: '', length: 200 })
   describe: string | null;
 
   @Column({ default: false })
-  admin_yn: boolean;
+  adminYn: boolean;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @Column({ nullable: true })
-  suspension_date: Date;
+  suspendedAt: Date;
 
   @Column({ nullable: true })
-  steam_id: number | null;
+  steamId: number | null;
 }

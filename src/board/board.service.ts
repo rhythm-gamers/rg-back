@@ -21,52 +21,52 @@ export class BoardService {
   async fetchBoardMetadata() {
     const board = await this.boardRepository.find({
       select: {
-        board_name: true,
+        boardName: true,
       },
     });
     return board;
   }
 
-  async createBoard(board_info: CreateBoardDto) {
+  async createBoard(boardInfo: CreateBoardDto) {
     const board = new Board();
-    board.board_name = board_info.board_name;
-    board.description = board_info.description;
+    board.boardName = boardInfo.boardName;
+    board.description = boardInfo.description;
     return await this.boardRepository.insert(board);
   }
 
-  async fetchBoardByBoardname(board_info: string): Promise<Board> {
+  async fetchBoardByBoardname(boardName: string): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
-        board_name: board_info,
+        boardName: boardName,
       },
     });
     return board;
   }
 
-  async deleteBoardByBoardname(board_name: string): Promise<Board> {
+  async deleteBoardByBoardname(boardName: string): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
-        board_name: board_name,
+        boardName: boardName,
       },
     });
     return await this.boardRepository.remove(board);
   }
 
   async modifyBoardByBoardname(
-    board_info: ModifyBoardDto,
-    origin_name: string,
+    boardInfo: ModifyBoardDto,
+    originName: string,
   ): Promise<Board> {
     const board = await this.boardRepository.findOne({
       where: {
-        board_name: origin_name,
+        boardName: originName,
       },
     });
 
-    if (board_info.board_name) {
-      board.board_name = board_info.board_name;
+    if (boardInfo.boardName) {
+      board.boardName = boardInfo.boardName;
     }
-    if (board_info.description) {
-      board.description = board_info.description;
+    if (boardInfo.description) {
+      board.description = boardInfo.description;
     }
 
     return await this.boardRepository.save(board);

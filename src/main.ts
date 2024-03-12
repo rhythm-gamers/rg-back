@@ -1,18 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { WinstonModule } from 'nest-winston';
-import { loggerConfig } from './config/logger.config';
+import { winstonLogger } from './config/logger.config';
 import { setupSwagger } from './config/swagger.config';
 import { json } from 'express';
 
 async function bootstrap() {
+  const isDevelope = process.env.IS_DEVELOPE === 'dev' ? true : false;
   const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger(loggerConfig),
+    bufferLogs: true,
+    logger: winstonLogger,
   });
   app.enableCors();
   app.use(json({ limit: '50mb' })); // post시 받아오는 body의 최대 크기
 
-  setupSwagger(app);
+  if (isDevelope) {
+    setupSwagger(app);
+  }
   await app.listen(3000);
 }
 bootstrap();

@@ -10,7 +10,7 @@ import {
 @Entity()
 export class UserReport {
   @PrimaryGeneratedColumn()
-  user_report_id: number;
+  userReportId: number;
 
   // 신고한 유저
   @ManyToOne(() => User, (user) => user.reporting)
@@ -27,8 +27,8 @@ export class UserReport {
   handled: boolean;
 
   @CreateDateColumn()
-  report_recieved: Date;
+  reportRecieved: Date;
 
   @Column({ nullable: true })
-  report_confirmed: Date;
+  reportConfirmed: Date;
 }
