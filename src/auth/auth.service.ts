@@ -30,15 +30,15 @@ export class AuthService {
     if (bcrypt.compareSync(loginDto.password, user.password)) {
       let accessToken = await this.jwtService.signAsync(
         {
-          uid: user.user_id,
-          username: user.register_id,
+          uid: user.userId,
+          username: user.registerId,
         },
         { expiresIn: "1h" },
       );
       let refreshToken = await this.jwtService.signAsync(
         {
-          uid: user.user_id,
-          username: user.register_id,
+          uid: user.userId,
+          username: user.registerId,
         },
         { expiresIn: "7d" },
       );
@@ -68,7 +68,7 @@ export class AuthService {
   private async findUserByUsername(loginDto: LoginDto) {
     return await this.userRepository.findOne({
       where: {
-        register_id: loginDto.username,
+        registerId: loginDto.username,
       },
     });
   }
@@ -87,7 +87,7 @@ export class AuthService {
 
   private async createUser(registerDto: RegisterDto) {
     const newUser = this.userRepository.create({
-      register_id: registerDto.username,
+      registerId: registerDto.username,
       nickname: registerDto.nickname,
       password: registerDto.password,
     });
