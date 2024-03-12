@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - dev-hsh-ssh
 
 jobs:
   build:
