@@ -1,14 +1,15 @@
 import {
   CopyObjectCommand,
+  DeleteObjectCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
-import { AwsS3MoveFileDto } from './dao/aws-s3-move-files.dto';
-import { AwsS3DeleteFileDto } from './dao/aws-s3-delete-files.dto';
-import { AwsS3CopyFileDto } from './dao/aws-s3-copy-files.dto';
+import { AwsS3MoveFileDto } from './dto/aws-s3-move-file.dto';
+import { AwsS3DeleteFileDto } from './dto/aws-s3-delete-file.dto';
+import { AwsS3CopyFileDto } from './dto/aws-s3-copy-file.dto';
 
 @Injectable()
 export class AwsS3Service {
@@ -36,11 +37,11 @@ export class AwsS3Service {
 
   // upload == update
   // 파일 이름이 같으면 update 실행
-  async upload(filename: string, filebody: Buffer, type?: string) {
+  async upload(filepath: string, filebody: Buffer) {
     // type : practice | level-test
     const command: PutObjectCommand = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: type !== undefined ? `${type}/${filename}` : `${filename}`, // fileName. 여기서 폴더 생성 가능
+      Key: filepath,
       Body: filebody, // fileContent
     });
     const uploadFile = await this.s3.send(command);
@@ -50,14 +51,17 @@ export class AwsS3Service {
   async download(filename: string, type?: string) {
     const command: GetObjectCommand = new GetObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: type !== undefined ? `${type}/${filename}` : `${filename}`,
+      Key:
+        type !== undefined
+          ? encodeURI(`${type}/${filename}`)
+          : encodeURI(`${filename}`),
     });
     const downloadFile = await this.s3.send(command);
     const result = await downloadFile.Body.transformToString('base64');
     return result;
   }
 
-  async delete(files: AwsS3DeleteFileDto[] | string[]) {
+  async deletes(files: AwsS3DeleteFileDto[] | string[]) {
     const command: DeleteObjectsCommand = new DeleteObjectsCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Delete: {
@@ -67,28 +71,54 @@ export class AwsS3Service {
     return await this.s3.send(command);
   }
 
-  async move(files: AwsS3MoveFileDto[]) {
-    this.copy(files);
-    await this.delete(files);
-    await this.delete([files[0].originKey]);
+  async delete(file: AwsS3DeleteFileDto | string) {
+    const command: DeleteObjectCommand = new DeleteObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: this.makeDeleteObject(file),
+    });
+    try {
+      await this.s3.send(command);
+    } catch (err) {
+      console.error('Error deleting object:', err);
+      throw err;
+    }
   }
 
-  async copy(files: AwsS3CopyFileDto[]) {
-    files.forEach((file) => {
-      // 비동기 처리 시 delete 먼저 실행됨 ㅋㅋㄹ
-      const command: CopyObjectCommand = new CopyObjectCommand({
-        CopySource: `${process.env.AWS_S3_BUCKET_NAME}/${file.originKey}`,
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: file.destinationKey,
-      });
-      this.s3.send(command);
+  async copy(file: AwsS3CopyFileDto) {
+    const command: CopyObjectCommand = new CopyObjectCommand({
+      CopySource: encodeURI(
+        `${process.env.AWS_S3_BUCKET_NAME}/${file.originKey}`,
+      ),
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: file.destinationKey,
     });
+
+    try {
+      await this.s3.send(command);
+    } catch (err) {
+      console.error('Error deleting object:', err);
+      throw err;
+    }
+  }
+
+  async moves(files: AwsS3MoveFileDto[]) {
+    for (const file of files) {
+      await this.move(file);
+    }
+  }
+
+  async move(file: AwsS3MoveFileDto) {
+    await this.copy(file);
+    await this.delete(file.originKey);
   }
 
   private makeDeleteObjects(files: AwsS3DeleteFileDto[] | string[]) {
     return files.map((file) => {
-      if (typeof file === 'string') return { Key: file }; // 단순히 파일만 삭제
-      return { Key: file.originKey }; // 파일을 이동한 경우 원본 파일 삭제 필요
+      return { Key: this.makeDeleteObject(file) };
     });
+  }
+
+  private makeDeleteObject(file: AwsS3DeleteFileDto | string) {
+    return typeof file === 'string' ? file : file.originKey;
   }
 }

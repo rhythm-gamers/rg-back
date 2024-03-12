@@ -16,7 +16,6 @@ export class LevelTestService {
 
   async createEntity(createData: CreateLevelTestDto): Promise<LevelTest> {
     const { patternInfo, ...otherInfo } = createData;
-    delete createData.patternInfo;
 
     const levelTest: LevelTest = {
       ...new LevelTest(),
@@ -25,8 +24,6 @@ export class LevelTestService {
     const patternInfoEntity: PatternInfo =
       await this.patternInfoService.createPatternInfoEntity(patternInfo);
 
-    // levelTest.imgSrc = imgSrc;
-    // levelTest.noteSrc = noteSrc;
     levelTest.patternInfo = patternInfoEntity;
     return await this.levelTestRepo.save(levelTest);
   }
@@ -50,42 +47,22 @@ export class LevelTestService {
     const levelTest: LevelTest = await this.findLevelTest(id);
 
     if (updateData.patternInfo !== undefined) {
-      await this.patternInfoService.updatePatternInfoData(
-        levelTest.patternInfo.patternId,
-        updateData.patternInfo,
-      );
+      updateData.patternInfo =
+        await this.patternInfoService.updatePatternInfoData(
+          levelTest.patternInfo.patternId,
+          updateData.patternInfo,
+        );
     }
 
-    const updateLevelTestData: LevelTest = {
+    const updateLevelTestData = {
       ...levelTest,
       ...updateData,
-    } as LevelTest;
-    delete updateLevelTestData.patternInfo;
-    console.log(updateLevelTestData);
-    await this.levelTestRepo.update(id, updateLevelTestData);
+    };
+    await this.levelTestRepo.save(updateLevelTestData);
     return await this.findLevelTest(id);
   }
 
   async deleteById(id: number) {
-    /* 나중에 제거가 되지 않을 경우 대비
-    const removeTarget = await this.levelTestRepo.findOne({
-      select: {
-        patternInfo: {
-          patternId: true,
-        },
-      },
-      where: {
-        testId: id,
-      },
-      relations: {
-        patternInfo: true,
-      },
-    });
-    if (!removeTarget) {
-      return [];
-    }
-    const patternInfoRemove = await this.patternInfoService.deletePatternInfo(removeTarget.patternInfo.patternId);
-     */
     return await this.levelTestRepo.delete(id);
   }
 
