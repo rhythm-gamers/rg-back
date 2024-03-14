@@ -13,6 +13,7 @@ import { CreateBoardDto } from "./dto/create-board.dto";
 import { ModifyBoardDto } from "./dto/modify-board.dto";
 import { PostService } from "src/post/post.service";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { SkipAuth } from "src/token/token.metadata";
 
 @Controller("board")
 @ApiTags("board")
@@ -22,6 +23,7 @@ export class BoardController {
     private readonly postService: PostService,
   ) {}
 
+  @SkipAuth()
   @Get("spec/:boardName")
   @ApiOperation({})
   async fetchBoardInfo(@Param("boardName") boardName: string) {
@@ -38,6 +40,7 @@ export class BoardController {
     return result;
   }
 
+  @SkipAuth()
   @Get("metadata")
   @ApiOperation({})
   async fetchBoardMetadata(): Promise<ReturnBoardMetadataDto> {

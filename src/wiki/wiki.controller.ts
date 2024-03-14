@@ -14,13 +14,15 @@ import { ReturnWikiDataDto } from "./dto/return-wiki-data.dto";
 import { CreateWikiDataDto } from "./dto/create-wiki-data.dto";
 import { UpdateWikiDataDto } from "./dto/update-wiki-data.dto";
 import { DeleteWikiDataDto } from "./dto/delete-wiki-data.dto";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { SkipAuth } from "src/token/token.metadata";
 
 @Controller("wiki")
 @ApiTags("wiki")
 export class WikiController {
   constructor(private readonly wikiService: WikiService) {}
 
+  @SkipAuth()
   @Get("metadata")
   @ApiOperation({})
   async getWikiMetadata(): Promise<ReturnWikiMetadataDto> {
@@ -41,7 +43,12 @@ export class WikiController {
     return result;
   }
 
+  @SkipAuth()
   @Get("spec/:id")
+  @ApiParam({
+    name: "위키 id",
+    required: true,
+  })
   @ApiOperation({})
   async getWikiData(@Param("id") id: number): Promise<ReturnWikiDataDto> {
     const result: ReturnWikiDataDto = await this.wikiService.getWikiData(id);
@@ -49,7 +56,7 @@ export class WikiController {
   }
 
   // TODO Auth 필요
-  @Post("")
+  @Post()
   @ApiOperation({})
   async createtWikiData(@Body() wiki: CreateWikiDataDto) {
     const result = await this.wikiService.createWikiData(wiki);
@@ -57,13 +64,16 @@ export class WikiController {
   }
 
   // TODO Auth 필요
-  @Put("spec/:title")
+  @Put(":originTitle")
   @ApiOperation({})
   async updateWikiData(
     @Body() wiki: UpdateWikiDataDto,
-    @Param("title") title: string,
+    @Param("originTitle") originTitle: string,
   ) {
-    const result = await this.wikiService.updateWikiDataByTitle(wiki, title);
+    const result = await this.wikiService.updateWikiDataByTitle(
+      wiki,
+      originTitle,
+    );
     return result;
   }
 

@@ -15,6 +15,7 @@ import { CommentService } from "src/comment/comment.service";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { UpdatePostDto } from "./dto/update-post.dto";
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { SkipAuth } from "src/token/token.metadata";
 
 @ApiTags("post")
 @Controller("post")
@@ -25,6 +26,7 @@ export class PostController {
     private readonly commentService: CommentService,
   ) {}
 
+  @SkipAuth()
   @Get("board/:boardName")
   @ApiQuery({
     name: "page",
@@ -49,6 +51,7 @@ export class PostController {
     );
   }
 
+  @SkipAuth()
   @Get("spec/:postId")
   @ApiOperation({})
   @ApiParam({
