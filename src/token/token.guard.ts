@@ -60,16 +60,8 @@ export class TokenGuard implements CanActivate {
           },
           { expiresIn: "1h" },
         );
-        const newRefreshToken = this.jwtService.sign(
-          {
-            uid: decodedRefreshToken.uid,
-            username: decodedRefreshToken.username,
-          },
-          { expiresIn: "7d" },
-        );
         request.user = decodedRefreshToken;
         response.cookie("access_token", newAccessToken, { httpOnly: true });
-        response.cookie("refresh_token", newRefreshToken, { httpOnly: true });
         return true;
       } catch (refreshTokenError) {
         throw new UnauthorizedException("Token expired");
