@@ -12,12 +12,14 @@ import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { SkipAuth } from "src/token/token.metadata";
 
 @ApiTags("comment")
 @Controller("comment")
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
+  @SkipAuth()
   @Get("post/:postId")
   @ApiQuery({
     name: "page",
