@@ -14,6 +14,7 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UpdatePracticeDto } from "../dto/update-practice.dto";
 import { Practice } from "../entity/practice.entity";
 import { CreatePracticeDto } from "../dto/create-practice.dto";
+import { SkipAuth } from "src/token/token.metadata";
 
 @ApiTags("practice")
 @Controller("practice")
@@ -32,6 +33,7 @@ export class PracticeController {
     return result;
   }
 
+  @SkipAuth()
   @Get()
   @ApiOperation({ summary: "패턴 연습 정보 가져오기" })
   async fetchPracticeInfo(@Query("id") id: number) {
@@ -39,6 +41,7 @@ export class PracticeController {
     return result;
   }
 
+  @SkipAuth()
   @Get("all")
   @ApiOperation({ summary: "모든 패턴 연습 정보 가져오기" })
   async fetchAllPracticeInfo() {

@@ -14,6 +14,7 @@ import { PatternService } from "../pattern.service";
 import { LevelTestService } from "../service/level-test.service";
 import { UpdateLevelTestDto } from "../dto/update-level-test.dto";
 import { LevelTest } from "../entity/level-test.entity";
+import { SkipAuth } from "src/token/token.metadata";
 
 @ApiTags("level test")
 @Controller("level-test")
@@ -32,6 +33,7 @@ export class LevelTestController {
     return result;
   }
 
+  @SkipAuth()
   @Get()
   @ApiOperation({ summary: "레벨테스트 정보 가져오기" })
   async fetchLevelTestInfo(@Query("id") id: number) {
@@ -39,6 +41,7 @@ export class LevelTestController {
     return result;
   }
 
+  @SkipAuth()
   @Get("all") // level-tests로?
   @ApiOperation({ summary: "모든 레벨 테스트 정보 가져오기" })
   async fetchAllLevelTestInfo() {
