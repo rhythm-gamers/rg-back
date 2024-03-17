@@ -4,12 +4,12 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { QueryFailedError } from 'typeorm';
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { QueryFailedError } from "typeorm";
 
 enum MysqlErrorCode {
-  ALREADY_EXIST = 'ER_DUP_ENTRY',
+  ALREADY_EXIST = "ER_DUP_ENTRY",
 }
 
 @Catch()
@@ -18,7 +18,7 @@ export class ExceptionFilter implements ExceptionFilter {
 
   public catch(exception: unknown, host: ArgumentsHost): void {
     let args: unknown;
-    let message: string = 'UNKNOWN ERROR';
+    let message: string = "UNKNOWN ERROR";
 
     const context = host.switchToHttp();
     const res = context.getResponse<Response>();
@@ -27,7 +27,7 @@ export class ExceptionFilter implements ExceptionFilter {
     const datetime = new Date();
 
     message = exception instanceof HttpException ? exception.message : message;
-    message = exception instanceof QueryFailedError ? 'Already Exist' : message;
+    message = exception instanceof QueryFailedError ? "Already Exist" : message;
 
     const errorResponse = {
       code: statusCode,

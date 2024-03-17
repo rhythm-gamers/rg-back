@@ -7,25 +7,25 @@ import {
   Patch,
   Post,
   Query,
-} from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateLevelTestDto } from '../dto/create-level-test.dto';
-import { PatternService } from '../pattern.service';
-import { LevelTestService } from '../service/level-test.service';
-import { UpdateLevelTestDto } from '../dto/update-level-test.dto';
-import { LevelTest } from '../entity/level-test.entity';
+} from "@nestjs/common";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { CreateLevelTestDto } from "../dto/create-level-test.dto";
+import { PatternService } from "../pattern.service";
+import { LevelTestService } from "../service/level-test.service";
+import { UpdateLevelTestDto } from "../dto/update-level-test.dto";
+import { LevelTest } from "../entity/level-test.entity";
 
-@ApiTags('level test')
-@Controller('level-test')
+@ApiTags("level test")
+@Controller("level-test")
 export class LevelTestController {
-  private readonly DIRECTORY = 'level-test';
+  private readonly DIRECTORY = "level-test";
   constructor(
     private readonly patternService: PatternService,
     private readonly levelTestService: LevelTestService,
   ) {}
 
   @Post()
-  @ApiOperation({ summary: '레벨테스트 생성' })
+  @ApiOperation({ summary: "레벨테스트 생성" })
   async createLevelTest(@Body() createData: CreateLevelTestDto) {
     await this.patternService.buildCreateData(createData, this.DIRECTORY);
     const result = await this.levelTestService.createEntity(createData);
@@ -33,23 +33,23 @@ export class LevelTestController {
   }
 
   @Get()
-  @ApiOperation({ summary: '레벨테스트 정보 가져오기' })
-  async fetchLevelTestInfo(@Query('id') id: number) {
+  @ApiOperation({ summary: "레벨테스트 정보 가져오기" })
+  async fetchLevelTestInfo(@Query("id") id: number) {
     const result = await this.levelTestService.fetchById(+id);
     return result;
   }
 
-  @Get('all') // level-tests로?
-  @ApiOperation({ summary: '모든 레벨 테스트 정보 가져오기' })
+  @Get("all") // level-tests로?
+  @ApiOperation({ summary: "모든 레벨 테스트 정보 가져오기" })
   async fetchAllLevelTestInfo() {
     const result = await this.levelTestService.fetchAll();
     return result;
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: '레벨테스트 채보, 패턴 정보 등 업데이트' })
+  @Patch(":id")
+  @ApiOperation({ summary: "레벨테스트 채보, 패턴 정보 등 업데이트" })
   async updateLevelTest(
-    @Param('id') id: number,
+    @Param("id") id: number,
     @Body() updateData: UpdateLevelTestDto,
   ) {
     const levelTestEntity: LevelTest =
@@ -75,9 +75,9 @@ export class LevelTestController {
     return result;
   }
 
-  @Delete(':id')
-  @ApiOperation({ summary: '레벨테스트 삭제' })
-  async delete(@Param('id') id: number) {
+  @Delete(":id")
+  @ApiOperation({ summary: "레벨테스트 삭제" })
+  async delete(@Param("id") id: number) {
     const levelTest = await this.levelTestService.fetchById(+id);
     if (levelTest == null) {
       return 0;
