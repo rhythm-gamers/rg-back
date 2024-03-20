@@ -17,6 +17,7 @@ import SteamAuth from "node-steam-openid";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
+import { SkipAuth } from "src/token/token.metadata";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -71,6 +72,7 @@ export class AuthController {
     return games.data;
   }
 
+  @SkipAuth()
   @ApiTags("auth")
   @ApiOperation({ summary: "사용자 로그인" })
   @Post("login")
@@ -83,6 +85,7 @@ export class AuthController {
       .send();
   }
 
+  @SkipAuth()
   @ApiTags("auth")
   @ApiOperation({ summary: "사용자 회원가입" })
   @Post("register")
