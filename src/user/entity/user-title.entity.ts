@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
@@ -6,7 +12,10 @@ export class UserTitle {
   @PrimaryGeneratedColumn()
   userTitleId: number;
 
-  @OneToOne(() => User, (user) => user.usertitle)
+  @OneToOne(() => User, (user) => user.usertitle, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn()
   user: User;
 
   @Column({ default: false })

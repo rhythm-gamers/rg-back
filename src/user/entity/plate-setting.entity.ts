@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
@@ -6,7 +12,10 @@ export class PlateSetting {
   @PrimaryGeneratedColumn()
   plateSettingId: number;
 
-  @OneToOne(() => User, (user) => user.platesetting)
+  @OneToOne(() => User, (user) => user.platesetting, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn()
   user: User;
 
   @Column({ default: false })
