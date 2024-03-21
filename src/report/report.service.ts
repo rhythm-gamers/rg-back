@@ -77,7 +77,7 @@ export class ReportService {
   };
 
   async reportPost(reportInfo: ReportDao, reporterId: number) {
-    const reporter = await this.userService.fetchUserWithUserID(reporterId);
+    const reporter = await this.userService.fetchWithUserId(reporterId);
     const post = await this.postService.fetchPostWithPostID(
       +reportInfo.targetId,
     );
@@ -120,7 +120,7 @@ export class ReportService {
   }
 
   async reportComment(reportInfo: ReportDao, reporterId: number) {
-    const reporter = await this.userService.fetchUserWithUserID(reporterId);
+    const reporter = await this.userService.fetchWithUserId(reporterId);
     const comment = await this.commentService.fetchCommentWithCommentID(
       +reportInfo.targetId,
     );
@@ -163,8 +163,8 @@ export class ReportService {
   }
 
   async reportUser(reportInfo: ReportDao, reporterId: number) {
-    const reporter = await this.userService.fetchUserWithUserID(reporterId);
-    const reported = await this.userService.fetchUserWithUserID(
+    const reporter = await this.userService.fetchWithUserId(reporterId);
+    const reported = await this.userService.fetchWithUserId(
       +reportInfo.targetId,
     );
 
