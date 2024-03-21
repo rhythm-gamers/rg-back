@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { LevelTestProgressService } from "./level-test-progress.service";
 import { PracticeProgressService } from "./practice-progress.service";
 import { UserService } from "src/user/user.service";
@@ -15,23 +15,43 @@ export class ProgressService {
     private readonly userService: UserService,
   ) {}
 
-  async updatePractice(progress: number, userId: number, practiceId: number) {
-    const practice = await this.practiceService.fetchById(practiceId);
-    const user =
-      await this.userService.fetchUserPracticeProgressWithUserId(userId);
-
-    return await this.practiceProgressService.update(progress, user, practice);
-  }
-
-  async updateLeveltest(progress: number, userId: number, testId: number) {
+  async updateLeveltestProgress(
+    progress: number,
+    userId: number,
+    testId: number,
+  ) {
     const levelTest = await this.levelTestService.fetchById(testId);
-    const user =
-      await this.userService.fetchUserLevelTestProgressWithUserId(userId);
+    if (levelTest == null) {
+      throw new BadRequestException("해당 레벨 테스트는 없습니다.");
+    }
+    const user = await this.userService.fetchWithUserId(userId);
 
     return await this.levelTestProgressService.update(
       progress,
       user,
       levelTest,
     );
+  }
+
+  async updatePracticeProgress(
+    progress: number,
+    userId: number,
+    practiceId: number,
+  ) {
+    const practice = await this.practiceService.fetchById(practiceId);
+    if (practice == null) {
+      throw new BadRequestException("해당 패턴 연습은 없습니다.");
+    }
+    const user = await this.userService.fetchWithUserId(userId);
+
+    return await this.practiceProgressService.update(progress, user, practice);
+  }
+
+  async fetchLeveltestProgress(userId: number, testId: number) {
+    return await this.levelTestProgressService.fetch(userId, testId);
+  }
+
+  async fetchPracticeProgress(userId: number, practiceId: number) {
+    return await this.practiceProgressService.fetch(userId, practiceId);
   }
 }
