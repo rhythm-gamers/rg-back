@@ -115,7 +115,7 @@ export class PostService {
     const board = await this.boardService.fetchBoardByBoardname(
       createPost.boardName,
     );
-    const user = await this.userService.fetchUserWithUserID(userId);
+    const user = await this.userService.fetchWithUserId(userId);
     const post = new Post();
     post.board = board;
     post.user = user;
