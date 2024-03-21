@@ -1,6 +1,7 @@
 import {
   ArgumentsHost,
   Catch,
+  ExceptionFilter,
   HttpException,
   HttpStatus,
   Logger,
@@ -13,7 +14,7 @@ enum MysqlErrorCode {
 }
 
 @Catch()
-export class ExceptionFilter implements ExceptionFilter {
+export class MyDefaultExceptionLoggingFilter implements ExceptionFilter {
   private readonly logger: Logger = new Logger();
 
   public catch(exception: unknown, host: ArgumentsHost): void {
