@@ -9,6 +9,7 @@ import { TokenGuard } from "./token/token.guard";
 import { winstonLogger } from "./config/logger.config";
 import { setupSwagger } from "./config/swagger.config";
 import { json } from "express";
+import { RolesGuard } from "./token/roles.guard";
 
 async function bootstrap() {
   const isDevelope = process.env.IS_DEVELOPE === "dev" ? true : false;
@@ -23,7 +24,10 @@ async function bootstrap() {
   });
   const jwtService = app.get(JwtService);
   const reflector = app.get(Reflector);
-  app.useGlobalGuards(new TokenGuard(jwtService, reflector));
+  app.useGlobalGuards(
+    new TokenGuard(jwtService, reflector),
+    new RolesGuard(reflector),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
