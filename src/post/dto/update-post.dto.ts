@@ -1,13 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { OmitType, PartialType } from "@nestjs/swagger";
+import { CreatePostDto } from "./create-post.dto";
 
-export class UpdatePostDto {
-  @ApiProperty({
-    required: false,
-  })
-  title?: string;
-
-  @ApiProperty({
-    required: false,
-  })
-  content?: string;
-}
+export class UpdatePostDto extends PartialType(
+  OmitType(CreatePostDto, ["boardName"]),
+) {}
