@@ -13,7 +13,8 @@ import { CreateBoardDto } from "./dto/create-board.dto";
 import { ModifyBoardDto } from "./dto/modify-board.dto";
 import { PostService } from "src/post/post.service";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { SkipAuth } from "src/token/token.metadata";
+import { Roles, SkipAuth } from "src/token/token.metadata";
+import { Role } from "src/auth/object/token-payload.obj";
 
 @Controller("board")
 @ApiTags("board")
@@ -52,6 +53,7 @@ export class BoardController {
     return result;
   }
 
+  @Roles(Role.Admin)
   @Post()
   @ApiOperation({})
   async createBoard(@Body() boardInfo: CreateBoardDto) {
@@ -59,6 +61,7 @@ export class BoardController {
     return result;
   }
 
+  @Roles(Role.Admin)
   @Delete(":originName")
   @ApiOperation({})
   async deleteBoard(@Param("originName") originName) {
@@ -66,6 +69,7 @@ export class BoardController {
     return result;
   }
 
+  @Roles(Role.Admin)
   @Patch(":originName")
   @ApiOperation({})
   async updateBoard(

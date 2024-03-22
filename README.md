@@ -71,12 +71,20 @@ DATABASE_DATABASE=<database_name> # 접속하려는 데이터베이스의 이름
 
 IS_DEVELOPE=dev # 개발시에는 dev, 서비스시에는 prod
 
+# Comment Limit
+COMMENT_LIMIT=20
+
 # AWS S3
 AWS_S3_BUCKET_REGION=ap-northeast-2 # S3 버킷이 있는 지역
 AWS_S3_ACCESS_KEY_ID=<access_key> # IAM에서 발급한 버킷 접근 Key
 AWS_S3_SECRET_ACCESS_KEY=<secret_access_key> # IAM에서 발급한 버킷 접근 Secret Accecc Key
 AWS_S3_BUCKET_NAME=<bucket_name> # S3 버킷 이름
 AWS_S3_BUCKER_URL=<bucket_url> # S3 버킷 주소
+
+# token
+JWT_SECRET="ivno********njkn"
+ACCESS_TOKEN_EXPIRE="2h"
+REFRESH_TOKEN_EXPIRT="7d"
 ```
 
 
@@ -159,4 +167,30 @@ const command = new DeleteObjectsCommand({
 })
 
 s3.send(command); // 커맨드 전송
+```
+
+## 인가 관련
+
+`@Roles()` 를 통한 인가 기능 추가. 만약 더 추가하고싶은 역할이 있다면 `token-payload.obj.ts`의 enum에 추가하고 `TokenPayload` 클래스의 constructor만 수정해주세용
+
+※ 단, constructor 수정 시 `roles.guard.ts` 로직 수정 필요. 현재는 Admin과 User 2개만 있다 가정하고 만들었음
+
+```ts
+1. 권한을 부여하지 않는 경우
+  이 경우는 @Roles() 데코레이션을 사용하지 않거나, @Roles() 데코레이터 안에 아무것도 쓰지 않으면 된다.
+  e.g.)
+  1)
+    @Roles()
+    async fetchSometing()
+  2)
+    async fetchSomething()
+
+2. 권한을 부여하는 경우
+ 이 경우는 @Roles() 데코레이터 안에 원하는 권한을 넣으면 된다.
+  e.g.)
+    @Roles(Role.Admin)
+    async postSomething()
+
+    @Roles(Role.User)
+    async fetchSomething()
 ```
