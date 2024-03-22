@@ -14,6 +14,7 @@ import bcrypt from "bcrypt";
 import { RegisterDto } from "./dto/register.dto";
 import { UserTitleService } from "src/user/service/user-title.service";
 import { PlateSettingService } from "src/user/service/plate-setting.service";
+import { TokenPayload } from "./object/token-payload.obj";
 
 const SALT_ROUNDS = 10;
 @Injectable()
@@ -32,19 +33,18 @@ export class AuthService {
     if (!user) throw new NotFoundException("User not found");
 
     if (bcrypt.compareSync(loginDto.password, user.password)) {
+      const payload = new TokenPayload(user);
       let accessToken = await this.jwtService.signAsync(
         {
-          uid: user.userId,
-          username: user.registerId,
+          ...payload,
         },
-        { expiresIn: "1h" },
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRE },
       );
       let refreshToken = await this.jwtService.signAsync(
         {
-          uid: user.userId,
-          username: user.registerId,
+          ...payload,
         },
-        { expiresIn: "7d" },
+        { expiresIn: process.env.REFRESH_TOKEN_EXPIRE },
       );
 
       accessToken = "Bearer " + accessToken;
