@@ -1,48 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { PartialType } from "@nestjs/mapped-types";
+import { PatternInfoObj } from "../obj/pattern-info.obj";
 
-export class UpdatePatternInfoDto {
-  @ApiProperty({
-    required: false,
-  })
-  roll: number;
-
-  @ApiProperty({
-    required: false,
-  })
-  offGrid: number;
-
-  @ApiProperty({
-    required: false,
-  })
-  stairs: number;
-
-  @ApiProperty({
-    required: false,
-  })
-  peak: number;
-
-  @ApiProperty({
-    required: false,
-  })
-  multiples: number;
-
-  @ApiProperty({
-    required: false,
-  })
-  trill: number;
-
-  @ApiProperty({
-    required: false,
-  })
-  hold: number;
-
+export class UpdatePatternInfoDto extends PartialType(PatternInfoObj) {
   constructor() {
-    this.roll = 0;
-    this.offGrid = 0;
-    this.stairs = 0;
-    this.peak = 0;
-    this.multiples = 0;
-    this.trill = 0;
-    this.hold = 0;
+    super();
   }
 }

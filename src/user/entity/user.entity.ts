@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -25,11 +24,9 @@ export class User {
   userId: number;
 
   @OneToOne(() => PlateSetting, (platesetting) => platesetting.user)
-  @JoinColumn()
   platesetting: PlateSetting;
 
   @OneToOne(() => UserTitle, (usertitle) => usertitle.user)
-  @JoinColumn()
   usertitle: UserTitle;
 
   @OneToMany(() => LevelTestProgress, (progress) => progress.user, {

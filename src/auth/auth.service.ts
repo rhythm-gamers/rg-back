@@ -12,6 +12,8 @@ import { User } from "src/user/entity/user.entity";
 import { Repository } from "typeorm";
 import bcrypt from "bcrypt";
 import { RegisterDto } from "./dto/register.dto";
+import { UserTitleService } from "src/user/service/user-title.service";
+import { PlateSettingService } from "src/user/service/plate-setting.service";
 
 const SALT_ROUNDS = 10;
 @Injectable()
@@ -19,6 +21,8 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private userTitleService: UserTitleService,
+    private plateSettingService: PlateSettingService,
   ) {}
 
   @InjectRepository(User) private readonly userRepository: Repository<User>;
@@ -86,10 +90,14 @@ export class AuthService {
   }
 
   private async createUser(registerDto: RegisterDto) {
+    const userTitle = await this.userTitleService.create();
+    const plateSetting = await this.plateSettingService.create();
     const newUser = this.userRepository.create({
       registerId: registerDto.username,
       nickname: registerDto.nickname,
       password: registerDto.password,
+      usertitle: userTitle,
+      platesetting: plateSetting,
     });
     await this.userRepository.save(newUser);
     return newUser;

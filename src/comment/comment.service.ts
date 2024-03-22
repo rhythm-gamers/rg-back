@@ -88,7 +88,7 @@ export class CommentService {
     userId: number,
     commentCreate: CreateCommentDto,
   ): Promise<Comment> {
-    const user = await this.userService.fetchUserWithUserID(userId);
+    const user = await this.userService.fetchWithUserId(userId);
     const post = await this.postService.fetchPostWithPostID(
       commentCreate.postUid,
     );

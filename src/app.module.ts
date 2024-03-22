@@ -15,7 +15,7 @@ import { AwsS3Module } from "./s3/aws-s3.module";
 import { ProgressModule } from "./progress/progress.module";
 import { CommonModule } from "./common/common.module";
 import { APP_FILTER } from "@nestjs/core";
-import { ExceptionFilter } from "./common/filters/exception.filter";
+import { MyDefaultExceptionLoggingFilter } from "./common/filters/exception.filter";
 
 @Module({
   imports: [
@@ -33,6 +33,9 @@ import { ExceptionFilter } from "./common/filters/exception.filter";
     CommonModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_FILTER, useClass: ExceptionFilter }],
+  providers: [
+    AppService,
+    { provide: APP_FILTER, useClass: MyDefaultExceptionLoggingFilter },
+  ],
 })
 export class AppModule {}

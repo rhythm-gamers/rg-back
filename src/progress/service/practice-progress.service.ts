@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PracticeProgress } from "../entity/practice-progress.entity";
 import { Repository } from "typeorm";
@@ -13,29 +13,60 @@ export class PracticeProgressService {
   ) {}
 
   async update(progress: number, user: User, practice: Practice) {
-    let entity: PracticeProgress;
-    if (
-      !user.practiceProgresses.some(
-        (progress) => progress.practice.practiceId === practice.practiceId,
-      )
-    ) {
-      entity = new PracticeProgress();
-      entity.user = user;
-      entity.practice = practice;
-      entity.currentRate = progress;
-      entity = await this.progressRepo.save(entity);
-    } else {
-      entity = user.practiceProgresses.find(
-        (progress) => progress.practice.practiceId === practice.practiceId,
-      );
-      this.progressRepo.update(entity.practiceProgressId, {
-        currentRate: progress,
-      });
-    }
-    return await this.progressRepo.findOne({
+    const res = await this.progressRepo.findOne({
       where: {
-        practiceProgressId: entity.practiceProgressId,
+        user: {
+          userId: user.userId,
+        },
+        practice: {
+          practiceId: practice.practiceId,
+        },
       },
     });
+    if (res) {
+      this.__update(progress, res);
+    } else {
+      this.__create(progress, user, practice);
+    }
+  }
+
+  async fetch(userId: number, practiceId: number) {
+    const res = await this.progressRepo.findOne({
+      where: {
+        user: {
+          userId: userId,
+        },
+        practice: {
+          practiceId: practiceId,
+        },
+      },
+    });
+    if (res == null) {
+      throw new BadRequestException(
+        "해당 유저는 해당 패턴 연습 결과를 가지고 있지 않습니다.",
+      );
+    }
+    delete res.practiceProgressId;
+    return res;
+  }
+
+  private async __create(progress: number, user: User, practice: Practice) {
+    const entity: PracticeProgress = new PracticeProgress();
+    entity.user = user;
+    entity.practice = practice;
+    entity.currentRate = progress;
+    return await this.progressRepo.save(entity);
+  }
+
+  private async __update(progress: number, entity: PracticeProgress) {
+    if (entity.currentRate < progress) {
+      entity.currentRate = progress;
+      this.progressRepo.update(
+        {
+          practiceProgressId: entity.practiceProgressId,
+        },
+        entity,
+      );
+    }
   }
 }

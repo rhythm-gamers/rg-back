@@ -9,7 +9,7 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async fetchUserWithUserID(userId: number): Promise<User> {
+  async fetchWithUserId(userId: number): Promise<User> {
     const user = await this.userRepository.findOneBy({
       userId: userId,
     });
