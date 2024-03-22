@@ -1,5 +1,4 @@
-export interface UpdateWikiDataDto {
-  title?: string;
-  content?: string;
-  mustRead?: true;
-}
+import { PartialType } from "@nestjs/swagger";
+import { CreateWikiDataDto } from "./create-wiki-data.dto";
+
+export class UpdateWikiDataDto extends PartialType(CreateWikiDataDto) {}

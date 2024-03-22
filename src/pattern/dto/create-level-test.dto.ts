@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CreatePatternInfoDto } from "./create-pattern-info.dto";
 import { PatternSourceObject } from "../obj/pattern-source.obj";
-import { IsNumber, IsObject, IsString } from "class-validator";
+import { IsNotEmptyObject, IsNumber, IsString } from "class-validator";
 
 export class CreateLevelTestDto extends PatternSourceObject {
   @ApiProperty({
@@ -36,6 +36,6 @@ export class CreateLevelTestDto extends PatternSourceObject {
     description: "어느 패턴이 등장하는가?",
     example: new CreatePatternInfoDto(),
   })
-  @IsObject()
+  @IsNotEmptyObject()
   patternInfo: CreatePatternInfoDto;
 }
