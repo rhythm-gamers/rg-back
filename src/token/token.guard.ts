@@ -42,9 +42,12 @@ export class TokenGuard implements CanActivate {
     cookies.access_token = cookies.access_token.replace("Bearer ", "");
     cookies.refresh_token = cookies.refresh_token.replace("Bearer ", "");
 
-    console.log(cookies);
+    const jwtSecret = process.env.JWT_SECRET;
+
     try {
-      const decodedAccessToken = this.jwtService.verify(cookies.access_token);
+      const decodedAccessToken = this.jwtService.verify(cookies.access_token, {
+        secret: jwtSecret,
+      });
       console.log(decodedAccessToken);
       request.user = decodedAccessToken;
       return true;
@@ -52,13 +55,16 @@ export class TokenGuard implements CanActivate {
       try {
         const decodedRefreshToken = this.jwtService.verify(
           cookies.refresh_token,
+          {
+            secret: jwtSecret,
+          },
         );
         const newAccessToken = this.jwtService.sign(
           {
             uid: decodedRefreshToken.uid,
             username: decodedRefreshToken.username,
           },
-          { expiresIn: "1h" },
+          { expiresIn: "1h", secret: jwtSecret },
         );
         request.user = decodedRefreshToken;
         response.cookie("access_token", newAccessToken, { httpOnly: true });
