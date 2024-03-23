@@ -1,5 +1,5 @@
-export interface WikiMetadata {
-  uid: number;
+export class WikiMetadata {
+  wikiId: number;
   title: string;
   mustRead: boolean;
 }
