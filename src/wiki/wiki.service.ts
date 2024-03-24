@@ -1,11 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Wiki } from "./entity/wiki.entity";
 import { Repository } from "typeorm";
 import { WikiMetadataOrigin } from "./obj/wiki-metadata-origin.obj";
-import { ReturnWikiDataDto } from "./dto/return-wiki-data.dto";
-import { CreateWikiDataDto } from "./dto/create-wiki-data.dto";
-import { UpdateWikiDataDto } from "./dto/update-wiki-data.dto";
+import { ReturnWikiDto } from "./dto/return-wiki.dto";
+import { CreateWikiDto } from "./dto/create-wiki.dto";
+import { UpdateWikiDto } from "./dto/update-wiki.dto";
 
 @Injectable()
 export class WikiService {
@@ -13,19 +17,22 @@ export class WikiService {
     @InjectRepository(Wiki) private wikiRepository: Repository<Wiki>,
   ) {}
 
-  async getWikiMetadata(): Promise<WikiMetadataOrigin[]> {
+  async fetchMetadata(): Promise<WikiMetadataOrigin[]> {
     const metadatas = await this.wikiRepository.find({
       select: {
-        uid: true,
+        wikiId: true,
         letter: true,
         title: true,
         mustRead: true,
+      },
+      order: {
+        title: "ASC",
       },
     });
     return metadatas;
   }
 
-  async getWikiData(id: number): Promise<ReturnWikiDataDto> {
+  async fetch(title: string): Promise<ReturnWikiDto> {
     const data = await this.wikiRepository.findOne({
       select: {
         title: true,
@@ -33,15 +40,22 @@ export class WikiService {
         mustRead: true,
       },
       where: {
-        uid: id,
+        title: title,
       },
     });
     return data;
   }
 
-  async createWikiData(wiki: CreateWikiDataDto) {
+  async create(wiki: CreateWikiDto) {
+    const res = await this.wikiRepository.findOne({
+      where: {
+        title: wiki.title,
+      },
+    });
+    if (res) {
+      throw new BadRequestException("이미 있는 내용입니다.");
+    }
     const wikiAppend: Wiki = new Wiki();
-
     wikiAppend.title = wiki.title;
     wikiAppend.letter = this.getChosung(wiki.title);
     wikiAppend.content = wiki.content;
@@ -49,7 +63,7 @@ export class WikiService {
       wikiAppend.mustRead = wiki.mustRead;
     }
 
-    return await this.wikiRepository.insert(wikiAppend);
+    return await this.wikiRepository.save(wikiAppend);
   }
 
   private getChosung(input: string): string {
@@ -65,36 +79,39 @@ export class WikiService {
     }
   }
 
-  async updateWikiDataByTitle(wiki: UpdateWikiDataDto, title: string) {
-    const data = await this.wikiRepository.findOne({
-      where: {
-        title: title,
-      },
+  async updateByTitle(wiki: UpdateWikiDto, originTitle: string) {
+    const findData = await this.wikiRepository.find({
+      where: [{ title: originTitle }, { title: wiki.title }],
     });
-    let letter = data.letter;
-    if (wiki.title) {
-      letter = this.getChosung(wiki.title);
+    if (findData.length > 1) {
+      throw new ConflictException("바꾸려는 위키의 제목과 일치합니다.");
     }
-    const updateData = { ...data, ...wiki, letter };
+    const data = findData.find((dat) => dat.title === originTitle);
+    if (data == null) {
+      throw new BadRequestException("해당 위키는 없습니다.");
+    }
 
-    return await this.wikiRepository.save(updateData);
+    const letter =
+      wiki.title == null ? data.letter : this.getChosung(wiki.title);
+    const result = await this.wikiRepository.update(
+      {
+        wikiId: data.wikiId,
+      },
+      { ...wiki, letter: letter },
+    );
+
+    return result;
   }
 
-  async deleteWikiDataById(id: number) {
+  async deleteById(id: number) {
     return await this.wikiRepository.delete(id);
   }
 
-  async deleteWikiDataByTitle(title: string) {
-    const wiki = await this.wikiRepository.findOne({
-      where: {
-        title: title,
-      },
+  async deleteByTitle(title: string) {
+    const res = await this.wikiRepository.delete({
+      title: title,
     });
-    if (wiki) {
-      return await this.wikiRepository.remove(wiki);
-    } else {
-      return wiki;
-    }
+    return res;
   }
 }
 

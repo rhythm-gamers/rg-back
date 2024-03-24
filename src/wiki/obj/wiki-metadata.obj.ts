@@ -1,14 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNumber, IsString } from "class-validator";
-
 export class WikiMetadata {
-  @ApiProperty()
-  @IsNumber()
-  uid: number;
-  @ApiProperty()
-  @IsString()
+  wikiId: number;
   title: string;
-  @ApiProperty()
-  @IsBoolean()
   mustRead: boolean;
 }
