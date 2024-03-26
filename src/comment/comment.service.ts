@@ -24,7 +24,7 @@ export class CommentService {
   ) {
     const result = await this.commentRepository.findAndCount({
       select: {
-        commentId: true,
+        id: true,
         content: true,
         likes: true,
         parentId: true,
@@ -37,11 +37,11 @@ export class CommentService {
       },
       where: {
         post: {
-          postId: postId,
+          id: postId,
         },
       },
       order: {
-        commentId: "DESC",
+        id: "DESC",
       },
       skip: page * limit,
       take: limit,
@@ -53,7 +53,7 @@ export class CommentService {
 
   async fetchCommentWithCommentID(commentId: number) {
     const comment = await this.commentRepository.findOneBy({
-      commentId: commentId,
+      id: commentId,
     });
 
     return comment;
@@ -109,7 +109,7 @@ export class CommentService {
       userId,
       commentId,
     );
-    const result = await this.commentRepository.delete(comment.commentId);
+    const result = await this.commentRepository.delete(comment.id);
     return result;
   }
 
@@ -135,7 +135,7 @@ export class CommentService {
         likes: true,
       },
       where: {
-        commentId: commentId,
+        id: commentId,
       },
     });
     return result;
@@ -155,7 +155,7 @@ export class CommentService {
   private async fetchCommentWithCommentId(commentId: number) {
     const comment = await this.commentRepository.findOne({
       where: {
-        commentId: commentId,
+        id: commentId,
       },
       relations: ["user"],
     });

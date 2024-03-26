@@ -67,7 +67,7 @@ export class WikiController {
 
   private generateMetadata(metadata: WikiMetadataOrigin) {
     return {
-      wikiId: metadata.wikiId,
+      id: metadata.id,
       title: metadata.title,
       mustRead: metadata.mustRead,
     };

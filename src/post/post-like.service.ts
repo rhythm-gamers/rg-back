@@ -17,7 +17,7 @@ export class PostLikeService {
   async appendUserToLikeList(userId: number, postId: number) {
     const user = await this.userService.fetchUserLikeListWithUserID(userId);
     if (
-      user.postLikeList.some((like) => like.post.postId === postId) === true
+      user.postLikeList.some((like) => like.post.id === postId) === true
     ) {
       return false;
     }

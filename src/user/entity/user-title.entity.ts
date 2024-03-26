@@ -10,9 +10,9 @@ import { User } from "./user.entity";
 @Entity()
 export class UserTitle {
   @PrimaryGeneratedColumn()
-  userTitleId: number;
+  id: number;
 
-  @OneToOne(() => User, (user) => user.usertitle, {
+  @OneToOne(() => User, (user) => user.userTitle, {
     onDelete: "CASCADE",
   })
   @JoinColumn()

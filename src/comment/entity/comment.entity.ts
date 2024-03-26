@@ -15,7 +15,7 @@ import { CommentLike } from "./comment-like.entity";
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
-  commentId: number;
+  id: number;
 
   @ManyToOne(() => User, (user) => user.comments)
   user: User;

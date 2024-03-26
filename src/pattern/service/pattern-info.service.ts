@@ -33,7 +33,7 @@ export class PatternInfoService {
     await this.patternInfoRepo.update(id, updatePatternInfoData);
     return await this.patternInfoRepo.findOne({
       where: {
-        patternId: id,
+        id: id,
       },
     });
   }

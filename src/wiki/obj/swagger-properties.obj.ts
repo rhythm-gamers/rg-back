@@ -4,7 +4,7 @@ export const metadataProperty = (
   mustread: boolean,
 ) => {
   return {
-    wikiId: { type: "integer", example: id },
+    id: { type: "integer", example: id },
     title: { type: "string", example: title },
     mustRead: { type: "boolean", example: mustread },
   };
@@ -60,6 +60,6 @@ export const wikiCreateProperties = () => {
     letter: { type: "string", example: "a" },
     content: { type: "string", example: "테스트용" },
     mustRead: { type: "boolean", example: true },
-    wikiId: { type: "number", example: 8 },
+    id: { type: "number", example: 8 },
   };
 };

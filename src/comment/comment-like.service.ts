@@ -18,7 +18,7 @@ export class CommentLikeService {
   async appendUserToLikeList(userId: number, commentId: number) {
     const user = await this.userService.fetchUserLikeListWithUserID(userId);
     if (
-      user.commentLikeList.some((like) => like.comment.commentId === commentId)
+      user.commentLikeList.some((like) => like.comment.id === commentId)
     ) {
       return false;
     }

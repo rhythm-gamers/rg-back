@@ -10,9 +10,9 @@ import { User } from "./user.entity";
 @Entity()
 export class PlateSetting {
   @PrimaryGeneratedColumn()
-  plateSettingId: number;
+  id: number;
 
-  @OneToOne(() => User, (user) => user.platesetting, {
+  @OneToOne(() => User, (user) => user.plateSetting, {
     onDelete: "CASCADE",
   })
   @JoinColumn()

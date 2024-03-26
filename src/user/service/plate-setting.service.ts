@@ -50,7 +50,7 @@ export class PlateSettingService {
       throw new BadRequestException("User Not Found");
     }
     delete plate.user;
-    delete plate.plateSettingId;
+    delete plate.id;
     return plate;
   }
 
