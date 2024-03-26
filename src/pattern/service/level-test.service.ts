@@ -28,14 +28,33 @@ export class LevelTestService {
     return await this.levelTestRepo.save(levelTest);
   }
 
-  async fetchById(id: number): Promise<LevelTest> {
-    return await this.findLevelTest(id);
+  async fetchById(
+    id: number,
+    includePatternInfo: boolean = false,
+  ): Promise<LevelTest> {
+    return await this.findLevelTest(id, includePatternInfo);
   }
 
-  async fetchAll() {
+  async fetchByTitle(title: string): Promise<LevelTest> {
+    const res = await this.levelTestRepo.findOne({
+      where: {
+        title: title,
+      },
+    });
+    return res;
+  }
+
+  async fetchAll(keyNum?: number) {
+    const whereClues = {};
+    if (Number.isNaN(keyNum) === false && keyNum != null) {
+      whereClues["keyNum"] = keyNum;
+    }
     return await this.levelTestRepo.find({
       relations: {
         patternInfo: true,
+      },
+      where: {
+        ...whereClues,
       },
     });
   }
@@ -44,7 +63,7 @@ export class LevelTestService {
     id: number,
     updateData: UpdateLevelTestDto,
   ): Promise<LevelTest> {
-    const levelTest: LevelTest = await this.findLevelTest(id);
+    const levelTest: LevelTest = await this.findLevelTest(id, true);
 
     if (updateData.patternInfo !== undefined) {
       updateData.patternInfo =
@@ -59,20 +78,24 @@ export class LevelTestService {
       ...updateData,
     };
     await this.levelTestRepo.save(updateLevelTestData);
-    return await this.findLevelTest(id);
+    return await this.findLevelTest(id, true);
   }
 
   async deleteById(id: number) {
     return await this.levelTestRepo.delete(id);
   }
 
-  async findLevelTest(id: number): Promise<LevelTest> {
+  async findLevelTest(
+    id: number,
+    includePatternInfo: boolean,
+  ): Promise<LevelTest> {
+    const relationsClue = includePatternInfo ? { patternInfo: true } : {};
     return await this.levelTestRepo.findOne({
       where: {
         testId: id,
       },
       relations: {
-        patternInfo: true,
+        ...relationsClue,
       },
     });
   }

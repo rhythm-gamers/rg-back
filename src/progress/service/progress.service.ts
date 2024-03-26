@@ -54,4 +54,20 @@ export class ProgressService {
   async fetchPracticeProgress(userId: number, practiceId: number) {
     return await this.practiceProgressService.fetch(userId, practiceId);
   }
+
+  async fetchAllLevelTestProgress(userId: number, keyNum: number) {
+    return await this.levelTestProgressService.fetchAllByUserId(userId, keyNum);
+  }
+
+  async fetchAllPracticeProgress(userId: number, keyNum: number) {
+    return await this.practiceProgressService.fetchAllByUserId(userId, keyNum);
+  }
+
+  async fetchLevelTestRanking(id: number) {
+    return await this.levelTestProgressService.fetchRanking(id);
+  }
+
+  async fetchPracticeRanking(id: number) {
+    return await this.practiceProgressService.fetchRanking(id);
+  }
 }

@@ -14,6 +14,9 @@ export class PracticeService {
     private readonly patternInfoService: PatternInfoService,
   ) {}
 
+  private INCLUDE_PATTERN_INFO = true;
+  private EXCLUDE_PATTERN_INFO = false;
+
   async createEntity(createData: CreatePracticeDto): Promise<Practice> {
     const { patternInfo, ...otherInfo } = createData;
 
@@ -28,14 +31,33 @@ export class PracticeService {
     return await this.practiceRepo.save(practice);
   }
 
-  async fetchById(id: number): Promise<Practice> {
-    return await this.findPractice(id);
+  async fetchById(
+    id: number,
+    includePatternInfo: boolean = false,
+  ): Promise<Practice> {
+    return await this.findPractice(id, includePatternInfo);
   }
 
-  async fetchAll() {
+  async fetchByTitle(title: string): Promise<Practice> {
+    const res = await this.practiceRepo.findOne({
+      where: {
+        title: title,
+      },
+    });
+    return res;
+  }
+
+  async fetchAll(keyNum?: number) {
+    const whereClues = {};
+    if (Number.isNaN(keyNum) === false && keyNum != null) {
+      whereClues["keyNum"] = keyNum;
+    }
     return await this.practiceRepo.find({
       relations: {
         patternInfo: true,
+      },
+      where: {
+        ...whereClues,
       },
     });
   }
@@ -44,7 +66,10 @@ export class PracticeService {
     practiceId: number,
     updateData: UpdatePracticeDto,
   ): Promise<Practice> {
-    const practice: Practice = await this.findPractice(practiceId);
+    const practice: Practice = await this.findPractice(
+      practiceId,
+      this.INCLUDE_PATTERN_INFO,
+    );
 
     if (updateData.patternInfo !== undefined) {
       updateData.patternInfo =
@@ -59,20 +84,24 @@ export class PracticeService {
       ...updateData,
     };
     await this.practiceRepo.save(updatePracticeData);
-    return await this.findPractice(practiceId);
+    return await this.findPractice(practiceId, this.INCLUDE_PATTERN_INFO);
   }
 
   async deleteById(id: number) {
     return await this.practiceRepo.delete(id);
   }
 
-  async findPractice(practiceId: number): Promise<Practice> {
+  async findPractice(
+    practiceId: number,
+    includePatternInfo: boolean,
+  ): Promise<Practice> {
+    const realtionsClue = includePatternInfo ? { patternInfo: true } : {};
     return await this.practiceRepo.findOne({
       where: {
         practiceId: practiceId,
       },
       relations: {
-        patternInfo: true,
+        ...realtionsClue,
       },
     });
   }

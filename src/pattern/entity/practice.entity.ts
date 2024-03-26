@@ -29,6 +29,15 @@ export class Practice {
   @Column()
   level: number;
 
+  @Column({
+    type: "decimal",
+    precision: 7,
+    scale: 2,
+    comment: "00000.00~99999.99",
+    default: 0, // 임시로 만들었음
+  })
+  goalRate: number; // DECIMAL(7,2)
+
   @Column()
   keyNum: number;
 
