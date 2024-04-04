@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Req, Res } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  Res,
+} from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UpdatePlateSettingDto } from "./dto/update-plate-setting.dto";
 import { PlateSettingService } from "./service/plate-setting.service";
@@ -7,6 +16,8 @@ import { SkipAuth } from "src/token/token.metadata";
 import { ApiParam, ApiTags } from "@nestjs/swagger";
 import { UpdateUserTitleDto } from "./dto/update-user-title.dto";
 import { UserTitleService } from "./service/user-title.service";
+import { TokenPayload } from "src/auth/object/token-payload.obj";
+import { UploadProfileImageDto } from "./dto/upload-profile-image.dto";
 
 @Controller("user")
 export class UserController {
@@ -78,5 +89,18 @@ export class UserController {
   ) {
     const titles = await this.userTitleService.fetchByNickname(nickname);
     res.status(200).send(titles);
+  }
+
+  @Post("upload/profile-image")
+  async uploadProfileImage(
+    @Req() req,
+    @Res() res: Response,
+    @Body() profileImageDto: UploadProfileImageDto,
+  ) {
+    const user: TokenPayload = req.user;
+    const imageBase64: string = profileImageDto.image;
+    // this.userService.uploadUserProfileImage(user.nickname, imageBase64);
+    this.userService.fetchPlateData(user.uid);
+    res.status(200).send();
   }
 }

@@ -29,7 +29,4 @@ export class PlateSetting {
 
   @Column({ default: false })
   showChinghoIco: boolean;
-
-  @Column({ default: 0 })
-  showBgdesign: number;
 }

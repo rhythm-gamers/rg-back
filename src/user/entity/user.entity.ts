@@ -17,6 +17,7 @@ import { LevelTestProgress } from "../../progress/entity/level-test-progress.ent
 import { PracticeProgress } from "../../progress/entity/practice-progress.entity";
 import { CommentLike } from "src/comment/entity/comment-like.entity";
 import { PostLike } from "src/post/entity/post-like.entity";
+import { PlateData } from "./plate-data.entity";
 
 @Entity()
 export class User {
@@ -28,6 +29,9 @@ export class User {
 
   @OneToOne(() => UserTitle, (usertitle) => usertitle.user)
   usertitle: UserTitle;
+
+  @OneToOne(() => PlateData, (plateData) => plateData.user)
+  plateData: PlateData;
 
   @OneToMany(() => LevelTestProgress, (progress) => progress.user, {
     cascade: true,
@@ -97,4 +101,10 @@ export class User {
 
   @Column({ nullable: true })
   steamId: number | null;
+
+  @Column({ default: 0 })
+  userLevel: number;
+
+  @Column({ nullable: true })
+  profileImage: string | null;
 }
