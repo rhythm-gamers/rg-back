@@ -1,5 +1,5 @@
 export class WikiMetadata {
-  wikiId: number;
+  id: number;
   title: string;
   mustRead: boolean;
 }

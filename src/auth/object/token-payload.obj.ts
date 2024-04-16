@@ -7,10 +7,10 @@ export class TokenPayload {
   role: Role;
 
   constructor(user: User) {
-    this.uid = user.userId;
+    this.uid = user.id;
     this.registerId = user.registerId;
     this.nickname = user.nickname;
-    this.role = user.adminYn === true ? Role.Admin : Role.User;
+    this.role = user.isAdmin === true ? Role.Admin : Role.User;
   }
 }
 

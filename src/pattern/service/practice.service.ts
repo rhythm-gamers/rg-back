@@ -74,7 +74,7 @@ export class PracticeService {
     if (updateData.patternInfo !== undefined) {
       updateData.patternInfo =
         await this.patternInfoService.updatePatternInfoData(
-          practice.patternInfo.patternId,
+          practice.patternInfo.id,
           updateData.patternInfo,
         );
     }
@@ -98,7 +98,7 @@ export class PracticeService {
     const realtionsClue = includePatternInfo ? { patternInfo: true } : {};
     return await this.practiceRepo.findOne({
       where: {
-        practiceId: practiceId,
+        id: practiceId,
       },
       relations: {
         ...realtionsClue,

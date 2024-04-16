@@ -11,9 +11,9 @@ import { PracticeProgress } from "src/progress/entity/practice-progress.entity";
 @Entity()
 export class Practice {
   @PrimaryGeneratedColumn()
-  practiceId: number;
+  id: number;
 
-  @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.practice, {
+  @OneToOne(() => PatternInfo, (patternInfo) => patternInfo.practice, {
     cascade: true,
   })
   patternInfo: PatternInfo;

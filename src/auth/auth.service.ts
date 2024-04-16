@@ -96,8 +96,8 @@ export class AuthService {
       registerId: registerDto.username,
       nickname: registerDto.nickname,
       password: registerDto.password,
-      usertitle: userTitle,
-      platesetting: plateSetting,
+      userTitle: userTitle,
+      plateSetting: plateSetting,
     });
     await this.userRepository.save(newUser);
     return newUser;

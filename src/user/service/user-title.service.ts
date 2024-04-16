@@ -21,7 +21,7 @@ export class UserTitleService {
     const plate = await this.userTitleRepository.findOne({
       where: {
         user: {
-          userId: userId,
+          id: userId,
         },
       },
       relations: {
@@ -50,14 +50,14 @@ export class UserTitleService {
       throw new BadRequestException("User Not Found");
     }
     delete plate.user;
-    delete plate.userTitleId;
+    delete plate.id;
     return plate;
   }
 
   async delete(userId: number) {
     await this.userTitleRepository.delete({
       user: {
-        userId: userId,
+        id: userId,
       },
     });
   }

@@ -16,7 +16,7 @@ import { PostLike } from "./post-like.entity";
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
-  postId: number;
+  id: number;
 
   @ManyToOne(() => Board, (board) => board.posts, {
     onDelete: "CASCADE",

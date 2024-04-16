@@ -22,10 +22,10 @@ export class PracticeProgressService {
     const res = await this.progressRepo.findOne({
       where: {
         user: {
-          userId: user.userId,
+          id: user.id,
         },
         practice: {
-          practiceId: practice.practiceId,
+          id: practice.id,
         },
       },
     });
@@ -45,10 +45,10 @@ export class PracticeProgressService {
     const res = await this.progressRepo.findOne({
       where: {
         user: {
-          userId: userId,
+          id: userId,
         },
         practice: {
-          practiceId: practiceId,
+          id: practiceId,
         },
       },
     });
@@ -62,7 +62,7 @@ export class PracticeProgressService {
 
   async fetchAllByUserId(userId: number, keyNum: number) {
     const whereClue = {
-      user: { userId: userId },
+      user: { id: userId },
     };
     if (Number.isNaN(keyNum) === false) {
       whereClue["practice"] = { keyNum: keyNum };
@@ -74,7 +74,7 @@ export class PracticeProgressService {
         currentRate: true,
         updatedAt: true,
         practice: {
-          practiceId: true,
+          id: true,
         },
       },
       where: {
@@ -91,14 +91,14 @@ export class PracticeProgressService {
       }
       let currentRate = 0;
       for (const [idx, progress] of res.entries()) {
-        if (progress.practice.practiceId === practice.practiceId) {
+        if (progress.practice.id === practice.id) {
           currentRate = progress.currentRate;
           res.splice(idx, 1);
           break;
         }
       }
 
-      delete practice.patternInfo.patternId;
+      delete practice.patternInfo.id;
       for (const key in practice.patternInfo) {
         if (practice.patternInfo[key] === 0) {
           delete practice.patternInfo[key];
@@ -133,7 +133,7 @@ export class PracticeProgressService {
       },
       where: {
         practice: {
-          practiceId: practice.practiceId,
+          id: practice.id,
         },
       },
       relations: {

@@ -11,7 +11,7 @@ export class UserService {
 
   async fetchWithUserId(userId: number): Promise<User> {
     const user = await this.userRepository.findOneBy({
-      userId: userId,
+      id: userId,
     });
     return user;
   }
@@ -19,7 +19,7 @@ export class UserService {
   async fetchUserLikeListWithUserID(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        userId: userId,
+        id: userId,
       },
       relations: {
         commentLikeList: {
@@ -36,7 +36,7 @@ export class UserService {
   async fetchUserPracticeProgressWithUserId(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        userId: userId,
+        id: userId,
       },
       relations: {
         practiceProgresses: {
@@ -50,7 +50,7 @@ export class UserService {
   async fetchUserLevelTestProgressWithUserId(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        userId: userId,
+        id: userId,
       },
       relations: {
         levelTestProgresses: {

@@ -24,18 +24,18 @@ export class PostService {
   ) {
     const posts = await this.postRepository.findAndCount({
       select: {
-        postId: true,
+        id: true,
         title: true,
         views: true,
         likes: true,
         createdAt: true,
         modifiedAt: true,
         user: {
-          userId: true,
+          id: true,
           nickname: true,
         },
         comments: {
-          commentId: true,
+          id: true,
         },
       },
       where: {
@@ -45,7 +45,7 @@ export class PostService {
       },
       relations: ["user", "comments"],
       order: {
-        postId: "DESC",
+        id: "DESC",
       },
       skip: limit * page,
       take: limit,
@@ -79,9 +79,9 @@ export class PostService {
   async fetchPostSpecInfo(postId: number) {
     const post = await this.postRepository.findOne({
       select: {
-        postId: true,
+        id: true,
         user: {
-          userId: true,
+          id: true,
           nickname: true,
         },
         title: true,
@@ -92,7 +92,7 @@ export class PostService {
         modifiedAt: true,
       },
       where: {
-        postId: postId,
+        id: postId,
       },
       relations: {
         user: true,
@@ -137,13 +137,13 @@ export class PostService {
   async deletePost(userId: number, postId: number) {
     const post = await this.checkPostOwnerAndGetPost(userId, postId);
 
-    const result = await this.postRepository.delete(post.postId);
+    const result = await this.postRepository.delete(post.id);
     return result;
   }
 
   async fetchPostWithPostID(postId: number): Promise<Post> {
     const post = await this.postRepository.findOneBy({
-      postId: postId,
+      id: postId,
     });
     return post;
   }
@@ -160,7 +160,7 @@ export class PostService {
     });
 
     const result = await this.postRepository.findOneBy({
-      postId: postId,
+      id: postId,
     });
     return result;
   }
@@ -170,7 +170,7 @@ export class PostService {
     postId: number,
   ): Promise<Post> {
     const post = await this.fetchPostWithPostId(postId);
-    if (post.user.userId !== userId) {
+    if (post.user.id !== userId) {
       throw new BadRequestException();
     }
     return post;
@@ -179,7 +179,7 @@ export class PostService {
   private async fetchPostWithPostId(postId: number) {
     const post = await this.postRepository.findOne({
       where: {
-        postId: postId,
+        id: postId,
       },
       relations: ["user"],
     });
