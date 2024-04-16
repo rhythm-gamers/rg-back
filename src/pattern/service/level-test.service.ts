@@ -68,7 +68,7 @@ export class LevelTestService {
     if (updateData.patternInfo !== undefined) {
       updateData.patternInfo =
         await this.patternInfoService.updatePatternInfoData(
-          levelTest.patternInfo.patternId,
+          levelTest.patternInfo.id,
           updateData.patternInfo,
         );
     }
@@ -92,7 +92,7 @@ export class LevelTestService {
     const relationsClue = includePatternInfo ? { patternInfo: true } : {};
     return await this.levelTestRepo.findOne({
       where: {
-        testId: id,
+        id: id,
       },
       relations: {
         ...relationsClue,

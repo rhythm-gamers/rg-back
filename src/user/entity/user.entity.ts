@@ -21,13 +21,13 @@ import { PostLike } from "src/post/entity/post-like.entity";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  userId: number;
+  id: number;
 
-  @OneToOne(() => PlateSetting, (platesetting) => platesetting.user)
-  platesetting: PlateSetting;
+  @OneToOne(() => PlateSetting, (plateSetting) => plateSetting.user)
+  plateSetting: PlateSetting;
 
-  @OneToOne(() => UserTitle, (usertitle) => usertitle.user)
-  usertitle: UserTitle;
+  @OneToOne(() => UserTitle, (userTitle) => userTitle.user)
+  userTitle: UserTitle;
 
   @OneToMany(() => LevelTestProgress, (progress) => progress.user, {
     cascade: true,
@@ -55,20 +55,20 @@ export class User {
   })
   postLikeList: PostLike[];
 
-  @OneToMany(() => PostReport, (postreport) => postreport.reporter, {
+  @OneToMany(() => PostReport, (postReport) => postReport.reporter, {
     cascade: true,
   })
   postReports: PostReport[];
 
-  @OneToMany(() => CommentReport, (commentreport) => commentreport.reporter)
+  @OneToMany(() => CommentReport, (commentReport) => commentReport.reporter)
   commentReports: CommentReport[];
 
   // 신고를 함
-  @OneToMany(() => UserReport, (userreport) => userreport.reporter)
+  @OneToMany(() => UserReport, (userReport) => userReport.reporter)
   reporting: UserReport[];
 
   // 신고를 당함
-  @OneToMany(() => UserReport, (userreport) => userreport.reported)
+  @OneToMany(() => UserReport, (userReport) => userReport.reported)
   reported: UserReport[];
 
   @Column({ length: 20, unique: true })
@@ -87,7 +87,7 @@ export class User {
   describe: string | null;
 
   @Column({ default: false })
-  adminYn: boolean;
+  isAdmin: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

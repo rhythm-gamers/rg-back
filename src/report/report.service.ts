@@ -13,24 +13,23 @@ import { FetchNotProceedListDao } from "./dao/fetch-not-proceed-list.dao";
 import { HandleReportedCommentDto } from "./dto/handle-reported-comment.dto";
 import { HandleReportedUserDto } from "./dto/handle-reported-user.dto";
 
-interface TargerQueryOptions {
+interface TargetQueryOptions {
   post?: {
-    postId: boolean;
+    id: boolean;
     title: boolean;
   };
-  postReportId?: boolean;
 
   comment?: {
-    commentId: boolean;
+    id: boolean;
     content: boolean;
   };
-  commentReportId?: boolean;
 
   reported?: {
-    userId: boolean;
+    id: boolean;
     name: boolean;
   };
-  userReportId?: boolean;
+
+  id?: boolean;
 }
 
 @Injectable()
@@ -52,14 +51,14 @@ export class ReportService {
   ) {}
 
   private fetchNotProceedListFormat = (
-    selecter: TargerQueryOptions,
+    selecter: TargetQueryOptions,
     paging: FetchNotProceedListDao,
     relations: string[],
   ) => {
     return {
       select: {
         reporter: {
-          userId: true,
+          id: true,
           name: true,
         },
         reason: true,
@@ -95,11 +94,11 @@ export class ReportService {
     const reportedList = await this.postReportRepository.findAndCount(
       this.fetchNotProceedListFormat(
         {
+          id: true,
           post: {
-            postId: true,
+            id: true,
             title: true,
           },
-          postReportId: true,
         },
         paging,
         ["reporter", "post"],
@@ -138,11 +137,11 @@ export class ReportService {
     const reportedList = await this.commentReportRepository.find(
       this.fetchNotProceedListFormat(
         {
+          id: true,
           comment: {
-            commentId: true,
+            id: true,
             content: true,
           },
-          commentReportId: true,
         },
         paging,
         ["reporter", "comment"],
@@ -182,10 +181,10 @@ export class ReportService {
       this.fetchNotProceedListFormat(
         {
           reported: {
-            userId: true,
+            id: true,
             name: true,
           },
-          userReportId: true,
+          id: true,
         },
         paging,
         ["reporter", "reported"],
@@ -206,15 +205,15 @@ export class ReportService {
     const reportedUser = await this.userReportRepository.findOne({
       select: {
         reported: {
-          userId: true,
+          id: true,
         },
       },
       where: {
-        userReportId: +reportedInfo.reportId,
+        id: +reportedInfo.reportId,
       },
       relations: ["reported"],
     });
-    const reportedUserId = reportedUser.reported.userId;
+    const reportedUserId = reportedUser.reported.id;
     const reason = reportedInfo.reason;
     const duration = +reportedInfo.duration;
 

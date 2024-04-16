@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class Wiki {
   @PrimaryGeneratedColumn()
-  wikiId: number;
+  id: number;
 
   @Column({ length: 20 })
   title: string;

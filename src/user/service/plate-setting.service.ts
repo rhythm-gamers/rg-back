@@ -21,7 +21,7 @@ export class PlateSettingService {
     const plate = await this.plateSettingRepository.findOne({
       where: {
         user: {
-          userId: userId,
+          id: userId,
         },
       },
       relations: {
@@ -50,14 +50,14 @@ export class PlateSettingService {
       throw new BadRequestException("User Not Found");
     }
     delete plate.user;
-    delete plate.plateSettingId;
+    delete plate.id;
     return plate;
   }
 
   async delete(userId: number) {
     await this.plateSettingRepository.delete({
       user: {
-        userId: userId,
+        id: userId,
       },
     });
   }

@@ -24,24 +24,24 @@ export class CommentService {
   ) {
     const result = await this.commentRepository.findAndCount({
       select: {
-        commentId: true,
+        id: true,
         content: true,
         likes: true,
         parentId: true,
         createdAt: true,
         modifiedAt: true,
         user: {
-          userId: true,
+          id: true,
           nickname: true,
         },
       },
       where: {
         post: {
-          postId: postId,
+          id: postId,
         },
       },
       order: {
-        commentId: "DESC",
+        id: "DESC",
       },
       skip: page * limit,
       take: limit,
@@ -53,7 +53,7 @@ export class CommentService {
 
   async fetchCommentWithCommentID(commentId: number) {
     const comment = await this.commentRepository.findOneBy({
-      commentId: commentId,
+      id: commentId,
     });
 
     return comment;
@@ -109,7 +109,7 @@ export class CommentService {
       userId,
       commentId,
     );
-    const result = await this.commentRepository.delete(comment.commentId);
+    const result = await this.commentRepository.delete(comment.id);
     return result;
   }
 
@@ -135,7 +135,7 @@ export class CommentService {
         likes: true,
       },
       where: {
-        commentId: commentId,
+        id: commentId,
       },
     });
     return result;
@@ -146,7 +146,7 @@ export class CommentService {
     commentId: number,
   ): Promise<Comment> {
     const comment = await this.fetchCommentWithCommentId(commentId);
-    if (comment.user.userId !== userId) {
+    if (comment.user.id !== userId) {
       throw new BadRequestException();
     }
     return comment;
@@ -155,7 +155,7 @@ export class CommentService {
   private async fetchCommentWithCommentId(commentId: number) {
     const comment = await this.commentRepository.findOne({
       where: {
-        commentId: commentId,
+        id: commentId,
       },
       relations: ["user"],
     });

@@ -22,10 +22,10 @@ export class LevelTestProgressService {
     const res = await this.progressRepo.findOne({
       where: {
         user: {
-          userId: user.userId,
+          id: user.id,
         },
         levelTest: {
-          testId: levelTest.testId,
+          id: levelTest.id,
         },
       },
     });
@@ -45,10 +45,10 @@ export class LevelTestProgressService {
     const res = await this.progressRepo.findOne({
       where: {
         user: {
-          userId: userId,
+          id: userId,
         },
         levelTest: {
-          testId: levelTestId,
+          id: levelTestId,
         },
       },
     });
@@ -62,7 +62,7 @@ export class LevelTestProgressService {
 
   async fetchAllByUserId(userId: number, keyNum: number) {
     const whereClue = {
-      user: { userId: userId },
+      user: { id: userId },
     };
     if (Number.isNaN(keyNum) === false) {
       whereClue["levelTest"] = { keyNum: keyNum };
@@ -74,7 +74,7 @@ export class LevelTestProgressService {
         currentRate: true,
         updatedAt: true,
         levelTest: {
-          testId: true,
+          id: true,
         },
       },
       where: {
@@ -91,14 +91,14 @@ export class LevelTestProgressService {
       }
       let currentRate = 0;
       for (const [idx, progress] of res.entries()) {
-        if (progress.levelTest.testId === lTest.testId) {
+        if (progress.levelTest.id === lTest.id) {
           currentRate = progress.currentRate;
           res.splice(idx, 1);
           break;
         }
       }
 
-      delete lTest.patternInfo.patternId;
+      delete lTest.patternInfo.id;
       for (const key in lTest.patternInfo) {
         if (lTest.patternInfo[key] === 0) {
           delete lTest.patternInfo[key];
@@ -134,7 +134,7 @@ export class LevelTestProgressService {
       },
       where: {
         levelTest: {
-          testId: levelTest.testId,
+          id: levelTest.id,
         },
       },
       relations: {

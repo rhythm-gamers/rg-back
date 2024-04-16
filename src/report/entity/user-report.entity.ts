@@ -10,7 +10,7 @@ import {
 @Entity()
 export class UserReport {
   @PrimaryGeneratedColumn()
-  userReportId: number;
+  id: number;
 
   // 신고한 유저
   @ManyToOne(() => User, (user) => user.reporting)

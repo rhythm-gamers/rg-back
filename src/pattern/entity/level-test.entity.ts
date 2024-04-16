@@ -11,9 +11,9 @@ import { LevelTestProgress } from "src/progress/entity/level-test-progress.entit
 @Entity()
 export class LevelTest {
   @PrimaryGeneratedColumn()
-  testId: number;
+  id: number;
 
-  @OneToOne(() => PatternInfo, (patterninfo) => patterninfo.levelTest, {
+  @OneToOne(() => PatternInfo, (patternInfo) => patternInfo.levelTest, {
     cascade: true,
   })
   patternInfo: PatternInfo;

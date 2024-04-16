@@ -20,7 +20,7 @@ export class WikiService {
   async fetchMetadata(): Promise<WikiMetadataOrigin[]> {
     const metadatas = await this.wikiRepository.find({
       select: {
-        wikiId: true,
+        id: true,
         letter: true,
         title: true,
         mustRead: true,
@@ -95,7 +95,7 @@ export class WikiService {
       wiki.title == null ? data.letter : this.getChosung(wiki.title);
     const result = await this.wikiRepository.update(
       {
-        wikiId: data.wikiId,
+        id: data.id,
       },
       { ...wiki, letter: letter },
     );

@@ -11,7 +11,7 @@ import { LevelTest } from "./level-test.entity";
 @Entity()
 export class PatternInfo {
   @PrimaryGeneratedColumn()
-  patternId: number;
+  id: number;
 
   @OneToOne(() => Practice, (practice) => practice.patternInfo, {
     nullable: true,
@@ -20,7 +20,7 @@ export class PatternInfo {
   @JoinColumn()
   practice: Practice;
 
-  @OneToOne(() => LevelTest, (leveltest) => leveltest.patternInfo, {
+  @OneToOne(() => LevelTest, (levelTest) => levelTest.patternInfo, {
     nullable: true,
     onDelete: "CASCADE",
   })

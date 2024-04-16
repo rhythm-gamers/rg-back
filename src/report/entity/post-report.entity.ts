@@ -11,7 +11,7 @@ import {
 @Entity()
 export class PostReport {
   @PrimaryGeneratedColumn()
-  postReportId: number;
+  id: number;
 
   // 신고한 유저
   @ManyToOne(() => User, (user) => user.postReports, {
