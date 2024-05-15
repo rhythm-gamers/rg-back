@@ -31,7 +31,7 @@ export class CommentService {
         createdAt: true,
         modifiedAt: true,
         user: {
-          userId: true,
+          id: true,
           nickname: true,
         },
       },
@@ -146,7 +146,7 @@ export class CommentService {
     commentId: number,
   ): Promise<Comment> {
     const comment = await this.fetchCommentWithCommentId(commentId);
-    if (comment.user.userId !== userId) {
+    if (comment.user.id !== userId) {
       throw new BadRequestException();
     }
     return comment;

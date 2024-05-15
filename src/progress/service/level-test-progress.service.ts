@@ -16,7 +16,7 @@ export class LevelTestProgressService {
     const res = await this.progressRepo.findOne({
       where: {
         user: {
-          userId: user.userId,
+          id: user.id,
         },
         levelTest: {
           testId: levelTest.testId,
@@ -34,7 +34,7 @@ export class LevelTestProgressService {
     const res = await this.progressRepo.findOne({
       where: {
         user: {
-          userId: userId,
+          id: userId,
         },
         levelTest: {
           testId: levelTestId,

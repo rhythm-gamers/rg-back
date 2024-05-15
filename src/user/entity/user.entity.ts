@@ -22,7 +22,7 @@ import { PlateData } from "./plate-data.entity";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  userId: number;
+  id: number;
 
   @OneToOne(() => PlateSetting, (platesetting) => platesetting.user)
   platesetting: PlateSetting;
@@ -88,7 +88,7 @@ export class User {
   loginType: string;
 
   @Column({ nullable: true, default: "", length: 200 })
-  describe: string | null;
+  introduction: string | null;
 
   @Column({ default: false })
   adminYn: boolean;
@@ -100,7 +100,7 @@ export class User {
   suspendedAt: Date;
 
   @Column({ nullable: true })
-  steamId: number | null;
+  steamId: string | null;
 
   @Column({ default: 0 })
   userLevel: number;

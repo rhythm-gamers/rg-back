@@ -19,7 +19,7 @@ export class PlateDataService {
       },
       where: {
         user: {
-          userId: userId,
+          id: userId,
         },
       },
     });

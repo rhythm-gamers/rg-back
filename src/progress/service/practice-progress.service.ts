@@ -16,7 +16,7 @@ export class PracticeProgressService {
     const res = await this.progressRepo.findOne({
       where: {
         user: {
-          userId: user.userId,
+          id: user.id,
         },
         practice: {
           practiceId: practice.practiceId,
@@ -34,7 +34,7 @@ export class PracticeProgressService {
     const res = await this.progressRepo.findOne({
       where: {
         user: {
-          userId: userId,
+          id: userId,
         },
         practice: {
           practiceId: practiceId,

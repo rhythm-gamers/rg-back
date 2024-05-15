@@ -13,11 +13,20 @@ import { UpdatePlateSettingDto } from "./dto/update-plate-setting.dto";
 import { PlateSettingService } from "./service/plate-setting.service";
 import { Response } from "express";
 import { SkipAuth } from "src/token/token.metadata";
-import { ApiParam, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from "@nestjs/swagger";
 import { UpdateUserTitleDto } from "./dto/update-user-title.dto";
 import { UserTitleService } from "./service/user-title.service";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
 import { UploadProfileImageDto } from "./dto/upload-profile-image.dto";
+import { UpdateIntroductionDto } from "./dto/update-introduction.dto";
+import { HttpStatusCode } from "axios";
 
 @Controller("user")
 export class UserController {
@@ -37,9 +46,9 @@ export class UserController {
     try {
       const user = req.user;
       await this.plateSettingService.update(updateDto, user.uid);
-      res.status(200).send();
+      res.status(HttpStatusCode.Ok).send();
     } catch (error) {
-      res.status(400).send();
+      res.status(HttpStatusCode.BadRequest).send();
     }
   }
 
@@ -53,9 +62,9 @@ export class UserController {
     try {
       const user = req.user;
       await this.userTitleService.update(updateDto, user.uid);
-      res.status(200).send();
+      res.status(HttpStatusCode.Ok).send();
     } catch (error) {
-      res.status(400).send();
+      res.status(HttpStatusCode.BadRequest).send();
     }
   }
 
@@ -72,7 +81,7 @@ export class UserController {
     @Res() res: Response,
   ) {
     const plate = await this.plateSettingService.fetchByNickname(nickname);
-    res.status(200).send(plate);
+    res.status(HttpStatusCode.Ok).send(plate);
   }
 
   @SkipAuth()
@@ -88,7 +97,7 @@ export class UserController {
     @Res() res: Response,
   ) {
     const titles = await this.userTitleService.fetchByNickname(nickname);
-    res.status(200).send(titles);
+    res.status(HttpStatusCode.Ok).send(titles);
   }
 
   @Post("upload/profile-image")
@@ -99,8 +108,60 @@ export class UserController {
   ) {
     const user: TokenPayload = req.user;
     const imageBase64: string = profileImageDto.image;
-    // this.userService.uploadUserProfileImage(user.nickname, imageBase64);
+    this.userService.uploadUserProfileImage(user.nickname, imageBase64);
     this.userService.fetchPlateData(user.uid);
-    res.status(200).send();
+    res.status(HttpStatusCode.Ok).send();
+  }
+
+  @Get("introduction")
+  async fetchIntroduction(@Req() req, @Res() res: Response) {
+    const user: TokenPayload = req.user;
+    const introduction = await this.userService.fetchIntroduction(+user.uid);
+    res.status(HttpStatusCode.Ok).send({ introduction: introduction });
+  }
+
+  @Post("introduction")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        introduction: {
+          type: "string",
+          example: "rgback admin입니다.",
+          description: "업데이트 될 한줄 소개",
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: "업데이트 성공",
+  })
+  @ApiBadRequestResponse({
+    description: "토큰 없음",
+  })
+  @ApiInternalServerErrorResponse({
+    description: "데이터베이스 오류",
+  })
+  @ApiTags("User Setting")
+  async changeIntroduction(
+    @Body() updateDto: UpdateIntroductionDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
+    const user: TokenPayload = req.user;
+    const introduction: string = updateDto.introduction;
+    if (introduction.length > 200) {
+      res.status(HttpStatusCode.BadRequest).send();
+    }
+    const result = await this.userService.updateIntroduction(
+      +user.uid,
+      introduction,
+    );
+    console.log(result);
+    if (result) {
+      res.status(HttpStatusCode.Ok).send();
+    } else {
+      res.status(HttpStatusCode.InternalServerError).send();
+    }
   }
 }

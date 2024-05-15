@@ -21,7 +21,7 @@ export class PlateSettingService {
     const plate = await this.plateSettingRepository.findOne({
       where: {
         user: {
-          userId: userId,
+          id: userId,
         },
       },
       relations: {
@@ -57,7 +57,7 @@ export class PlateSettingService {
   async delete(userId: number) {
     await this.plateSettingRepository.delete({
       user: {
-        userId: userId,
+        id: userId,
       },
     });
   }

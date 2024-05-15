@@ -27,7 +27,7 @@ interface TargerQueryOptions {
   commentReportId?: boolean;
 
   reported?: {
-    userId: boolean;
+    id: boolean;
     name: boolean;
   };
   userReportId?: boolean;
@@ -59,7 +59,7 @@ export class ReportService {
     return {
       select: {
         reporter: {
-          userId: true,
+          id: true,
           name: true,
         },
         reason: true,
@@ -182,7 +182,7 @@ export class ReportService {
       this.fetchNotProceedListFormat(
         {
           reported: {
-            userId: true,
+            id: true,
             name: true,
           },
           userReportId: true,
@@ -206,7 +206,7 @@ export class ReportService {
     const reportedUser = await this.userReportRepository.findOne({
       select: {
         reported: {
-          userId: true,
+          id: true,
         },
       },
       where: {
@@ -214,7 +214,7 @@ export class ReportService {
       },
       relations: ["reported"],
     });
-    const reportedUserId = reportedUser.reported.userId;
+    const reportedUserId = reportedUser.reported.id;
     const reason = reportedInfo.reason;
     const duration = +reportedInfo.duration;
 

@@ -19,7 +19,7 @@ export class UserService {
 
   async fetchWithUserId(userId: number): Promise<User> {
     const user = await this.userRepository.findOneBy({
-      userId: userId,
+      id: userId,
     });
     return user;
   }
@@ -27,7 +27,7 @@ export class UserService {
   async fetchUserLikeListWithUserID(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        userId: userId,
+        id: userId,
       },
       relations: {
         commentLikeList: {
@@ -44,7 +44,7 @@ export class UserService {
   async fetchUserPracticeProgressWithUserId(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        userId: userId,
+        id: userId,
       },
       relations: {
         practiceProgresses: {
@@ -58,7 +58,7 @@ export class UserService {
   async fetchUserLevelTestProgressWithUserId(userId: number) {
     const user = await this.userRepository.findOne({
       where: {
-        userId: userId,
+        id: userId,
       },
       relations: {
         levelTestProgresses: {
@@ -81,7 +81,7 @@ export class UserService {
   async fetchPlateData(userId: number) {
     const user: User = await this.userRepository.findOne({
       select: {
-        userId: true,
+        id: true,
         profileImage: true,
         platesetting: {
           plateSettingId: true,
@@ -92,7 +92,7 @@ export class UserService {
         },
       },
       where: {
-        userId: userId,
+        id: userId,
       },
       relations: {
         platesetting: true,
@@ -112,5 +112,31 @@ export class UserService {
     const titleDatas =
       user.platesetting.showChinghoIco === true ? user.usertitle : {};
     console.log(titleDatas);
+  }
+
+  async fetchIntroduction(userId: number) {
+    const result = await this.userRepository.findOne({
+      select: {
+        introduction: true,
+      },
+      where: {
+        id: userId,
+      },
+    });
+    return result.introduction;
+  }
+
+  async updateIntroduction(userId: number, introduction: string) {
+    const result = await this.userRepository.update(userId, {
+      introduction: introduction,
+    });
+    return result;
+  }
+
+  async saveUserSteamUID(uid: number, steamUID: string) {
+    const result = await this.userRepository.update(uid, {
+      steamId: steamUID,
+    });
+    return result;
   }
 }

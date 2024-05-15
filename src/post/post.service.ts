@@ -31,7 +31,7 @@ export class PostService {
         createdAt: true,
         modifiedAt: true,
         user: {
-          userId: true,
+          id: true,
           nickname: true,
         },
         comments: {
@@ -81,7 +81,7 @@ export class PostService {
       select: {
         postId: true,
         user: {
-          userId: true,
+          id: true,
           nickname: true,
         },
         title: true,
@@ -170,7 +170,7 @@ export class PostService {
     postId: number,
   ): Promise<Post> {
     const post = await this.fetchPostWithPostId(postId);
-    if (post.user.userId !== userId) {
+    if (post.user.id !== userId) {
       throw new BadRequestException();
     }
     return post;
