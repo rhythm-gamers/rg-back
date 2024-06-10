@@ -3,20 +3,11 @@ import { AuthService } from "./auth.service";
 import { Response } from "express";
 import axios, { HttpStatusCode } from "axios";
 import qs from "qs";
-import {
-  // steam,
-  SteamUserObject,
-  rhythmGameList,
-} from "./object/auth.object";
+import { SteamUserObject } from "./object/auth.object";
 import SteamAuth from "node-steam-openid";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
-import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
-  ApiBadRequestResponse,
-} from "@nestjs/swagger";
+import { ApiTags, ApiOperation } from "@nestjs/swagger";
 import { SkipAuth } from "src/token/token.metadata";
 import { TokenPayload } from "./object/token-payload.obj";
 import { UserService } from "src/user/user.service";
@@ -42,12 +33,14 @@ export class AuthController {
     });
   }
 
+  @ApiTags("steam")
   @Get("steam")
   async steamLogin(@Res() res: Response) {
     const redirectUrl = await this.steam.getRedirectUrl();
     res.redirect(redirectUrl);
   }
 
+  @ApiTags("steam")
   @Get("steam/authenticate")
   async steamAuthenticate(@Req() req, @Res() res: Response) {
     const rgbackUser: TokenPayload = req.user;
@@ -61,58 +54,9 @@ export class AuthController {
     return;
   }
 
-  @ApiOkResponse({
-    description: "스팀 게임 목록 조회 완료",
-    schema: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-      example: [
-        "Djmax Respect V",
-        "EZ2ON REBOOT",
-        "불과 얼음의 춤 (A Dance of Fire and Ice)",
-        "Rhythm Doctor",
-      ],
-    },
-  })
-  @ApiBadRequestResponse({
-    description: "저장된 스팀 id 없음",
-  })
-  @Get("steam/games")
-  async getGames(@Req() req, @Res() res: Response) {
-    const token: TokenPayload = req.user;
-    const user = await this.userService.fetchWithUserId(+token.uid);
-    const steamid: string = user.steamId;
-    if (steamid === "" || steamid == null) {
-      res.status(HttpStatusCode.BadRequest).send();
-      return;
-    }
-
-    const decrypted = await this.codecService.decrypt(steamid);
-
-    const params = {
-      key: process.env.STEAM_API_KEY,
-      steamid: decrypted,
-      format: "json",
-      include_appinfo: true,
-      appids_filter: rhythmGameList,
-    };
-
-    const games = await axios.get(
-      `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`,
-      { params },
-    );
-    const gamesObj: Array<Record<string, string>> = games.data.response.games;
-
-    const data = [];
-    gamesObj.forEach((game) => {
-      data.push(game.name);
-    });
-
-    res.status(HttpStatusCode.Ok).send(data);
-    return;
-  }
+  /*
+    SteamGame 목록 조회하는 코드는 user.controller로 이동
+  */
 
   @SkipAuth()
   @ApiTags("auth")
@@ -131,8 +75,15 @@ export class AuthController {
   @ApiTags("auth")
   @ApiOperation({ summary: "사용자 회원가입" })
   @Post("register")
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto, @Res() res: Response) {
+    try {
+      await this.authService.register(registerDto);
+      res.status(HttpStatusCode.Ok).send();
+    } catch (err) {
+      res.status(err.status).send(err.message);
+      return;
+    }
+    return;
   }
 
   @ApiTags("auth")
