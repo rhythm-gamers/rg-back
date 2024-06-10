@@ -10,7 +10,7 @@ import { User } from "./user.entity";
 @Entity()
 export class PlateData {
   @PrimaryGeneratedColumn()
-  dataId: number;
+  id: number;
 
   @OneToOne(() => User, (user) => user.plateData, {
     onDelete: "CASCADE",
@@ -26,6 +26,4 @@ export class PlateData {
 
   @Column({ default: 0 })
   chinghoRank: number;
-
-
 }
