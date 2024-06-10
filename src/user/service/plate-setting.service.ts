@@ -12,7 +12,7 @@ export class PlateSettingService {
   ) {}
 
   async create() {
-    const plateSetting = new PlateSetting();
+    const plateSetting = await this.plateSettingRepository.create();
     const res = await this.plateSettingRepository.save(plateSetting);
     return res;
   }
