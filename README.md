@@ -61,6 +61,7 @@ touch .env
 STEAM_REALM=<실제 서비스 하는 도메인>
 STEAM_RETURN_URL=<실제 서비스 하는 도메인>/auth/steam/authenticate
 STEAM_API_KEY=<issued_steam_id>
+AFTER_REDIRECT_URL=<프론트엔드 도메인>
 
 # Databse
 DATABASE_HOST=<database_host> # 실제 데이터베이스 주소. 개발시에는 localhost
