@@ -10,6 +10,7 @@ import { PlateSettingService } from "./service/plate-setting.service";
 import { AwsS3Module } from "src/s3/aws-s3.module";
 import { PlateDataService } from "./service/plate-data.service";
 import { PlateData } from "./entity/plate-data.entity";
+import { CodecModule } from "src/codec/codec.modle";
 
 @Module({
   controllers: [UserController],
@@ -22,7 +23,13 @@ import { PlateData } from "./entity/plate-data.entity";
   imports: [
     TypeOrmModule.forFeature([User, PlateSetting, UserTitle, PlateData]),
     AwsS3Module,
+    CodecModule,
   ],
-  exports: [UserService, UserTitleService, PlateSettingService],
+  exports: [
+    UserService,
+    UserTitleService,
+    PlateSettingService,
+    PlateDataService,
+  ],
 })
 export class UserModule {}
