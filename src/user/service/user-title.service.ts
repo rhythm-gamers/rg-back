@@ -12,7 +12,7 @@ export class UserTitleService {
   ) {}
 
   async create() {
-    const userTitle = new UserTitle();
+    const userTitle = await this.userTitleRepository.create();
     const res = await this.userTitleRepository.save(userTitle);
     return res;
   }

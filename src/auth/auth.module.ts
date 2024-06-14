@@ -5,6 +5,7 @@ import { User } from "src/user/entity/user.entity";
 import { Module } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
+import { CodecModule } from "src/codec/codec.modle";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthController } from "./auth.controller";
       secret: process.env.JWT_SECRET,
     }),
     TypeOrmModule.forFeature([User]),
+    CodecModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

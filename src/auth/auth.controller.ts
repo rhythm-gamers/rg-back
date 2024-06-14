@@ -1,23 +1,17 @@
-import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { Request, Response } from "express";
-import axios from "axios";
+import { Response } from "express";
+import axios, { HttpStatusCode } from "axios";
 import qs from "qs";
-import {
-  // steam,
-  SteamUserObject,
-  sixtarGateId,
-  djMaxId,
-  ez2onRebootRId,
-  museDashId,
-  rhythmDoctorId,
-  adofaiId,
-} from "./auth.object";
+import { SteamUserObject } from "./object/auth.object";
 import SteamAuth from "node-steam-openid";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
 import { SkipAuth } from "src/token/token.metadata";
+import { TokenPayload } from "./object/token-payload.obj";
+import { UserService } from "src/user/user.service";
+import { CodecService } from "src/codec/codec.service";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -27,7 +21,11 @@ axios.defaults.paramsSerializer = (params) => {
 export class AuthController {
   private steam: SteamAuth;
 
-  constructor(private readonly authService: AuthService) {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+    private readonly codecService: CodecService,
+  ) {
     this.steam = new SteamAuth({
       realm: process.env.STEAM_REALM,
       returnUrl: process.env.STEAM_RETURN_URL,
@@ -35,42 +33,30 @@ export class AuthController {
     });
   }
 
+  @ApiTags("steam")
   @Get("steam")
   async steamLogin(@Res() res: Response) {
     const redirectUrl = await this.steam.getRedirectUrl();
     res.redirect(redirectUrl);
   }
 
+  @ApiTags("steam")
   @Get("steam/authenticate")
-  async steamAuthenticate(@Req() req: Request) {
+  async steamAuthenticate(@Req() req, @Res() res: Response) {
+    const rgbackUser: TokenPayload = req.user;
     const user: SteamUserObject = await this.steam.authenticate(req);
-    return user._json.steamid;
+    const steamid: string = user._json.steamid;
+
+    const encrypted = await this.codecService.encrypt(steamid);
+
+    await this.userService.saveUserSteamUID(+rgbackUser.uid, encrypted);
+    res.redirect(process.env.AFTER_REDIRECT_URL);
+    return;
   }
 
-  @Get("steam/games/:id")
-  async getGames(@Param("id") id: string) {
-    const params = {
-      key: process.env.STEAM_API_KEY,
-      steamid: id,
-      format: "json",
-      include_appinfo: true,
-      appids_filter: [
-        sixtarGateId,
-        djMaxId,
-        ez2onRebootRId,
-        museDashId,
-        rhythmDoctorId,
-        adofaiId,
-      ],
-    };
-
-    const games = await axios.get(
-      `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`,
-      { params },
-    );
-
-    return games.data;
-  }
+  /*
+    SteamGame 목록 조회하는 코드는 user.controller로 이동
+  */
 
   @SkipAuth()
   @ApiTags("auth")
@@ -81,7 +67,7 @@ export class AuthController {
     res
       .cookie("access_token", tokens.accessToken, { httpOnly: true })
       .cookie("refresh_token", tokens.refreshToken, { httpOnly: true })
-      .status(200)
+      .status(HttpStatusCode.Ok)
       .send();
   }
 
@@ -89,8 +75,15 @@ export class AuthController {
   @ApiTags("auth")
   @ApiOperation({ summary: "사용자 회원가입" })
   @Post("register")
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto, @Res() res: Response) {
+    try {
+      await this.authService.register(registerDto);
+      res.status(HttpStatusCode.Ok).send();
+    } catch (err) {
+      res.status(err.status).send(err.message);
+      return;
+    }
+    return;
   }
 
   @ApiTags("auth")
@@ -100,7 +93,7 @@ export class AuthController {
     res
       .clearCookie("access_token")
       .clearCookie("refresh_token")
-      .status(200)
+      .status(HttpStatusCode.Ok)
       .send();
   }
 }

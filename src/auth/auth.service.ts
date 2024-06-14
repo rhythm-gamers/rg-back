@@ -15,15 +15,17 @@ import { RegisterDto } from "./dto/register.dto";
 import { UserTitleService } from "src/user/service/user-title.service";
 import { PlateSettingService } from "src/user/service/plate-setting.service";
 import { TokenPayload } from "./object/token-payload.obj";
+import { PlateDataService } from "src/user/service/plate-data.service";
 
 const SALT_ROUNDS = 10;
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
-    private userTitleService: UserTitleService,
-    private plateSettingService: PlateSettingService,
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+    private readonly userTitleService: UserTitleService,
+    private readonly plateSettingService: PlateSettingService,
+    private readonly plateDataService: PlateDataService,
   ) {}
 
   @InjectRepository(User) private readonly userRepository: Repository<User>;
@@ -92,12 +94,14 @@ export class AuthService {
   private async createUser(registerDto: RegisterDto) {
     const userTitle = await this.userTitleService.create();
     const plateSetting = await this.plateSettingService.create();
+    const plateData = await this.plateDataService.create();
     const newUser = this.userRepository.create({
       registerId: registerDto.username,
       nickname: registerDto.nickname,
       password: registerDto.password,
       userTitle: userTitle,
       plateSetting: plateSetting,
+      plateData: plateData,
     });
     await this.userRepository.save(newUser);
     return newUser;
