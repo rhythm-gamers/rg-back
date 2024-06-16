@@ -6,7 +6,6 @@ import {
 } from "@nestjs/common";
 import { LoginDto } from "./dto/login.dto";
 import { UserService } from "src/user/user.service";
-import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/user/entity/user.entity";
 import { Repository } from "typeorm";
@@ -16,16 +15,17 @@ import { UserTitleService } from "src/user/service/user-title.service";
 import { PlateSettingService } from "src/user/service/plate-setting.service";
 import { TokenPayload } from "./object/token-payload.obj";
 import { PlateDataService } from "src/user/service/plate-data.service";
+import { TokenService } from "src/token/token.service";
 
 const SALT_ROUNDS = 10;
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
     private readonly userTitleService: UserTitleService,
     private readonly plateSettingService: PlateSettingService,
     private readonly plateDataService: PlateDataService,
+    private readonly tokenService: TokenService,
   ) {}
 
   @InjectRepository(User) private readonly userRepository: Repository<User>;
@@ -36,17 +36,13 @@ export class AuthService {
 
     if (bcrypt.compareSync(loginDto.password, user.password)) {
       const payload = new TokenPayload(user);
-      let accessToken = await this.jwtService.signAsync(
-        {
-          ...payload,
-        },
-        { expiresIn: process.env.ACCESS_TOKEN_EXPIRE },
+      let accessToken = await this.tokenService.signAsync(
+        payload,
+        process.env.ACCESS_TOKEN_EXPIRE,
       );
-      let refreshToken = await this.jwtService.signAsync(
-        {
-          ...payload,
-        },
-        { expiresIn: process.env.REFRESH_TOKEN_EXPIRE },
+      let refreshToken = await this.tokenService.signAsync(
+        payload,
+        process.env.REFRESH_TOKEN_EXPIRE,
       );
 
       accessToken = "Bearer " + accessToken;

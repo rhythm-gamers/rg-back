@@ -5,11 +5,10 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";
-import { Observable } from "rxjs";
 import { IS_PUBLIC_KEY } from "./token.metadata";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
+import { TokenService } from "./token.service";
 
 type Cookies = {
   access_token: string;
@@ -19,12 +18,10 @@ type Cookies = {
 @Injectable()
 export class TokenGuard implements CanActivate {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
+    private readonly tokenService: TokenService,
   ) {}
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -43,26 +40,18 @@ export class TokenGuard implements CanActivate {
     cookies.access_token = cookies.access_token.replace("Bearer ", "");
     cookies.refresh_token = cookies.refresh_token.replace("Bearer ", "");
 
-    const jwtSecret = process.env.JWT_SECRET;
-
     try {
-      const decodedAccessToken = this.getPayload(
-        cookies.access_token,
-        jwtSecret,
-      );
+      const decodedAccessToken: TokenPayload =
+        await this.tokenService.getTokenPayload(cookies.access_token);
       request.user = decodedAccessToken;
       return true;
     } catch (accessTokenError) {
       try {
-        const decodedRefreshToken: TokenPayload = this.getPayload(
-          cookies.refresh_token,
-          jwtSecret,
-        );
-        const newAccessToken: string = this.jwtService.sign(
-          {
-            ...decodedRefreshToken,
-          },
-          { expiresIn: process.env.ACCESS_TOKEN_EXPIRE, secret: jwtSecret },
+        const decodedRefreshToken: TokenPayload =
+          await this.tokenService.getTokenPayload(cookies.refresh_token);
+        const newAccessToken = await this.tokenService.signAsync(
+          decodedRefreshToken,
+          process.env.ACCESS_TOKEN_EXPIRE,
         );
         request.user = decodedRefreshToken;
         response.cookie("access_token", newAccessToken, { httpOnly: true });
@@ -75,13 +64,5 @@ export class TokenGuard implements CanActivate {
         throw new UnauthorizedException("Token expired");
       }
     }
-  }
-
-  getPayload(token: string, secret: string): TokenPayload {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { iat, exp, ...payload } = this.jwtService.verify(token, {
-      secret: secret,
-    });
-    return payload;
   }
 }
