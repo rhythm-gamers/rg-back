@@ -10,12 +10,19 @@ export class PlateDataService {
     private plateDataRepository: Repository<PlateData>,
   ) {}
 
-  async fetchPlateData(userId: number, dataFlag: any) {
-    const whereClue = {};
+  async create() {
+    const data = await this.plateDataRepository.create();
+    return await this.plateDataRepository.save(data);
+  }
+
+  async fetchPlateData(userId: number, dataFlag: Record<string, boolean>) {
     const data = await this.plateDataRepository.findOne({
       select: {
-        dataId: true,
+        id: true,
         backgroundDesign: true,
+        chingho: true,
+        chinghoRank: true,
+        // ...dataFlag,
       },
       where: {
         user: {
