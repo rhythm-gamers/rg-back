@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./entity/user.entity";
@@ -77,41 +81,57 @@ export class UserService {
       throw new BadRequestException("Base64로 인코딩된 파일이 아닙니다.");
     }
   }
+  async fetchPlateDataByNickname(nickname: string) {
+    const user = await this.userRepository.findOne({
+      select: {
+        id: true,
+      },
+      where: {
+        nickname: nickname,
+      },
+    });
+    const data = await this.fetchPlateData(user.id);
+    return data;
+  }
 
   async fetchPlateData(userId: number) {
     const user: User = await this.userRepository.findOne({
       select: {
         id: true,
         profileImage: true,
-        platesetting: {
-          plateSettingId: true,
+        plateSetting: {
+          id: true,
           showChingho: true,
           showChinghoIco: true,
           showComment: true,
           showLevel: true,
         },
+        introduction: true,
       },
       where: {
         id: userId,
       },
       relations: {
-        platesetting: true,
-        usertitle: true,
+        plateSetting: true,
+        userTitle: true,
       },
     });
     console.log(user);
     const dataFlag = {
-      chingho: user.platesetting.showChingho,
-      comment: user.platesetting.showComment,
-      level: user.platesetting.showLevel,
+      chingho: user.plateSetting.showChingho,
+      comment: user.plateSetting.showComment,
+      level: user.plateSetting.showLevel,
     };
+    console.log(dataFlag);
     const plateDatas = await this.plateDataService.fetchPlateData(
       userId,
       dataFlag,
     );
+    console.log(plateDatas);
     const titleDatas =
-      user.platesetting.showChinghoIco === true ? user.usertitle : {};
+      user.plateSetting.showChinghoIco === true ? user.userTitle : {};
     console.log(titleDatas);
+    return 1;
   }
 
   async fetchIntroduction(userId: number) {
@@ -136,6 +156,22 @@ export class UserService {
   async saveUserSteamUID(uid: number, steamUID: string) {
     const result = await this.userRepository.update(uid, {
       steamId: steamUID,
+    });
+    return result;
+  }
+
+  async updateNickname(uid: number, nickname: string) {
+    const isExisting = await this.userRepository.findOne({
+      where: {
+        nickname: nickname,
+      },
+    });
+    if (isExisting) {
+      throw new ConflictException("이미 사용중인 닉네임입니다.");
+    }
+
+    const result = await this.userRepository.update(uid, {
+      nickname: nickname,
     });
     return result;
   }

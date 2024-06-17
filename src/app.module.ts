@@ -16,6 +16,7 @@ import { ProgressModule } from "./progress/progress.module";
 import { CommonModule } from "./common/common.module";
 import { APP_FILTER } from "@nestjs/core";
 import { MyDefaultExceptionLoggingFilter } from "./common/filters/exception.filter";
+import { TokenModule } from "./token/token.module";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { MyDefaultExceptionLoggingFilter } from "./common/filters/exception.filt
     AwsS3Module,
     ProgressModule,
     CommonModule,
+    TokenModule,
   ],
   controllers: [AppController],
   providers: [

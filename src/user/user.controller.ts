@@ -29,6 +29,7 @@ import { UpdateIntroductionDto } from "./dto/update-introduction.dto";
 import axios, { HttpStatusCode } from "axios";
 import { rhythmGameList } from "../auth/object/auth.object";
 import { CodecService } from "src/codec/codec.service";
+import { UpdateNicknameDto } from "./dto/update-nickname.dto";
 
 @Controller("user")
 export class UserController {
@@ -128,18 +129,42 @@ export class UserController {
     res.send();
   }
 
+  @ApiTags("User Setting")
   @ApiBody({
     schema: {
       type: "object",
       properties: {
-        introduction: {
+        nickname: {
           type: "string",
-          example: "rgback admin입니다.",
-          description: "업데이트 될 한줄 소개",
+          example: "John Doe 3",
+          description: "닉네임 변경",
         },
       },
     },
   })
+  @ApiOkResponse({
+    description: "변경 성공",
+  })
+  @ApiBadRequestResponse({
+    description: "중복된 닉네임 존재",
+  })
+  @Patch("nickname")
+  async updateNickname(
+    @Req() req,
+    @Res() res: Response,
+    @Body() { nickname }: UpdateNicknameDto,
+  ) {
+    let payload = req.user;
+    try {
+      await this.userService.updateNickname(payload.uid, nickname);
+      payload = { ...payload, nickname };
+      res.send();
+    } catch (err) {
+      res.status(400).send("사용중인 닉네임");
+    }
+    return;
+  }
+
   @ApiOkResponse({
     description: "가져오기 성공",
   })

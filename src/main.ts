@@ -3,13 +3,13 @@ import { AppModule } from "./app.module";
 
 import { ValidationPipe } from "@nestjs/common";
 import cookieParser from "cookie-parser";
-import { JwtService } from "@nestjs/jwt";
 import { TokenGuard } from "./token/token.guard";
 
 import { winstonLogger } from "./config/logger.config";
 import { setupSwagger } from "./config/swagger.config";
 import { json } from "express";
 import { RolesGuard } from "./token/roles.guard";
+import { TokenService } from "./token/token.service";
 
 async function bootstrap() {
   const isDevelope = process.env.IS_DEVELOPE === "dev" ? true : false;
@@ -22,10 +22,10 @@ async function bootstrap() {
     origin: "*",
     credentials: true,
   });
-  const jwtService = app.get(JwtService);
   const reflector = app.get(Reflector);
+  const tokenService = app.get(TokenService);
   app.useGlobalGuards(
-    new TokenGuard(jwtService, reflector),
+    new TokenGuard(reflector, tokenService),
     new RolesGuard(reflector),
   );
   app.useGlobalPipes(
