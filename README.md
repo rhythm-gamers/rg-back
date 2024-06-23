@@ -90,6 +90,21 @@ AWS_S3_BUCKER_URL=<bucket_url> # S3 버킷 주소
 JWT_SECRET="ivno********njkn"
 ACCESS_TOKEN_EXPIRE="2h"
 REFRESH_TOKEN_EXPIRT="7d"
+
+# firebase realtime database
+# firebase console → service account → create new secret key
+FIREBASE_TYPE=<type>
+FIREBASE_PROJECT_ID=<project_id>
+FIREBASE_PRIVATE_KEY_ID=<private_key_id>
+FIREBASE_PRIVATE_KEY="<private_key>"
+FIREBASE_CLIENT_EMAIL=<client_email>
+FIREBASE_CLIENT_ID=<client_id>
+FIREBASE_AUTH_URI=<auth_uri>
+FIREBASE_TOKEN_URI=<token_uri>
+FIREBASE_AUTH_PROVIDER_X509_CERT_URL=<auth_provider_x509_cert_url>
+FIREBASE_CLIENT_X509_CERT_URL=<client_x509_cert_url>
+FIREBASE_UNIVERSE_DOMAIN=<universe_domain>
+FIREBASE_RTDB_URL=<YOUR_REALTIME_DATABASE_URL>
 ```
 
 # 메모
