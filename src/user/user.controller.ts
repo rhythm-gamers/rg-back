@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Req,
   Res,
 } from "@nestjs/common";
@@ -26,10 +27,12 @@ import { UserTitleService } from "./service/user-title.service";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
 import { UploadProfileImageDto } from "./dto/upload-profile-image.dto";
 import { UpdateIntroductionDto } from "./dto/update-introduction.dto";
-import axios, { HttpStatusCode } from "axios";
-import { rhythmGameList } from "../auth/object/auth.object";
+import { HttpStatusCode } from "axios";
 import { CodecService } from "src/codec/codec.service";
 import { UpdateNicknameDto } from "./dto/update-nickname.dto";
+import { ChinghoService } from "../chingho/chingho.service";
+import { UpdateChinghoDto } from "./dto/update-chingho.dto";
+import { PlateDataService } from "./service/plate-data.service";
 
 @Controller("user")
 export class UserController {
@@ -38,6 +41,8 @@ export class UserController {
     private readonly plateSettingService: PlateSettingService,
     private readonly userTitleService: UserTitleService,
     private readonly codecService: CodecService,
+    private readonly chinghoService: ChinghoService,
+    private readonly plateDataService: PlateDataService,
   ) {}
 
   @ApiTags("User Setting")
@@ -117,6 +122,18 @@ export class UserController {
     res.status(HttpStatusCode.Ok).send();
   }
 
+  /*
+    이 부분은 프론트에서 S3 경로 환경변수화 하고
+    profile-image/<nickname>으로 바로 접근해서 fetch할 수 있도록 하는게 좋을듯?
+  */
+  @ApiTags("User Setting")
+  @Get("profile-image")
+  async fetchProfileImagePath(@Req() req, @Res() res: Response) {
+    const user: TokenPayload = req.user;
+    const imagePath = this.userService.fetchUserProfileImage(user.nickname);
+    res.status(HttpStatusCode.Ok).send(imagePath);
+  }
+
   @SkipAuth()
   @ApiTags("User Setting")
   @Get("plate/:nickname")
@@ -125,7 +142,7 @@ export class UserController {
     @Res() res: Response,
     @Param("nickname") nickname: string,
   ) {
-    await this.userService.fetchPlateDataByNickname(nickname);
+    await this.userService.fetchPlatedataByNickname(nickname);
     res.send();
   }
 
@@ -160,7 +177,7 @@ export class UserController {
       payload = { ...payload, nickname };
       res.send();
     } catch (err) {
-      res.status(400).send("사용중인 닉네임");
+      res.status(HttpStatusCode.BadRequest).send("사용중인 닉네임");
     }
     return;
   }
@@ -221,19 +238,34 @@ export class UserController {
     }
   }
 
+  /*
+  // 스팀 게임 조회는 스팀 연동시, 칭호 업데이트 cron시 가져옴
+  // 즉, 보유 게임 목록을 조회하는 엔드포인트 필요 없어짐
   @ApiTags("steam-games")
   @ApiOkResponse({
     description: "스팀 게임 목록 조회 완료",
     schema: {
       type: "array",
       items: {
-        type: "string",
+        type: "object",
       },
       example: [
-        "Djmax Respect V",
-        "EZ2ON REBOOT",
-        "불과 얼음의 춤 (A Dance of Fire and Ice)",
-        "Rhythm Doctor",
+        {
+          name: "Djmax Respect V",
+          playtime: "100000",
+        },
+        {
+          name: "EZ2ON REBOOT",
+          playtime: "100000",
+        },
+        {
+          name: "불과 얼음의 춤 (A Dance of Fire and Ice)",
+          playtime: "100000",
+        },
+        {
+          name: "Rhythm Doctor",
+          playtime: "100000",
+        },
       ],
     },
   })
@@ -250,28 +282,35 @@ export class UserController {
       return;
     }
 
-    const decrypted = await this.codecService.decrypt(steamid);
-
-    const params = {
-      key: process.env.STEAM_API_KEY,
-      steamid: decrypted,
-      format: "json",
-      include_appinfo: true,
-      appids_filter: rhythmGameList,
-    };
-
-    const games = await axios.get(
-      `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/`,
-      { params },
-    );
-    const gamesObj: Array<Record<string, string>> = games.data.response.games;
-
-    const data = [];
-    gamesObj.forEach((game) => {
-      data.push(game.name);
-    });
+    const decryptedSteamId = await this.codecService.decrypt(steamid);
+    const data = await this.userService.getUserSteamgameList(decryptedSteamId);
 
     res.status(HttpStatusCode.Ok).send(data);
     return;
+  }
+  */
+
+  @Put("chingho")
+  @ApiBadRequestResponse({
+    description: "잘못된 입력값",
+  })
+  @ApiOkResponse({
+    description: "업데이트 성공",
+  })
+  async updateChingho(
+    @Body() dto: UpdateChinghoDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
+    const token: TokenPayload = req.user;
+    await this.plateDataService.update(+token.uid, dto);
+    res.send();
+  }
+
+  @Get("chingho")
+  async getCHingho(@Req() req, @Res() res: Response) {
+    const token: TokenPayload = req.user;
+    const chingho = await this.plateDataService.fetchCurrentChingho(+token.uid);
+    res.send(chingho);
   }
 }
