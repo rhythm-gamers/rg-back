@@ -11,6 +11,8 @@ import { AwsS3Module } from "src/s3/aws-s3.module";
 import { PlateDataService } from "./service/plate-data.service";
 import { PlateData } from "./entity/plate-data.entity";
 import { CodecModule } from "src/codec/codec.modle";
+import { FirebaseModule } from "src/firebase/firebase.module";
+import { ChinghoModule } from "src/chingho/chingho.module";
 
 @Module({
   controllers: [UserController],
@@ -24,6 +26,8 @@ import { CodecModule } from "src/codec/codec.modle";
     TypeOrmModule.forFeature([User, PlateSetting, UserTitle, PlateData]),
     AwsS3Module,
     CodecModule,
+    FirebaseModule,
+    ChinghoModule,
   ],
   exports: [
     UserService,
