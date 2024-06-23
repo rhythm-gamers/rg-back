@@ -17,10 +17,18 @@ import { CommonModule } from "./common/common.module";
 import { APP_FILTER } from "@nestjs/core";
 import { MyDefaultExceptionLoggingFilter } from "./common/filters/exception.filter";
 import { TokenModule } from "./token/token.module";
+import { FirebaseModule } from "./firebase/firebase.module";
+import { ChinghoModule } from "./chingho/chingho.module";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(databaseConnection),
+
+    FirebaseModule,
+    TokenModule,
+    CommonModule,
+    AwsS3Module,
+
     UserModule,
     PatternModule,
     WikiModule,
@@ -29,10 +37,8 @@ import { TokenModule } from "./token/token.module";
     ReportModule,
     BoardModule,
     AuthModule,
-    AwsS3Module,
     ProgressModule,
-    CommonModule,
-    TokenModule,
+    ChinghoModule,
   ],
   controllers: [AppController],
   providers: [
