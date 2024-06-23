@@ -12,6 +12,7 @@ import { SkipAuth } from "src/token/token.metadata";
 import { TokenPayload } from "./object/token-payload.obj";
 import { UserService } from "src/user/user.service";
 import { CodecService } from "src/codec/codec.service";
+import { ChinghoService } from "src/chingho/chingho.service";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -25,6 +26,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly codecService: CodecService,
+    private readonly chinghoService: ChinghoService,
   ) {
     this.steam = new SteamAuth({
       realm: process.env.STEAM_REALM,
@@ -50,6 +52,10 @@ export class AuthController {
     const encrypted = await this.codecService.encrypt(steamid);
 
     await this.userService.saveUserSteamUID(+rgbackUser.uid, encrypted);
+    /*
+     스팀 로그인 시 바로 보유중인 게임 조회 및 칭호 설정
+    */
+    await this.chinghoService.updateSteamgameChingho(rgbackUser.uid);
     res.redirect(process.env.AFTER_REDIRECT_URL);
     return;
   }
