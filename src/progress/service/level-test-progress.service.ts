@@ -5,6 +5,9 @@ import { User } from "src/user/entity/user.entity";
 import { Repository } from "typeorm";
 import { LevelTest } from "src/pattern/entity/level-test.entity";
 import { LevelTestService } from "src/pattern/service/level-test.service";
+import { FirebaseService } from "src/firebase/firebase.service";
+import { RtdbUpdateDto } from "src/firebase/dto/rtdb-update.dto";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class LevelTestProgressService {
@@ -12,7 +15,86 @@ export class LevelTestProgressService {
     @InjectRepository(LevelTestProgress)
     private progressRepo: Repository<LevelTestProgress>,
     private readonly levelTestService: LevelTestService,
+    private readonly firebaseService: FirebaseService,
   ) {}
+
+  setRareness(level: number) {
+    return Math.ceil((level - 1) / 3) + 1;
+  }
+
+  @Cron("0 0 */12 * * *", {
+    name: "Update LevelTest Chingho",
+    timeZone: "Asia/Seoul",
+  })
+  async leveltestChinghoCron() {
+    const leveltestDatas = await this.progressRepo.find({
+      relations: {
+        user: true,
+        levelTest: true,
+      },
+    });
+    const leveltestClearRates = {};
+    leveltestDatas.forEach((data) => {
+      if (leveltestClearRates[data.user.id] == null) {
+        leveltestClearRates[data.user.id] = {};
+      }
+      if (data.currentRate > data.levelTest.goalRate) {
+        leveltestClearRates[data.user.id][data.levelTest.level] = true;
+      }
+    });
+
+    Object.keys(leveltestClearRates).forEach(async (key) => {
+      const userClearRate = leveltestClearRates[key];
+      const maxLevel = Math.max(...Object.keys(userClearRate).map(Number));
+      let rareness = 0;
+      if (maxLevel !== -Infinity) {
+        rareness = this.setRareness(+maxLevel);
+        const uploadData = this.makeRtdbUploadData(+maxLevel, +rareness);
+        await this.firebaseService.set(`chingho/${key}/레벨테스트`, uploadData);
+      }
+    });
+  }
+
+  async uploadToRtdb(userid: number, leveltestId: number, progress: number) {
+    const levelTest: LevelTest =
+      await this.levelTestService.fetchById(leveltestId);
+    if (levelTest.goalRate > progress) {
+      return null;
+    }
+
+    const rareness: number = this.setRareness(+levelTest.level);
+
+    const rtdbData = await this.firebaseService.get(
+      `chingho/${userid}/leveltest`,
+    );
+    if (rtdbData !== null) {
+      if (+Object.keys(rtdbData)[0] > rareness) return null;
+    }
+
+    const data: RtdbUpdateDto = this.makeRtdbUploadData(
+      levelTest.level,
+      rareness,
+    );
+
+    await this.firebaseService.set(`chingho/${userid}/레벨테스트`, data);
+  }
+
+  private makeRtdbUploadData(level: string | number, rareness: number) {
+    const data: RtdbUpdateDto = {};
+    let temp: string;
+    switch (rareness) {
+      case 4:
+        temp = `${level}`;
+        break;
+      case 3:
+      case 2:
+      case 1:
+        temp = `${level}/${rareness * 3 + 1}`;
+        break;
+    }
+    data[rareness] = temp;
+    return data;
+  }
 
   async update(
     progress: number,
@@ -38,6 +120,8 @@ export class LevelTestProgressService {
       data = await this.__create(progress, user, levelTest);
       type = "create";
     }
+    await this.uploadToRtdb(+user.id, +levelTest.id, progress);
+
     return { type: type, data: data };
   }
 
