@@ -57,7 +57,7 @@ export class FirebaseService {
 
   async get(path: string) {
     const ref = this.getRef(path);
-    return await ref.get();
+    return (await ref.get()).val();
   }
 
   async isExist(path: string) {
