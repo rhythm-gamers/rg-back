@@ -1,13 +1,9 @@
 import { IsIn, IsNumber, IsString } from "class-validator";
-import {
-  rareness as chinghoRareness,
-  title as chinghoTitle,
-} from "../../chingho/obj/chingho.obj";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class UpdateChinghoDto {
   @IsNumber()
-  @IsIn(Object.keys(chinghoRareness).map((data) => +data))
+  @IsIn([1, 2, 3, 4])
   @ApiProperty({
     description: "칭호 랭크",
     example: "one of [1, 2, 3, 4]",
@@ -16,10 +12,10 @@ export class UpdateChinghoDto {
   rareness: number;
 
   @IsString()
-  @IsIn(Object.values(chinghoTitle))
+  @IsIn(["뮤즈대시", "리듬닥터", "디맥", "얼불춤", "투온", "식스타"])
   @ApiProperty({
     description: "칭호 이름",
-    example: `one of [${Object.values(chinghoTitle)}]`,
+    example: `one of [뮤즈대시, 리듬닥터, 디맥, 얼불춤, 투온, 식스타"]`,
     required: true,
   })
   title: string;

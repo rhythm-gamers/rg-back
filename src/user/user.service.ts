@@ -11,7 +11,7 @@ import { PlateDataService } from "./service/plate-data.service";
 import { UserTitleService } from "./service/user-title.service";
 import axios from "axios";
 import { CodecService } from "src/codec/codec.service";
-import { title as rhythmgames } from "src/chingho/obj/chingho.obj";
+import { FirebaseService } from "src/firebase/firebase.service";
 
 @Injectable()
 export class UserService {
@@ -21,6 +21,7 @@ export class UserService {
     private readonly plateDataService: PlateDataService,
     private readonly userTitleService: UserTitleService,
     private readonly codecService: CodecService,
+    private readonly firebaseService: FirebaseService,
   ) {}
 
   private readonly PROFILE_IMAGE_PATH: string = "profile-image";
@@ -208,6 +209,13 @@ export class UserService {
   async getUserSteamgameList(
     steamid,
   ): Promise<Array<Record<string, string | number>>> {
+    const rhythmgames = await this.firebaseService.get("chingho/database/c");
+    try {
+      delete rhythmgames["0"];
+    } catch (err) {
+      delete rhythmgames[0];
+    }
+
     const rhythmGameList: Array<string | number> = Object.keys(rhythmgames);
     const params = {
       key: process.env.STEAM_API_KEY,

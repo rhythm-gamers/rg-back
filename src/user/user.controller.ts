@@ -290,6 +290,7 @@ export class UserController {
   }
   */
 
+  @ApiTags("칭호")
   @Put("chingho")
   @ApiBadRequestResponse({
     description: "잘못된 입력값",
@@ -307,10 +308,35 @@ export class UserController {
     res.send();
   }
 
-  @Get("chingho")
-  async getCHingho(@Req() req, @Res() res: Response) {
+  @ApiTags("칭호")
+  @Get("current-chingho")
+  async getCurrentChingho(@Req() req, @Res() res: Response) {
     const token: TokenPayload = req.user;
     const chingho = await this.plateDataService.fetchCurrentChingho(+token.uid);
     res.send(chingho);
+  }
+
+  @ApiTags("칭호")
+  @Get("all-chingho")
+  async getAllChingho(@Req() req, @Res() res: Response) {
+    const token = req.user;
+    const chinghoProgress = await this.chinghoService.fetchUserChinghoProgress(
+      +token.uid,
+    );
+    const havingChingho = await this.chinghoService.fetchUserChinghoList(
+      +token.uid,
+    );
+    const allChingho = await this.chinghoService.fetchAllChingho();
+    res.send({
+      progress: chinghoProgress,
+      havingChingho: havingChingho,
+      allChingho: allChingho,
+    });
+  }
+
+  @Get("test")
+  async testing(@Req() req, @Res() res: Response) {
+    const token = req.user;
+    res.send();
   }
 }
