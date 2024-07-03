@@ -8,12 +8,14 @@ import { ProgressService } from "./service/progress.service";
 import { UserModule } from "src/user/user.module";
 import { PatternModule } from "src/pattern/pattern.module";
 import { ProgressController } from "./progress.controller";
+import { FirebaseModule } from "src/firebase/firebase.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([LevelTestProgress, PracticeProgress]),
     forwardRef(() => UserModule),
     forwardRef(() => PatternModule),
+    FirebaseModule,
   ],
   controllers: [ProgressController],
   providers: [

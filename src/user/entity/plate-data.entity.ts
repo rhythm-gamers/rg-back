@@ -22,8 +22,8 @@ export class PlateData {
   backgroundDesign: number;
 
   @Column({ default: 0 })
-  chingho: number;
+  title: string;
 
   @Column({ default: 0 })
-  chinghoRank: number;
+  rareness: number;
 }

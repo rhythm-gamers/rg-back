@@ -6,13 +6,15 @@ import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { CodecModule } from "src/codec/codec.modle";
 import { TokenModule } from "src/token/token.module";
+import { ChinghoModule } from "src/chingho/chingho.module";
 
 @Module({
   imports: [
-    UserModule,
-    TokenModule,
     TypeOrmModule.forFeature([User]),
+    TokenModule,
     CodecModule,
+    UserModule,
+    ChinghoModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

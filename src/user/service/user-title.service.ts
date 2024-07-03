@@ -1,14 +1,22 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from "@nestjs/common";
 import { UserTitle } from "../entity/user-title.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UpdateUserTitleDto } from "../dto/update-user-title.dto";
+import { UserService } from "../user.service";
 
 @Injectable()
 export class UserTitleService {
   constructor(
     @InjectRepository(UserTitle)
-    private userTitleRepository: Repository<UserTitle>,
+    private readonly userTitleRepository: Repository<UserTitle>,
+    @Inject(forwardRef(() => UserService)) // 순환종속 발생
+    private readonly userService: UserService,
   ) {}
 
   async create() {
@@ -36,10 +44,16 @@ export class UserTitleService {
   }
 
   async fetchByNickname(nickname: string) {
+    const user = await this.userService.fetchWithNickname(nickname);
+    const plate = await this.fetch(user.id);
+    return plate;
+  }
+
+  async fetch(id: number) {
     const plate = await this.userTitleRepository.findOne({
       where: {
         user: {
-          nickname: nickname,
+          id: id,
         },
       },
       relations: {
@@ -49,6 +63,7 @@ export class UserTitleService {
     if (plate == null) {
       throw new BadRequestException("User Not Found");
     }
+
     delete plate.user;
     delete plate.id;
     return plate;
