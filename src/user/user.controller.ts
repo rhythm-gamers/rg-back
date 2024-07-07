@@ -18,6 +18,7 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -84,6 +85,31 @@ export class UserController {
     example: "John Doe",
     name: "nickname",
   })
+  @ApiOkResponse({
+    description: "게임 목록 조회 성공",
+    schema: {
+      type: "array",
+      example: ["디맥", "얼불춤", "식스타"],
+    },
+  })
+  @ApiBadRequestResponse({
+    description: "토큰 없음 && 해당 닉네임 유저 없음",
+    schema: {
+      type: "object",
+      example: {
+        err: "Target nickname is null && User token not founded",
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    description: "해당 닉네임 유저 없음",
+    schema: {
+      type: "object",
+      example: {
+        err: "Not Exist User",
+      },
+    },
+  })
   async getUserHavinggames(
     @Req() req,
     @Res() res: Response,
@@ -144,6 +170,47 @@ export class UserController {
     required: false,
     type: "string",
   })
+  @ApiOkResponse({
+    description: "플레이트 데이터 조회 성공",
+    schema: {
+      type: "object",
+      example: {
+        profileImage: "",
+        introduction: "",
+        backgroundDesign: 0,
+        currentChingho: {
+          level: 1,
+          title: "식스타",
+        },
+        currentHavingGame: ["디맥", "얼불춤"],
+        currentLevel: 0,
+        showFlags: {
+          showComment: true,
+          showLevel: true,
+          showChingho: true,
+          showHavingGames: true,
+        },
+      },
+    },
+  })
+  @ApiBadRequestResponse({
+    description: "토큰 없음 && 해당 닉네임 유저 없음",
+    schema: {
+      type: "object",
+      example: {
+        err: "Target nickname is null && User token not founded",
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    description: "해당 닉네임 유저 없음",
+    schema: {
+      type: "object",
+      example: {
+        err: "Not Exist User",
+      },
+    },
+  })
   @Get("plate/:nickname?")
   async fetchUserPlateData(
     @Req() req,
@@ -167,7 +234,7 @@ export class UserController {
         statusCode = HttpStatusCode.Ok;
       } catch (err) {
         result = { err: err.message };
-        statusCode = HttpStatusCode.BadRequest;
+        statusCode = HttpStatusCode.NotFound;
       }
     }
 
