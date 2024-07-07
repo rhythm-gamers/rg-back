@@ -22,8 +22,6 @@ import {
   ApiParam,
   ApiTags,
 } from "@nestjs/swagger";
-import { UpdateUserTitleDto } from "./dto/update-user-title.dto";
-import { UserTitleService } from "./service/user-title.service";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
 import { UploadProfileImageDto } from "./dto/upload-profile-image.dto";
 import { UpdateIntroductionDto } from "./dto/update-introduction.dto";
@@ -34,12 +32,13 @@ import { ChinghoService } from "../chingho/chingho.service";
 import { UpdateChinghoDto } from "./dto/update-chingho.dto";
 import { PlateDataService } from "./service/plate-data.service";
 
+const NICKNAME_VALIDATOR_ARRAY = ["{nickname}", ",", undefined, null];
+
 @Controller("user")
 export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly plateSettingService: PlateSettingService,
-    private readonly userTitleService: UserTitleService,
     private readonly codecService: CodecService,
     private readonly chinghoService: ChinghoService,
     private readonly plateDataService: PlateDataService,
@@ -55,22 +54,6 @@ export class UserController {
     try {
       const user = req.user;
       await this.plateSettingService.update(updateDto, user.uid);
-      res.status(HttpStatusCode.Ok).send();
-    } catch (error) {
-      res.status(HttpStatusCode.BadRequest).send();
-    }
-  }
-
-  @ApiTags("User Setting")
-  @Patch("user-title")
-  async UpdateUserTitle(
-    @Body() updateDto: UpdateUserTitleDto,
-    @Res() res: Response,
-    @Req() req,
-  ) {
-    try {
-      const user = req.user;
-      await this.userTitleService.update(updateDto, user.uid);
       res.status(HttpStatusCode.Ok).send();
     } catch (error) {
       res.status(HttpStatusCode.BadRequest).send();
@@ -95,18 +78,38 @@ export class UserController {
 
   @SkipAuth()
   @ApiTags("User Setting")
-  @Get("user-title/:nickname") // nickname으로 받아올 것인가?
+  @Get("having-games/:nickname?") // nickname으로 받아올 것인가?
   @ApiParam({
-    required: true,
+    required: false,
     example: "John Doe",
     name: "nickname",
   })
-  async getUserTitle(
-    @Param("nickname") nickname: string,
+  async getUserHavinggames(
+    @Req() req,
     @Res() res: Response,
+    @Param("nickname") nickname?: string,
   ) {
-    const titles = await this.userTitleService.fetchByNickname(nickname);
-    res.status(HttpStatusCode.Ok).send(titles);
+    let result, statusCode;
+    const user: TokenPayload = req.user;
+
+    if (this.isNicknameNull(nickname)) {
+      if (user == null) {
+        result = { err: "Target nickname is null && User token not founded" };
+        statusCode = HttpStatusCode.BadRequest;
+      } else {
+        result = await this.userService.fetchHavinggames(+user.uid);
+        statusCode = HttpStatusCode.Ok;
+      }
+    } else {
+      try {
+        result = await this.userService.fetchHavinggamesWithNickname(nickname);
+        statusCode = HttpStatusCode.Ok;
+      } catch (err) {
+        result = { err: err.message };
+        statusCode = HttpStatusCode.BadRequest;
+      }
+    }
+    res.status(statusCode).send(result);
   }
 
   @ApiTags("User Setting")
@@ -136,14 +139,43 @@ export class UserController {
 
   @SkipAuth()
   @ApiTags("User Setting")
-  @Get("plate/:nickname")
+  @ApiParam({
+    name: "nickname",
+    required: false,
+    type: "string",
+  })
+  @Get("plate/:nickname?")
   async fetchUserPlateData(
     @Req() req,
     @Res() res: Response,
-    @Param("nickname") nickname: string,
+    @Param("nickname") nickname?: string,
   ) {
-    await this.userService.fetchPlatedataByNickname(nickname);
-    res.send();
+    const user: TokenPayload = req.user;
+    let statusCode, result;
+
+    if (this.isNicknameNull(nickname)) {
+      if (user == null) {
+        result = { err: "Target nickname is null && User token not founded" };
+        statusCode = HttpStatusCode.BadRequest;
+      } else {
+        result = await this.userService.fetchPlatedata(user.uid);
+        statusCode = HttpStatusCode.Ok;
+      }
+    } else {
+      try {
+        result = await this.userService.fetchPlatedataByNickname(nickname);
+        statusCode = HttpStatusCode.Ok;
+      } catch (err) {
+        result = { err: err.message };
+        statusCode = HttpStatusCode.BadRequest;
+      }
+    }
+
+    res.status(statusCode).send(result);
+  }
+
+  private isNicknameNull(nickname: string): boolean {
+    return NICKNAME_VALIDATOR_ARRAY.includes(nickname);
   }
 
   @ApiTags("User Setting")
@@ -337,6 +369,7 @@ export class UserController {
   @Get("test")
   async testing(@Req() req, @Res() res: Response) {
     const token = req.user;
+    console.log(token);
     res.send();
   }
 }
