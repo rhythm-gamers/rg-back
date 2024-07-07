@@ -27,14 +27,12 @@ export class TokenGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    if (isPublic) return true;
-
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse() as Response;
     const cookies: Cookies = request.cookies as Cookies;
 
     if (!cookies.access_token || !cookies.refresh_token) {
-      throw new UnauthorizedException("Token not found");
+      if (!isPublic) throw new UnauthorizedException("Token not found");
     }
 
     cookies.access_token = cookies.access_token.replace("Bearer ", "");
@@ -57,6 +55,7 @@ export class TokenGuard implements CanActivate {
         response.cookie("access_token", newAccessToken, { httpOnly: true });
         return true;
       } catch (refreshTokenError) {
+        if (isPublic) return true;
         // token expire 시 토큰 자체를 삭제.
         // access_token을 header로 보낼 경우 clearCookie 대신 clearHeader로 바꿔야할듯?
         response.clearCookie("access_token", { httpOnly: true });
