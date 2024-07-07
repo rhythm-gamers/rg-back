@@ -18,15 +18,15 @@ export class PlateSetting {
   @JoinColumn()
   user: User;
 
-  @Column({ default: false })
+  @Column({ default: true })
   showComment: boolean;
 
-  @Column({ default: false })
+  @Column({ default: true })
   showLevel: boolean;
 
-  @Column({ default: false })
+  @Column({ default: true })
   showChingho: boolean;
 
-  @Column({ default: false })
-  showChinghoIco: boolean;
+  @Column({ default: true })
+  showHavingGames: boolean;
 }

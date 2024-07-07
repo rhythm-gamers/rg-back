@@ -1,22 +1,9 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { User } from "./user.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class UserTitle {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @OneToOne(() => User, (user) => user.userTitle, {
-    onDelete: "CASCADE",
-  })
-  @JoinColumn()
-  user: User;
 
   @Column({ default: false })
   djmax: boolean;

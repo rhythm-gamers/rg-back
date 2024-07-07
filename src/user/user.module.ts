@@ -4,8 +4,6 @@ import { UserController } from "./user.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./entity/user.entity";
 import { PlateSetting } from "./entity/plate-setting.entity";
-import { UserTitle } from "./entity/user-title.entity";
-import { UserTitleService } from "./service/user-title.service";
 import { PlateSettingService } from "./service/plate-setting.service";
 import { AwsS3Module } from "src/s3/aws-s3.module";
 import { PlateDataService } from "./service/plate-data.service";
@@ -16,24 +14,14 @@ import { ChinghoModule } from "src/chingho/chingho.module";
 
 @Module({
   controllers: [UserController],
-  providers: [
-    UserService,
-    UserTitleService,
-    PlateSettingService,
-    PlateDataService,
-  ],
+  providers: [UserService, PlateSettingService, PlateDataService],
   imports: [
-    TypeOrmModule.forFeature([User, PlateSetting, UserTitle, PlateData]),
+    TypeOrmModule.forFeature([User, PlateSetting, PlateData]),
     AwsS3Module,
     CodecModule,
     FirebaseModule,
     ChinghoModule,
   ],
-  exports: [
-    UserService,
-    UserTitleService,
-    PlateSettingService,
-    PlateDataService,
-  ],
+  exports: [UserService, PlateSettingService, PlateDataService],
 })
 export class UserModule {}
