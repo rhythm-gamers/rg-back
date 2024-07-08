@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import "dotenv/config";
 
 export const databaseConnection: TypeOrmModuleOptions = {
   type: "mariadb",

@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import * as admin from "firebase-admin";
 import { Database } from "firebase-admin/lib/database/database";
+import "dotenv/config";
 
 const serviceAccount = () => {
   return {
@@ -12,7 +13,8 @@ const serviceAccount = () => {
     client_id: process.env.FIREBASE_CLIENT_ID,
     auth_uri: process.env.FIREBASE_AUTH_URI,
     token_uri: process.env.FIREBASE_TOKEN_URI,
-    auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+    auth_provider_x509_cert_url:
+      process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
     client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
     universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
   };
