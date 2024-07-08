@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { PlateData } from "../entity/plate-data.entity";
 import { Repository } from "typeorm";
 import { UpdateChinghoDto } from "../dto/update-chingho.dto";
+import { UpdatePlatedataDto } from "../dto/update-platedata.dto";
 
 @Injectable()
 export class PlateDataService {
@@ -16,7 +17,7 @@ export class PlateDataService {
     return await this.plateDataRepository.save(data);
   }
 
-  async update(userid: number, dto: UpdateChinghoDto) {
+  async update(userid: number, dto: UpdateChinghoDto | UpdatePlatedataDto) {
     await this.plateDataRepository.update(
       {
         user: {

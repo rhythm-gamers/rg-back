@@ -8,10 +8,12 @@ import { And, IsNull, Not, Repository } from "typeorm";
 import { User } from "./entity/user.entity";
 import { AwsS3Service } from "src/s3/aws-s3.service";
 import { PlateDataService } from "./service/plate-data.service";
-import { UserTitleService } from "./service/user-title.service";
 import axios from "axios";
 import { CodecService } from "src/codec/codec.service";
 import { FirebaseService } from "src/firebase/firebase.service";
+import { UpdateChinghoDto } from "./dto/update-chingho.dto";
+import { PlateData } from "./entity/plate-data.entity";
+import { UpdatePlatedataDto } from "./dto/update-platedata.dto";
 
 @Injectable()
 export class UserService {
@@ -19,7 +21,6 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
     private readonly s3Service: AwsS3Service,
     private readonly plateDataService: PlateDataService,
-    private readonly userTitleService: UserTitleService,
     private readonly codecService: CodecService,
     private readonly firebaseService: FirebaseService,
   ) {}
@@ -112,16 +113,20 @@ export class UserService {
   }
 
   async fetchPlatedataByNickname(nickname: string) {
-    const user = await this.userRepository.findOne({
-      select: {
-        id: true,
-      },
-      where: {
-        nickname: nickname,
-      },
-    });
-    const data = await this.fetchPlatedata(user.id);
-    return data;
+    try {
+      const user = await this.userRepository.findOne({
+        select: {
+          id: true,
+        },
+        where: {
+          nickname: nickname,
+        },
+      });
+      const data = await this.fetchPlatedata(user.id);
+      return data;
+    } catch (err) {
+      throw new Error("Not Exist User");
+    }
   }
 
   async fetchPlatedata(userId: number) {
@@ -129,13 +134,6 @@ export class UserService {
       select: {
         id: true,
         profileImage: true,
-        plateSetting: {
-          id: true,
-          showChingho: true,
-          showChinghoIco: true,
-          showComment: true,
-          showLevel: true,
-        },
         introduction: true,
       },
       where: {
@@ -143,25 +141,62 @@ export class UserService {
       },
       relations: {
         plateSetting: true,
-        userTitle: true,
       },
     });
-    console.log(user);
-    const dataFlag = {
-      chingho: user.plateSetting.showChingho,
-      comment: user.plateSetting.showComment,
-      level: user.plateSetting.showLevel,
+    delete user.plateSetting.id;
+
+    const result = {
+      profileImage: user.profileImage == null ? "" : user.profileImage,
+      introduction: user.introduction,
     };
-    console.log(dataFlag);
-    const plateDatas = await this.plateDataService.fetch(
-      userId,
-      // dataFlag,
-    );
-    console.log(plateDatas);
-    const titleDatas =
-      user.plateSetting.showChinghoIco === true ? user.userTitle : {};
-    console.log(titleDatas);
-    return 1;
+    const plateData = await this.plateDataService.fetch(userId);
+
+    result["backgroundDesign"] = plateData.backgroundDesign;
+    result["currentChingho"] = {
+      level: plateData.rareness,
+      title: plateData.title,
+    };
+    result["currentHavingGame"] = await this.fetchHavinggames(userId);
+    result["currentLevel"] = plateData.currentLevel;
+
+    result["showFlags"] = user.plateSetting;
+
+    console.log(result);
+    return result;
+  }
+
+  async fetchHavinggamesWithNickname(nickname: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        select: {
+          id: true,
+        },
+        where: {
+          nickname: nickname,
+        },
+      });
+      return await this.fetchHavinggames(user.id);
+    } catch (err) {
+      throw new Error("Not Exist User");
+    }
+  }
+
+  async fetchHavinggames(userid: number) {
+    const chinghos = await this.firebaseService.get(`chingho/${userid}/스팀`);
+    const datas = await this.firebaseService.get(`chingho/database/c`);
+    delete datas["0"];
+    const result = [];
+
+    try {
+      // null object를 forEach 돌린 경우 에러 발생
+      Object.keys(chinghos).forEach((key) => {
+        Object.keys(chinghos[key]).forEach((game) => {
+          result.push(datas[game]);
+        });
+      });
+    } catch (err) {}
+
+    return result;
   }
 
   async fetchIntroduction(userId: number) {
@@ -242,5 +277,17 @@ export class UserService {
     });
 
     return data;
+  }
+
+  async updateLeveltestLevel(
+    userid: number,
+    dto: UpdateChinghoDto | UpdatePlatedataDto,
+  ) {
+    return await this.plateDataService.update(userid, dto);
+  }
+
+  async fetchLeveltestLevel(userid: number) {
+    const data: PlateData = await this.plateDataService.fetch(userid);
+    return data.currentLevel;
   }
 }

@@ -11,7 +11,6 @@ import { User } from "src/user/entity/user.entity";
 import { Repository } from "typeorm";
 import bcrypt from "bcrypt";
 import { RegisterDto } from "./dto/register.dto";
-import { UserTitleService } from "src/user/service/user-title.service";
 import { PlateSettingService } from "src/user/service/plate-setting.service";
 import { TokenPayload } from "./object/token-payload.obj";
 import { PlateDataService } from "src/user/service/plate-data.service";
@@ -22,7 +21,6 @@ const SALT_ROUNDS = 10;
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly userTitleService: UserTitleService,
     private readonly plateSettingService: PlateSettingService,
     private readonly plateDataService: PlateDataService,
     private readonly tokenService: TokenService,
@@ -88,14 +86,12 @@ export class AuthService {
   }
 
   private async createUser(registerDto: RegisterDto) {
-    const userTitle = await this.userTitleService.create();
     const plateSetting = await this.plateSettingService.create();
     const plateData = await this.plateDataService.create();
     const newUser = this.userRepository.create({
       registerId: registerDto.username,
       nickname: registerDto.nickname,
       password: registerDto.password,
-      userTitle: userTitle,
       plateSetting: plateSetting,
       plateData: plateData,
     });

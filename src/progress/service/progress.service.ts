@@ -26,6 +26,14 @@ export class ProgressService {
     }
     const user = await this.userService.fetchWithUserId(userId);
 
+    const currentLevel: number =
+      await this.userService.fetchLeveltestLevel(userId);
+    if (currentLevel < levelTest.level) {
+      await this.userService.updateLeveltestLevel(userId, {
+        currentLevel: levelTest.level,
+      });
+    }
+
     return await this.levelTestProgressService.update(
       progress,
       user,

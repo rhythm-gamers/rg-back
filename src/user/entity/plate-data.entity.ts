@@ -26,4 +26,7 @@ export class PlateData {
 
   @Column({ default: 0 })
   rareness: number;
+
+  @Column({ default: 0 })
+  currentLevel: number;
 }

@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { PlateSetting } from "./plate-setting.entity";
-import { UserTitle } from "./user-title.entity";
 import { Post } from "src/post/entity/post.entity";
 import { Comment } from "src/comment/entity/comment.entity";
 import { PostReport } from "src/report/entity/post-report.entity";
@@ -26,9 +25,6 @@ export class User {
 
   @OneToOne(() => PlateSetting, (plateSetting) => plateSetting.user)
   plateSetting: PlateSetting;
-
-  @OneToOne(() => UserTitle, (userTitle) => userTitle.user)
-  userTitle: UserTitle;
 
   @OneToOne(() => PlateData, (plateData) => plateData.user)
   plateData: PlateData;
