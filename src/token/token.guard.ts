@@ -35,8 +35,10 @@ export class TokenGuard implements CanActivate {
       if (!isPublic) throw new UnauthorizedException("Token not found");
     }
 
-    cookies.access_token = cookies.access_token.replace("Bearer ", "");
-    cookies.refresh_token = cookies.refresh_token.replace("Bearer ", "");
+    try {
+      cookies.access_token = cookies.access_token.replace("Bearer ", "");
+      cookies.refresh_token = cookies.refresh_token.replace("Bearer ", "");
+    } catch (err) {}
 
     try {
       const decodedAccessToken: TokenPayload =
@@ -55,7 +57,10 @@ export class TokenGuard implements CanActivate {
         response.cookie("access_token", newAccessToken, { httpOnly: true });
         return true;
       } catch (refreshTokenError) {
-        if (isPublic) return true;
+        if (isPublic) {
+          request.user = null;
+          return true;
+        }
         // token expire 시 토큰 자체를 삭제.
         // access_token을 header로 보낼 경우 clearCookie 대신 clearHeader로 바꿔야할듯?
         response.clearCookie("access_token", { httpOnly: true });
