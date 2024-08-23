@@ -14,6 +14,6 @@ export class Wiki {
   @Column({ default: false })
   mustRead: boolean;
 
-  @Column({ length: 1000, default: "" })
+  @Column({ length: 10000, default: "" })
   content: string;
 }

@@ -22,7 +22,7 @@ export class PostService {
     page: number,
     limit: number,
   ) {
-    const posts = await this.postRepository.findAndCount({
+    const posts = await this.postRepository.find({
       select: {
         id: true,
         title: true,
@@ -59,11 +59,8 @@ export class PostService {
       },
     });
 
-    posts[0].forEach((post) => {
+    posts.forEach((post) => {
       post["modified"] = post.createdAt === post.modifiedAt ? false : true;
-      post["time"] = post.modifiedAt;
-      delete post.createdAt;
-      delete post.modifiedAt;
       post["commentCount"] = post.comments.length;
       delete post.comments;
     });
@@ -104,9 +101,6 @@ export class PostService {
 
     if (post) {
       post["modified"] = post.createdAt === post.modifiedAt ? false : true;
-      post["showDate"] = post.modifiedAt;
-      delete post.createdAt;
-      delete post.modifiedAt;
     }
     return post;
   }
