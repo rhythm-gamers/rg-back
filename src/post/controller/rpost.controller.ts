@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, Res } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { RPostService } from "../service/rpost.service";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
@@ -10,6 +10,9 @@ import { Response } from "express";
 import { UpdatePostDto } from "../dto/update-post.dto";
 import { SkipAuth } from "src/token/token.metadata";
 import { ToggleLike } from "src/common/enum/toggle-like.enum";
+import { SearchPostQuery } from "../dto/search-post.query";
+import { PagenatedPostQuery } from "../dto/pagenate-post.query";
+import { getPagenatedPostsSchema, getPostSchema, getSearchPostsSchema } from "../dto/schema";
 
 @ApiTags("rpost")
 @Controller("rpost")
@@ -20,25 +23,28 @@ export class RPostController {
   // Search Post
   @SkipAuth()
   @Get("search")
+  @ApiOkResponse({
+    schema: { example: getSearchPostsSchema }
+  })
+  @ApiBadRequestResponse()
   async searchPost(
     @Req() req,
     @Res() res: Response,
-    @Query("term") searchTerm: string,
-    @Query("boardname") boardname: string,
-    @Query("page") page: number,
-    @Query("take") take: number,
+    @Query() queries: SearchPostQuery,
   ) {
-    const user: TokenPayload = req.user;
     try {
-      const posts = await this.postService.search(boardname, searchTerm, (+page) - 1, take);
-      res.send(posts) 
+      const posts = await this.postService.search(queries.boardname, queries.searchTerm, (+queries.page) - 1, +queries.take);
+      res.send(posts);
     } catch (e) {
+      console.log(e.message);
       res.status(HttpStatusCode.BadRequest).send();
     }
   }
 
   // Create Post
   @Post()
+  @ApiCreatedResponse({description: "생성 성공"})
+  @ApiBadRequestResponse()
   async createPost(
     @Req() req,
     @Res() res: Response,
@@ -53,19 +59,21 @@ export class RPostController {
     }
   }
 
-  // Get Posts
+  // Get Posts - 첫 게시판 접속은 한번에 받아오고, 이후에는 controller로 받아옴
   @SkipAuth()
   @Get()
+  @ApiOkResponse({
+    schema: { example: getPagenatedPostsSchema }
+  })
+  @ApiBadRequestResponse()
   async pagenatedPosts(
     @Req() req,
     @Res() res: Response,
-    @Query("page") page: number,
-    @Query("take") take: number,
-    @Query("boardname") boardname: string,
+    @Query() queries: PagenatedPostQuery,
   ) {
     try {
-      const posts = await this.postService.fetchPagenatedPostsWithBoardname(boardname, (+page) - 1, +take);
-      res.send(posts);
+      const posts = await this.postService.fetchPagenatedPostsWithBoardname(queries.boardname, (+queries.page) - 1, +queries.take);
+      res.status(HttpStatusCode.Ok).send(posts);
     } catch (e) {
       console.log(e);
       res.status(HttpStatusCode.BadRequest).send();
@@ -75,10 +83,14 @@ export class RPostController {
   // Get Post + Get Comments
   @SkipAuth()
   @Get(":postid")
+  @ApiOkResponse({
+    schema: { example: getPostSchema }
+  })
+  @ApiBadRequestResponse()
   async getPost(
     @Req() req,
     @Res() res: Response,
-    @Query("postid") postid: number
+    @Param("postid") postid: number
   ) {
     try {
       const post = await this.postService.fetchPostWithId(+postid);
@@ -91,11 +103,13 @@ export class RPostController {
 
 
   // Update Post
-  @Patch()
+  @Patch(":postid")
+  @ApiOkResponse({description: "수정 성공"})
+  @ApiBadRequestResponse()
   async updatePost(
     @Req() req,
     @Res() res: Response,
-    @Query("postid") postid: number,
+    @Param("postid") postid: number,
     @Body() dto: UpdatePostDto,
   ) {
     const user: TokenPayload = req.user;
@@ -110,6 +124,8 @@ export class RPostController {
 
   // Delete Post 
   @Delete(":postid")
+  @ApiOkResponse({description: "삭제 성공"})
+  @ApiBadRequestResponse()
   async deletePost(
     @Req() req,
     @Res() res: Response,
@@ -118,7 +134,7 @@ export class RPostController {
     const user: TokenPayload = req.user;
     try {
       await this.postService.delete(+user.uid, +postid);
-      res.send();
+      res.status(HttpStatusCode.Ok).send();
     } catch (e) {
       res.status(HttpStatusCode.BadRequest).send();
     }
@@ -126,6 +142,9 @@ export class RPostController {
 
   // Increase Like Count
   @Post("like/:postid")
+  @ApiCreatedResponse({description: "좋아요 증가"})
+  @ApiNoContentResponse({description: "좋아요 취소"})
+  @ApiBadRequestResponse()
   async togglePostLike(
     @Req() req,
     @Res() res: Response,

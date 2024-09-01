@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Param, Patch, Post, Req, Res } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { CreateCommentDto } from "../dto/create-comment.dto";
 import { RCommentService } from "../service/rcomment.service";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
@@ -16,6 +16,8 @@ export class RCommentController {
 
   // Create Comment
   @Post()
+  @ApiCreatedResponse({description: "생성 성공"})
+  @ApiBadRequestResponse()
   async createComment(
     @Req() req,
     @Res() res: Response,
@@ -34,6 +36,8 @@ export class RCommentController {
 
   // Update Comments
   @Patch(":commentid")
+  @ApiOkResponse({description: "수정 성공"})
+  @ApiBadRequestResponse()
   async updateComment(
     @Req() req,
     @Res() res: Response,
@@ -51,6 +55,8 @@ export class RCommentController {
 
   // Delete Comments
   @Delete(":commentid")
+  @ApiOkResponse({description: "삭제 성공"})
+  @ApiBadRequestResponse()
   async deleteComment(
     @Req() req,
     @Res() res: Response,
@@ -59,7 +65,7 @@ export class RCommentController {
     const user: TokenPayload = req.user;
     try {
       await this.commentService.delete(+user.uid, +commentid);
-      res.sendStatus(HttpStatusCode.NoContent).send();
+      res.sendStatus(HttpStatusCode.Ok).send();
     } catch (e) {
       res.status(HttpStatusCode.BadRequest).send();
     }
@@ -67,6 +73,9 @@ export class RCommentController {
 
   // Toggle Comments Like
   @Post("like/:commentid")
+  @ApiCreatedResponse({description: "좋아요 증가"})
+  @ApiNoContentResponse({description: "좋아요 취소"})
+  @ApiBadRequestResponse()
   async toggleCommentLike(
     @Req() req,
     @Res() res: Response,
