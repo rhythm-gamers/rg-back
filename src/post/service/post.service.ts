@@ -59,7 +59,7 @@ export class PostService {
     });
 
     posts.forEach((post) => {
-      post["modified"] = post.createdAt === post.modifiedAt ? false : true;
+      post["modified"] = post.createdAt === post.updatedAt ? false : true;
       post["commentCount"] = post.comments.length;
       delete post.comments;
     });
@@ -98,7 +98,7 @@ export class PostService {
     });
 
     if (post) {
-      post["modified"] = post.createdAt === post.modifiedAt ? false : true;
+      post["modified"] = post.createdAt === post.updatedAt ? false : true;
     }
     return post;
   }
