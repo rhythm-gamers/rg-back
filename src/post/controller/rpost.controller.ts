@@ -15,7 +15,7 @@ import { PagenatedPostQuery } from "../dto/pagenate-post.query";
 import { getPagenatedPostsSchema, getPostSchema, getSearchPostsSchema } from "../dto/schema";
 
 @ApiTags("rpost")
-@Controller("rpost")
+@Controller("v2/post")
 export class RPostController {
   constructor(
     private readonly postService: RPostService,

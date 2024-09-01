@@ -5,7 +5,6 @@ import {
   Controller,
   Delete,
   Get,
-  Injectable,
   Param,
   Patch,
   Post,
@@ -25,9 +24,8 @@ import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } fro
 import { FetchBoardQuery } from "../dto/fetch-board.query";
 import { getAllBoards, getSpecificBoard } from "../dto/schema";
 
-@Injectable()
-@Controller("rboard")
 @ApiTags("rboard")
+@Controller("v2/board")
 export class RBoardController {
   constructor(
     private readonly boardService: RBoardService,

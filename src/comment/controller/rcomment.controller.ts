@@ -10,7 +10,7 @@ import { Response } from "express";
 import { ToggleLike } from "src/common/enum/toggle-like.enum";
 
 @ApiTags("rcomment")
-@Controller("rcomment")
+@Controller("v2/rcomment")
 export class RCommentController {
   constructor(private readonly commentService: RCommentService) {}
 
