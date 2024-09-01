@@ -1,7 +1,7 @@
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CommentLike } from "./entity/comment-like.entity";
+import { CommentLike } from "../entity/comment-like.entity";
 import { CommentService } from "./comment.service";
 import { UserService } from "src/user/user.service";
 

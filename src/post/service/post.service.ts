@@ -1,12 +1,13 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Post } from "./entity/post.entity";
+import { Post } from "../entity/post.entity";
 import { Repository } from "typeorm";
-import { CreatePostDto } from "./dto/create-post.dto";
-import { BoardService } from "src/board/board.service";
+import { CreatePostDto } from "../dto/create-post.dto";
+import { BoardService } from "src/board/service/board.service";
 import { UserService } from "src/user/user.service";
-import { UpdatePostDto } from "./dto/update-post.dto";
+import { UpdatePostDto } from "../dto/update-post.dto";
 import { PostLikeService } from "./post-like.service";
+import { CommentService } from "src/comment/service/comment.service";
 
 @Injectable()
 export class PostService {
@@ -15,6 +16,8 @@ export class PostService {
     private readonly boardService: BoardService,
     private readonly userService: UserService,
     private readonly postLikeService: PostLikeService,
+    @Inject(forwardRef(() => CommentService))
+    private readonly commentService: CommentService,
   ) {}
 
   async fetchPostsAndCommentCountWithBoardname(
@@ -27,15 +30,11 @@ export class PostService {
         id: true,
         title: true,
         views: true,
-        likes: true,
         createdAt: true,
-        modifiedAt: true,
+        updatedAt: true,
         user: {
           id: true,
           nickname: true,
-        },
-        comments: {
-          id: true,
         },
       },
       where: {
@@ -43,7 +42,7 @@ export class PostService {
           boardName: boardName,
         },
       },
-      relations: ["user", "comments"],
+      relations: ["user"],
       order: {
         id: "DESC",
       },
@@ -59,17 +58,13 @@ export class PostService {
       },
     });
 
-    posts[0].forEach((post) => {
-      post["modified"] = post.createdAt === post.modifiedAt ? false : true;
-      post["time"] = post.modifiedAt;
-      delete post.createdAt;
-      delete post.modifiedAt;
-      post["commentCount"] = post.comments.length;
-      delete post.comments;
+    posts[0].forEach(async (post) => {
+      post["commentsCount"] =
+        await this.commentService.getCommentCountsRelatedWithPost(post.id);
     });
 
     const result = {
-      posts: posts,
+      posts: posts[0],
       allCount: allArticles,
     };
 
@@ -80,16 +75,15 @@ export class PostService {
     const post = await this.postRepository.findOne({
       select: {
         id: true,
+        title: true,
+        content: true,
+        views: true,
+        createdAt: true,
+        updatedAt: true,
         user: {
           id: true,
           nickname: true,
         },
-        title: true,
-        content: true,
-        views: true,
-        likes: true,
-        createdAt: true,
-        modifiedAt: true,
       },
       where: {
         id: postId,
@@ -103,10 +97,10 @@ export class PostService {
     });
 
     if (post) {
-      post["modified"] = post.createdAt === post.modifiedAt ? false : true;
-      post["showDate"] = post.modifiedAt;
+      post["modified"] = post.createdAt === post.updatedAt ? false : true;
+      post["showDate"] = post.updatedAt;
       delete post.createdAt;
-      delete post.modifiedAt;
+      delete post.updatedAt;
     }
     return post;
   }
@@ -154,10 +148,6 @@ export class PostService {
     ) {
       throw new BadRequestException();
     }
-
-    await this.postRepository.update(postId, {
-      likes: () => "likes + 1",
-    });
 
     const result = await this.postRepository.findOneBy({
       id: postId,

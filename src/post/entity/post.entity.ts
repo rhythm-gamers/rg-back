@@ -43,7 +43,7 @@ export class Post {
   })
   likeList: PostLike[];
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: false })
   title: string;
 
   @Column({ length: 10000, default: "" })
@@ -52,12 +52,9 @@ export class Post {
   @Column({ default: 0 })
   views: number;
 
-  @Column({ default: 0 })
-  likes: number;
-
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
-  modifiedAt: Date;
+  updatedAt: Date;
 }

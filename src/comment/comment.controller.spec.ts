@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { CommentController } from "./comment.controller";
-import { CommentService } from "./comment.service";
+import { CommentController } from "./controller/comment.controller";
+import { CommentService } from "./service/comment.service";
 
 describe("CommentController", () => {
   let controller: CommentController;

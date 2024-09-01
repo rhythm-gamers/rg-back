@@ -7,12 +7,16 @@ import {
   Patch,
   Post,
   Query,
+  Req,
+  Res,
 } from "@nestjs/common";
-import { CommentService } from "./comment.service";
-import { CreateCommentDto } from "./dto/create-comment.dto";
-import { UpdateCommentDto } from "./dto/update-comment.dto";
-import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { CommentService } from "../service/comment.service";
+import { CreateCommentDto } from "../dto/create-comment.dto";
+import { UpdateCommentDto } from "../dto/update-comment.dto";
+import { ApiBadRequestResponse, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { SkipAuth } from "src/token/token.metadata";
+import { Request, Response } from "express";
+import { TokenPayload } from "src/auth/object/token-payload.obj";
 
 @ApiTags("comment")
 @Controller("comment")
@@ -21,6 +25,11 @@ export class CommentController {
 
   @SkipAuth()
   @Get("post/:postId")
+  @ApiParam({
+    name: "postId",
+    required: true,
+    description: "게시글 id",
+  })
   @ApiQuery({
     name: "page",
     required: false,
@@ -46,8 +55,10 @@ export class CommentController {
 
   @Post()
   @ApiOperation({ summary: "댓글 생성" })
-  async craeteComment(@Body() body: CreateCommentDto) {
-    const userUid = 1;
+  @ApiBody({ type: CreateCommentDto })
+  async craeteComment(@Body() body: CreateCommentDto, @Req() req) {
+    const user: TokenPayload = req.user;
+    const userUid = +user.uid;
     return await this.commentService.createComment(userUid, body);
   }
 
@@ -56,22 +67,28 @@ export class CommentController {
   async updateComment(
     @Param("commentId") commentId: number,
     @Body() body: UpdateCommentDto,
+    @Req() req,
   ) {
-    const userUid = 1;
+    const user: TokenPayload = req.user;
+    const userUid = +user.uid;
     return await this.commentService.updateComment(userUid, +commentId, body);
   }
 
   @Delete(":commentId")
   @ApiOperation({ summary: "댓글 삭제" })
-  async deleteComment(@Param("commentId") commentId: number) {
-    const userUid = 1;
+  async deleteComment(@Param("commentId") commentId: number, @Req() req) {
+    const user: TokenPayload = req.user;
+    const userUid = +user.uid;
     return await this.commentService.deleteComment(userUid, +commentId);
   }
 
   @Post("inc_like/:commentId")
   @ApiOperation({ summary: "댓글 좋아요 증가" })
-  async increaseCommentLike(@Param("commentId") commentId: number) {
-    const userUid = 1;
+  @ApiUnauthorizedResponse({ description: "로그인 해주세요" })
+  @ApiBadRequestResponse({ description: "없는 댓글입니다" })
+  async increaseCommentLike(@Param("commentId") commentId: number, @Req() req) {
+    const user: TokenPayload = req.user;
+    const userUid = +user.uid;
     return await this.commentService.increaseCommentLikes(userUid, +commentId);
   }
 }

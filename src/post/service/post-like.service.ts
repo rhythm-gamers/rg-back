@@ -1,8 +1,8 @@
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { PostLike } from "./entity/post-like.entity";
+import { PostLike } from "../entity/post-like.entity";
 import { UserService } from "src/user/user.service";
-import { PostService } from "./post.service";
+import { PostService } from "../service/post.service";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -16,9 +16,7 @@ export class PostLikeService {
 
   async appendUserToLikeList(userId: number, postId: number) {
     const user = await this.userService.fetchUserLikeListWithUserID(userId);
-    if (
-      user.postLikeList.some((like) => like.post.id === postId) === true
-    ) {
+    if (user.postLikeList.some((like) => like.post.id === postId) === true) {
       return false;
     }
     const post = await this.postService.fetchPostWithPostID(postId);

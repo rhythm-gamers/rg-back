@@ -1,21 +1,66 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, Inject, forwardRef } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Comment } from "./entity/comment.entity";
+import { Comment } from "../entity/comment.entity";
 import { Repository } from "typeorm";
-import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { UpdateCommentDto } from "../dto/update-comment.dto";
 import { UserService } from "src/user/user.service";
-import { CreateCommentDto } from "./dto/create-comment.dto";
-import { PostService } from "src/post/post.service";
+import { CreateCommentDto } from "../dto/create-comment.dto";
+import { PostService } from "src/post/service/post.service";
 import { CommentLikeService } from "./comment-like.service";
 
 @Injectable()
 export class CommentService {
+  //   {
+  //     content:
+  //       commentUpdate.content == undefined
+  //         ? content
+  //         : commentUpdate.content,
+  //     modifiedAt: new Date(),
+  //   },
+  // );
+  //
   constructor(
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
     private readonly userService: UserService,
+    @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
     private readonly commentLikeService: CommentLikeService,
   ) {}
+
+  async getCommentCountsRelatedWithPost(postId: number): Promise<number> {
+    return this.commentRepository.count({
+      where: {
+        post: {
+          id: postId,
+        },
+      },
+    });
+  }
+
+  async fetchCommentsWithPostid(postId: number) {
+    return await this.commentRepository.find({
+      select: {
+        id: true,
+        content: true,
+        parentId: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          id: true,
+          nickname: true,
+        },
+      },
+      where: {
+        post: {
+          id: postId,
+        },
+      },
+      order: {
+        id: "ASC",
+      },
+      relations: ["user"],
+    });
+  }
 
   async fetchCommentAssociatePostID(
     postId: number,
@@ -26,10 +71,9 @@ export class CommentService {
       select: {
         id: true,
         content: true,
-        likes: true,
         parentId: true,
         createdAt: true,
-        modifiedAt: true,
+        updatedAt: true,
         user: {
           id: true,
           nickname: true,
@@ -90,7 +134,7 @@ export class CommentService {
   ): Promise<Comment> {
     const user = await this.userService.fetchWithUserId(userId);
     const post = await this.postService.fetchPostWithPostID(
-      commentCreate.postUid,
+      commentCreate.postid,
     );
 
     const comment = new Comment();
@@ -126,14 +170,7 @@ export class CommentService {
       throw new BadRequestException();
     }
 
-    await this.commentRepository.update(commentId, {
-      likes: () => "likes + 1",
-    });
-
     const result = await this.commentRepository.findOne({
-      select: {
-        likes: true,
-      },
       where: {
         id: commentId,
       },
