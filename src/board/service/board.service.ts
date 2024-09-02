@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Board } from "./entity/board.entity";
+import { Board } from "../entity/board.entity";
 import { Repository } from "typeorm";
-import { CreateBoardDto } from "./dto/create-board.dto";
-import { ModifyBoardDto } from "./dto/modify-board.dto";
+import { CreateBoardDto } from "../dto/create-board.dto";
+import { UpdateBoardDto } from "../dto/update-board.dto";
 import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Board")
@@ -53,7 +53,7 @@ export class BoardService {
   }
 
   async modifyBoardByBoardname(
-    boardInfo: ModifyBoardDto,
+    boardInfo: UpdateBoardDto,
     originName: string,
   ): Promise<Board> {
     const board = await this.boardRepository.findOne({

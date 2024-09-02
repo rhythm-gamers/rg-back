@@ -253,7 +253,15 @@ export class ProgressController {
   })
   async fetchLevetestRanking(@Res() res: Response, @Param("id") id: number) {
     const result = await this.progressService.fetchLevelTestRanking(+id);
-    res.status(HttpStatus.OK).send(result);
+    res.status(HttpStatus.OK).send(
+      result.map((r) => {
+        return {
+          rating: r.currentRate,
+          date: r.updatedAt,
+          nickname: r.user.nickname,
+        };
+      }),
+    );
   }
 
   @SkipAuth()
@@ -275,6 +283,14 @@ export class ProgressController {
   })
   async fetchPracticeRanking(@Res() res: Response, @Param("id") id: number) {
     const result = await this.progressService.fetchPracticeRanking(+id);
-    res.status(HttpStatus.OK).send(result);
+    res.status(HttpStatus.OK).send(
+      result.map((r) => {
+        return {
+          rating: r.currentRate,
+          date: r.updatedAt,
+          nickname: r.user.nickname,
+        };
+      }),
+    );
   }
 }

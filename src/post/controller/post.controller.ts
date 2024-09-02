@@ -8,14 +8,17 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   forwardRef,
 } from "@nestjs/common";
-import { PostService } from "./post.service";
-import { CommentService } from "src/comment/comment.service";
-import { CreatePostDto } from "./dto/create-post.dto";
-import { UpdatePostDto } from "./dto/update-post.dto";
+import { PostService } from "../service/post.service";
+import { CommentService } from "src/comment/service/comment.service";
+import { CreatePostDto } from "../dto/create-post.dto";
+import { UpdatePostDto } from "../dto/update-post.dto";
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { SkipAuth } from "src/token/token.metadata";
+import { TokenPayload } from "src/auth/object/token-payload.obj";
+import { RPostService } from "../service/rpost.service";
 
 @ApiTags("post")
 @Controller("post")
@@ -24,6 +27,7 @@ export class PostController {
     private readonly postService: PostService,
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
+    private readonly postRefactoringService: RPostService,
   ) {}
 
   @SkipAuth()
@@ -44,11 +48,12 @@ export class PostController {
     @Query("page") page: number = 0,
     @Query("limit") limit: number = +process.env.COMMENT_LIMIT,
   ) {
-    return await this.postService.fetchPostsAndCommentCountWithBoardname(
-      boardName,
-      +page,
-      +limit,
-    );
+    return await this.postRefactoringService.fetchPagenatedPostsWithBoardname(boardName, 0, 10);
+    // return await this.postService.fetchPostsAndCommentCountWithBoardname(
+    //   boardName,
+    //   +page,
+    //   +limit,
+    // );
   }
 
   @SkipAuth()
@@ -69,11 +74,12 @@ export class PostController {
     };
   }
 
-  @Post()
+  @Post("")
   @ApiOperation({})
-  async createPost(@Body() body: CreatePostDto) {
-    const userUid = 1;
-    return await this.postService.createPost(userUid, body);
+  async createPost(@Req() req, @Body() body: CreatePostDto) {
+    const user: TokenPayload = req.user;
+    await this.postService.createPost(+user.uid, body);
+    return body;
   }
 
   @Patch(":postId")
@@ -84,11 +90,12 @@ export class PostController {
     description: "수정하는 글의 id",
   })
   async updatePost(
+    @Req() req,
     @Param("postId") postId: number,
     @Body() body: UpdatePostDto,
   ) {
-    const userUid = 1;
-    return await this.postService.updatePost(userUid, +postId, body);
+    const user: TokenPayload = req.user;
+    return await this.postService.updatePost(+user.uid, +postId, body);
   }
 
   @Delete(":postId")
@@ -98,9 +105,9 @@ export class PostController {
     required: true,
     description: "삭제하는 글의 id",
   })
-  async deletePost(@Param("postId") postId: number) {
-    const userUid = 1;
-    return await this.postService.deletePost(userUid, +postId);
+  async deletePost(@Req() req, @Param("postId") postId: number) {
+    const user: TokenPayload = req.user;
+    return await this.postService.deletePost(+user.uid, +postId);
   }
 
   @Post("inc-like/:postId")
@@ -110,8 +117,8 @@ export class PostController {
     required: true,
     description: "좋아요를 증가시키려는 글의 id",
   })
-  async increasePostLikes(@Param("postId") postId: number) {
-    const userUid = 1;
-    return await this.postService.increasePostLikes(userUid, +postId);
+  async increasePostLikes(@Req() req, @Param("postId") postId: number) {
+    const user: TokenPayload = req.user;
+    return await this.postService.increasePostLikes(+user.uid, +postId);
   }
 }

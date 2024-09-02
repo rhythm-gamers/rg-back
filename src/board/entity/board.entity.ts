@@ -9,7 +9,7 @@ export class Board {
   @OneToMany(() => Post, (post) => post.board)
   posts: Post[];
 
-  @Column({ length: 10 })
+  @Column({ length: 20, unique: true, nullable: false })
   boardName: string;
 
   @Column({ length: 200, default: "" })

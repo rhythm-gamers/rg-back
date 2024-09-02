@@ -35,11 +35,8 @@ export class Comment {
 
   // TODO 해당 댓글에 추천한 유저를 어떻게 중복 체크 할 것인가?
 
-  @Column({ default: "" })
+  @Column({ default: "", length: 10000 })
   content: string;
-
-  @Column({ default: 0 })
-  likes: number;
 
   @Column() // TODO 이 부분은 추후에 자기 참조 등으로 가능하게끔...
   parentId: number;
@@ -48,5 +45,5 @@ export class Comment {
   createdAt: Date;
 
   @UpdateDateColumn()
-  modifiedAt: Date;
+  updatedAt: Date;
 }
