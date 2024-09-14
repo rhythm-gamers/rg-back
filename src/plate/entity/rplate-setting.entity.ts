@@ -5,18 +5,16 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "./user.entity";
+import { RUser } from "src/user/entity/ruser.entity";
 
 @Entity()
-export class PlateSetting {
+export class RPlateSetting {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User, (user) => user.plateSetting, {
-    onDelete: "CASCADE",
-  })
+  @OneToOne(() => RUser, (user) => user.plateSetting)
   @JoinColumn()
-  user: User;
+  user: RUser;
 
   @Column({ default: true })
   showComment: boolean;
@@ -29,4 +27,7 @@ export class PlateSetting {
 
   @Column({ default: true })
   showHavingGames: boolean;
+
+  @Column({ default: true })
+  showBgdesign: boolean;
 }
