@@ -1,10 +1,15 @@
-import { BadRequestException, forwardRef, Inject, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Post } from "../entity/post.entity";
 import { Repository } from "typeorm";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { BoardService } from "src/board/service/board.service";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/user/service/user.service";
 import { UpdatePostDto } from "../dto/update-post.dto";
 import { PostLikeService } from "./post-like.service";
 import { CommentService } from "src/comment/service/comment.service";
@@ -146,6 +151,10 @@ export class PostService {
     ) {
       throw new BadRequestException();
     }
+
+    await this.postRepository.update(postId, {
+      likes: () => "likes + 1",
+    });
 
     const result = await this.postRepository.findOneBy({
       id: postId,

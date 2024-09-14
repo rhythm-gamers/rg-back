@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Post } from "../entity/post.entity";
 import { Like, Repository } from "typeorm";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/user/service/user.service";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { RBoardService } from "src/board/service/rboard.service";
 import { UpdatePostDto } from "../dto/update-post.dto";

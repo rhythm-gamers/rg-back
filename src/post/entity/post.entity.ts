@@ -18,14 +18,10 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Board, (board) => board.posts, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => Board, (board) => board.posts)
   board: Board;
 
-  @ManyToOne(() => User, (user) => user.posts, {
-    onDelete: "NO ACTION",
-  })
+  @ManyToOne(() => User, (user) => user.posts)
   user: User;
 
   @OneToMany(() => Comment, (comment) => comment.post, {
@@ -48,6 +44,9 @@ export class Post {
 
   @Column({ length: 10000, default: "" })
   content: string;
+
+  @Column({ default: 0 })
+  likes: number;
 
   @Column({ default: 0 })
   views: number;
