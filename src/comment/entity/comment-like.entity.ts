@@ -7,13 +7,9 @@ export class CommentLike {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Comment, (comment) => comment.likeList, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => Comment, (comment) => comment.likeList)
   comment: Comment;
 
-  @ManyToOne(() => User, (user) => user.commentLikeList, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => User, (user) => user.commentLikeList)
   user: User;
 }

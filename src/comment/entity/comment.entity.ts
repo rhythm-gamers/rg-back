@@ -20,12 +20,12 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments)
   user: User;
 
-  @ManyToOne(() => Post, (post) => post.comments, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => Post, (post) => post.comments)
   post: Post;
 
-  @OneToMany(() => CommentReport, (commentreport) => commentreport.comment)
+  @OneToMany(() => CommentReport, (commentreport) => commentreport.comment, {
+    onDelete: "CASCADE",
+  })
   reportList: CommentReport[];
 
   @OneToMany(() => CommentLike, (like) => like.comment, {

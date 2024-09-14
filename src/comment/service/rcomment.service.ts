@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Comment } from "../entity/comment.entity";
 import { Repository } from "typeorm";
 import { CreateCommentDto } from "../dto/create-comment.dto";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/user/service/user.service";
 import { RPostService } from "src/post/service/rpost.service";
 import { UpdateCommentDto } from "../dto/update-comment.dto";
 import { RCommentLikeService } from "./rcomment-like.service";

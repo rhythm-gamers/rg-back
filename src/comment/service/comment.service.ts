@@ -1,9 +1,14 @@
-import { BadRequestException, Injectable, Inject, forwardRef } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  Inject,
+  forwardRef,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Comment } from "../entity/comment.entity";
 import { Repository } from "typeorm";
 import { UpdateCommentDto } from "../dto/update-comment.dto";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/user/service/user.service";
 import { CreateCommentDto } from "../dto/create-comment.dto";
 import { PostService } from "src/post/service/post.service";
 import { CommentLikeService } from "./comment-like.service";
