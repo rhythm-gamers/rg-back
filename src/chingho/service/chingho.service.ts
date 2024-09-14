@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, OnModuleInit } from "@nestjs/common";
-import { UserService } from "../user/user.service";
+import { UserService } from "../../user/service/user.service";
 import { FirebaseService } from "src/firebase/firebase.service";
 import { CodecService } from "src/codec/codec.service";
 import { RtdbUpdateDto } from "src/firebase/dto/rtdb-update.dto";
-import { User } from "../user/entity/user.entity";
+import { User } from "../../user/entity/user.entity";
 import { Cron } from "@nestjs/schedule";
 
 export interface UserChinghoProgress {
