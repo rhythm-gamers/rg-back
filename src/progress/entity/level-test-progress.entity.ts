@@ -13,14 +13,10 @@ export class LevelTestProgress {
   @PrimaryGeneratedColumn()
   levelTestProgressId: number;
 
-  @ManyToOne(() => User, (user) => user.levelTestProgresses, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => User, (user) => user.levelTestProgresses)
   user: User;
 
-  @ManyToOne(() => LevelTest, (test) => test.userProgresses, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => LevelTest, (test) => test.userProgresses)
   levelTest: LevelTest;
 
   @Column({ type: "decimal", precision: 5, scale: 2, comment: "000.00~999.99" })

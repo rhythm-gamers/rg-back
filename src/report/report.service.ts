@@ -4,7 +4,7 @@ import { CommentReport } from "./entity/comment-report.entity";
 import { Repository } from "typeorm";
 import { PostReport } from "./entity/post-report.entity";
 import { UserReport } from "./entity/user-report.entity";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/user/service/user.service";
 import { PostService } from "src/post/service/post.service";
 import { CommentService } from "src/comment/service/comment.service";
 import { HandleReportedDao } from "./dao/handle-reported.dao";
