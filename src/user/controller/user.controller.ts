@@ -9,9 +9,9 @@ import {
   Req,
   Res,
 } from "@nestjs/common";
-import { UserService } from "./user.service";
-import { UpdatePlateSettingDto } from "./dto/update-plate-setting.dto";
-import { PlateSettingService } from "./service/plate-setting.service";
+import { UserService } from "../service/user.service";
+import { UpdatePlateSettingDto } from "../../plate/dto/update-plate-setting.dto";
+import { PlateSettingService } from "../../plate/service/plate-setting.service";
 import { Response } from "express";
 import { SkipAuth } from "src/token/token.metadata";
 import {
@@ -24,14 +24,14 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
-import { UploadProfileImageDto } from "./dto/upload-profile-image.dto";
-import { UpdateIntroductionDto } from "./dto/update-introduction.dto";
+import { UploadProfileImageDto } from "../dto/upload-profile-image.dto";
+import { UpdateIntroductionDto } from "../dto/update-introduction.dto";
 import { HttpStatusCode } from "axios";
 import { CodecService } from "src/codec/codec.service";
-import { UpdateNicknameDto } from "./dto/update-nickname.dto";
-import { ChinghoService } from "../chingho/chingho.service";
-import { UpdateChinghoDto } from "./dto/update-chingho.dto";
-import { PlateDataService } from "./service/plate-data.service";
+import { UpdateNicknameDto } from "../dto/update-nickname.dto";
+import { ChinghoService } from "../../chingho/service/chingho.service";
+import { UpdateChinghoDto } from "../../chingho/dto/update-chingho.dto";
+import { PlateDataService } from "../../plate/service/plate-data.service";
 
 const NICKNAME_VALIDATOR_ARRAY = ["{nickname}", ",", undefined, null];
 

@@ -5,15 +5,15 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { And, IsNull, Not, Repository } from "typeorm";
-import { User } from "./entity/user.entity";
+import { User } from "../entity/user.entity";
 import { AwsS3Service } from "src/s3/aws-s3.service";
-import { PlateDataService } from "./service/plate-data.service";
+import { PlateDataService } from "src/plate/service/plate-data.service";
 import axios from "axios";
 import { CodecService } from "src/codec/codec.service";
 import { FirebaseService } from "src/firebase/firebase.service";
-import { UpdateChinghoDto } from "./dto/update-chingho.dto";
-import { PlateData } from "./entity/plate-data.entity";
-import { UpdatePlatedataDto } from "./dto/update-platedata.dto";
+import { UpdateChinghoDto } from "../../chingho/dto/update-chingho.dto";
+import { PlateData } from "../../plate/entity/plate-data.entity";
+import { UpdatePlatedataDto } from "../../plate/dto/update-platedata.dto";
 
 @Injectable()
 export class UserService {

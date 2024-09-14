@@ -6,7 +6,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { PlateSetting } from "src/plate/entity/plate-setting.entity";
 import { Post } from "src/post/entity/post.entity";
 import { Comment } from "src/comment/entity/comment.entity";
 import { PostReport } from "src/report/entity/post-report.entity";
@@ -16,18 +15,29 @@ import { LevelTestProgress } from "../../progress/entity/level-test-progress.ent
 import { PracticeProgress } from "../../progress/entity/practice-progress.entity";
 import { CommentLike } from "src/comment/entity/comment-like.entity";
 import { PostLike } from "src/post/entity/post-like.entity";
-import { PlateData } from "../../plate/entity/plate-data.entity";
+import { Chingho } from "src/chingho/entity/chingho.entity";
+import { RPlateData } from "src/plate/entity/rplate-data.entity";
+import { RPlateSetting } from "src/plate/entity/rplate-setting.entity";
 
 @Entity()
-export class User {
+export class RUser {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => PlateSetting, (plateSetting) => plateSetting.user)
-  plateSetting: PlateSetting;
+  @OneToOne(() => RPlateSetting, (plateSetting) => plateSetting.user, {
+    onDelete: "CASCADE",
+  })
+  plateSetting: RPlateSetting;
 
-  @OneToOne(() => PlateData, (plateData) => plateData.user)
-  plateData: PlateData;
+  @OneToOne(() => RPlateData, (plateData) => plateData.user, {
+    onDelete: "CASCADE",
+  })
+  plateData: RPlateData;
+
+  @OneToOne(() => Chingho, (chingho) => chingho.user, {
+    onDelete: "CASCADE",
+  })
+  chingho: Chingho;
 
   @OneToMany(() => LevelTestProgress, (progress) => progress.user, {
     cascade: true,
@@ -39,10 +49,14 @@ export class User {
   })
   practiceProgresses: PracticeProgress[];
 
-  @OneToMany(() => Post, (post) => post.user)
+  @OneToMany(() => Post, (post) => post.user, {
+    onDelete: "CASCADE",
+  })
   posts: Post[];
 
-  @OneToMany(() => Comment, (comment) => comment.user)
+  @OneToMany(() => Comment, (comment) => comment.user, {
+    onDelete: "CASCADE",
+  })
   comments: Comment[];
 
   @OneToMany(() => CommentLike, (like) => like.user, {
@@ -60,15 +74,21 @@ export class User {
   })
   postReports: PostReport[];
 
-  @OneToMany(() => CommentReport, (commentReport) => commentReport.reporter)
+  @OneToMany(() => CommentReport, (commentReport) => commentReport.reporter, {
+    onDelete: "CASCADE",
+  })
   commentReports: CommentReport[];
 
   // 신고를 함
-  @OneToMany(() => UserReport, (userReport) => userReport.reporter)
+  @OneToMany(() => UserReport, (userReport) => userReport.reporter, {
+    onDelete: "CASCADE",
+  })
   reporting: UserReport[];
 
   // 신고를 당함
-  @OneToMany(() => UserReport, (userReport) => userReport.reported)
+  @OneToMany(() => UserReport, (userReport) => userReport.reported, {
+    onDelete: "CASCADE",
+  })
   reported: UserReport[];
 
   @Column({ length: 20, unique: true })

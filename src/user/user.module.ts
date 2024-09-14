@@ -1,27 +1,30 @@
 import { Module } from "@nestjs/common";
-import { UserService } from "./user.service";
-import { UserController } from "./user.controller";
+import { UserService } from "./service/user.service";
+import { UserController } from "./controller/user.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./entity/user.entity";
-import { PlateSetting } from "./entity/plate-setting.entity";
-import { PlateSettingService } from "./service/plate-setting.service";
 import { AwsS3Module } from "src/s3/aws-s3.module";
-import { PlateDataService } from "./service/plate-data.service";
-import { PlateData } from "./entity/plate-data.entity";
 import { CodecModule } from "src/codec/codec.modle";
 import { FirebaseModule } from "src/firebase/firebase.module";
 import { ChinghoModule } from "src/chingho/chingho.module";
+import { RUserController } from "./controller/ruser.controller";
+import { MulterModule } from "@nestjs/platform-express";
+import { RUserService } from "./service/ruser.service";
+import { RUser } from "./entity/ruser.entity";
+import { PlateModule } from "src/plate/plate.module";
 
 @Module({
-  controllers: [UserController],
-  providers: [UserService, PlateSettingService, PlateDataService],
+  controllers: [UserController, RUserController],
+  providers: [UserService, RUserService],
   imports: [
-    TypeOrmModule.forFeature([User, PlateSetting, PlateData]),
+    TypeOrmModule.forFeature([User, RUser]),
     AwsS3Module,
     CodecModule,
     FirebaseModule,
     ChinghoModule,
+    MulterModule.register(),
+    PlateModule,
   ],
-  exports: [UserService, PlateSettingService, PlateDataService],
+  exports: [UserService, RUserService],
 })
 export class UserModule {}
