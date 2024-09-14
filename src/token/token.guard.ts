@@ -9,6 +9,7 @@ import { Response } from "express";
 import { IS_PUBLIC_KEY } from "./token.metadata";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
 import { TokenService } from "./token.service";
+import { cookieOptions } from "./cookie.options";
 
 type Cookies = {
   access_token: string;
@@ -31,8 +32,13 @@ export class TokenGuard implements CanActivate {
     const response = context.switchToHttp().getResponse() as Response;
     const cookies: Cookies = request.cookies as Cookies;
 
+    if (isPublic) {
+      request.user = null;
+      return true;
+    }
+
     if (!cookies.access_token || !cookies.refresh_token) {
-      if (!isPublic) throw new UnauthorizedException("Token not found");
+      throw new UnauthorizedException("Token not found");
     }
 
     try {
@@ -54,17 +60,14 @@ export class TokenGuard implements CanActivate {
           process.env.ACCESS_TOKEN_EXPIRE,
         );
         request.user = decodedRefreshToken;
-        response.cookie("access_token", newAccessToken, { httpOnly: true });
+        response.cookie("access_token", newAccessToken, { ...cookieOptions });
+        response.setHeader("access_token", newAccessToken);
         return true;
       } catch (refreshTokenError) {
-        if (isPublic) {
-          request.user = null;
-          return true;
-        }
         // token expire 시 토큰 자체를 삭제.
         // access_token을 header로 보낼 경우 clearCookie 대신 clearHeader로 바꿔야할듯?
-        response.clearCookie("access_token", { httpOnly: true });
-        response.clearCookie("refresh_token", { httpOnly: true });
+        response.clearCookie("access_token", { ...cookieOptions });
+        response.clearCookie("refresh_token", { ...cookieOptions });
         throw new UnauthorizedException("Token expired");
       }
     }
