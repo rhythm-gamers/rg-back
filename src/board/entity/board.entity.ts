@@ -6,7 +6,7 @@ export class Board {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => Post, (post) => post.board)
+  @OneToMany(() => Post, (post) => post.board, { onDelete: "CASCADE" })
   posts: Post[];
 
   @Column({ length: 20, unique: true, nullable: false })
