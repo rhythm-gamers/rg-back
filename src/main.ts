@@ -11,7 +11,7 @@ import { json } from "express";
 import { RolesGuard } from "./token/roles.guard";
 import { TokenService } from "./token/token.service";
 import expressBasicAuth from "express-basic-auth";
-import { tokenHeaderMiddleware } from "./token/token_header.middleware";
+import { tokenHeaderMiddleware } from "./token/token-header.middleware";
 
 function setSwaggerAuth(app: INestApplication) {
   app.use(
