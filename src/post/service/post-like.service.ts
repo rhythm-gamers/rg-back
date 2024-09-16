@@ -15,9 +15,32 @@ export class PostLikeService {
   ) {}
 
   async appendUserToLikeList(userId: number, postId: number) {
-    const user = await this.userService.fetchUserLikeListWithUserID(userId);
-    if (user.postLikeList.some((like) => like.post.id === postId) === true) {
-      return false;
+    const user = await this.userService.fetchWithUserId(userId);
+    const list = await this.postLikeRepo.find({
+      select: {
+        id: true,
+        user: {
+          id: true,
+        },
+      },
+      where: {
+        post: {
+          id: postId,
+        },
+      },
+      relations: ["user"],
+    });
+    try {
+      console.log(list);
+      if (
+        list.some((like) => {
+          if (!like.user) return false;
+          return like.user.id === userId;
+        })
+      )
+        return false;
+    } catch (e) {
+      console.log(e);
     }
     const post = await this.postService.fetchPostWithPostID(postId);
 

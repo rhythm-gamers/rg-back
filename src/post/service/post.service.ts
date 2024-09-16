@@ -152,9 +152,13 @@ export class PostService {
       throw new BadRequestException();
     }
 
-    await this.postRepository.update(postId, {
-      likes: () => "likes + 1",
-    });
+    try {
+      await this.postRepository.update(postId, {
+        likes: () => "likes + 1",
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
     const result = await this.postRepository.findOneBy({
       id: postId,
