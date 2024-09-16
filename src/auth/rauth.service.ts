@@ -9,18 +9,18 @@ import bcrypt from "bcrypt";
 import { RegisterDto } from "./dto/register.dto";
 import { TokenPayload } from "./object/token-payload.obj";
 import { TokenService } from "src/token/token.service";
-import { UserService } from "src/user/service/user.service";
+import { RUserService } from "src/user/service/ruser.service";
 
 const SALT_ROUNDS = 10;
 @Injectable()
-export class AuthService {
+export class RAuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly userService: RUserService,
     private readonly tokenService: TokenService,
   ) {}
 
   async login(loginDto: LoginDto) {
-    const user = await this.userService.fetchWithRegisterId(loginDto.username);
+    const user = await this.userService.fetchByRegisterId(loginDto.username);
     if (!user) throw new NotFoundException("User not found");
 
     if (bcrypt.compareSync(loginDto.password, user.password)) {

@@ -148,4 +148,11 @@ export class RUserService {
       console.log(e);
     }
   }
+
+  async saveUserSteamUID(uid: number, steamUID: string) {
+    const result = await this.userRepo.update(uid, {
+      steamId: steamUID,
+    });
+    return result;
+  }
 }

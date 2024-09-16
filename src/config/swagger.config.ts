@@ -5,8 +5,8 @@ import expressBasicAuth from "express-basic-auth";
 export const setupSwagger = (app: INestApplication) => {
   const version = "0.3";
   const config = new DocumentBuilder()
-    .setTitle("리듬게이머즈")
-    .setDescription("개발용 API 리스트")
+    .setTitle("리듬게이머즈 v1")
+    .setDescription("개발용 v1 API 리스트")
     .setVersion(version)
     .addTag("auth", "register/login/logout operation")
     .addTag("User Setting", "user operation")
@@ -28,12 +28,13 @@ export const setupSwagger = (app: INestApplication) => {
     .setTitle("리듬게이머즈 v2")
     .setDescription("개발용 v2 api 리스트")
     .setVersion(version)
-    .addTag("auth", "register/login/logout operation")
+    .addTag("rauth", "register/login/logout operation")
     .addTag("ruser", "user opetation")
     .addTag("rboard", "board operation")
     .addTag("rpost", "post operation")
     .addTag("rcomment", "comment operation")
     .addTag("rchingho", "chingho operation")
+    .addTag("rstream", "steam operation")
     .addBearerAuth()
     .build();
   const documentV2 = SwaggerModule.createDocument(app, v2);

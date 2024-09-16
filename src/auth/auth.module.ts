@@ -5,10 +5,12 @@ import { AuthController } from "./auth.controller";
 import { CodecModule } from "src/codec/codec.modle";
 import { TokenModule } from "src/token/token.module";
 import { ChinghoModule } from "src/chingho/chingho.module";
+import { RAuthService } from "./rauth.service";
+import { RAuthController } from "./rauth.controller";
 
 @Module({
   imports: [TokenModule, CodecModule, UserModule, ChinghoModule],
-  controllers: [AuthController],
-  providers: [AuthService],
+  controllers: [AuthController, RAuthController],
+  providers: [AuthService, RAuthService],
 })
 export class AuthModule {}
