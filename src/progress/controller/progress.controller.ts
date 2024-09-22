@@ -8,7 +8,7 @@ import {
   Req,
   Res,
 } from "@nestjs/common";
-import { ProgressService } from "./service/progress.service";
+import { ProgressService } from "../service/progress.service";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -17,13 +17,13 @@ import {
   ApiParam,
   ApiTags,
 } from "@nestjs/swagger";
-import { UpdateProgressDto } from "./dto/update-progress.dto";
+import { UpdateProgressDto } from "../dto/update-progress.dto";
 import { Response } from "express";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
 import {
   getAllOnesPropertyWithKeynum,
   getRankingProperties,
-} from "./obj/swagger-properties.obj";
+} from "../obj/swagger-properties.obj";
 import { SkipAuth } from "src/token/token.metadata";
 
 @Controller("progress")
