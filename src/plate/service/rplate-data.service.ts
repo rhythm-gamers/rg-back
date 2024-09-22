@@ -1,7 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UpdatePlatedataDto } from "../dto/update-platedata.dto";
+import {
+  UpdatePlatedataDto,
+  UpdatePlatelevelDto,
+} from "../dto/update-platedata.dto";
 import { RPlateData } from "../entity/rplate-data.entity";
 import { RUser } from "src/user/entity/ruser.entity";
 
@@ -17,7 +20,7 @@ export class RPlateDataService {
     return await this.plateDataRepo.save(plateData);
   }
 
-  async update(userid: number, dto: UpdatePlatedataDto) {
+  async update(userid: number, dto: UpdatePlatedataDto | UpdatePlatelevelDto) {
     await this.plateDataRepo.update({ user: { id: userid } }, dto);
   }
 

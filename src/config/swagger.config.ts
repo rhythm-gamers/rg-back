@@ -30,6 +30,7 @@ export const setupSwagger = (app: INestApplication) => {
     .setVersion(version)
     .addTag("rauth", "register/login/logout operation")
     .addTag("ruser", "user opetation")
+    .addTag("rprogress", "current progress operation")
     .addTag("rboard", "board operation")
     .addTag("rpost", "post operation")
     .addTag("rcomment", "comment operation")
