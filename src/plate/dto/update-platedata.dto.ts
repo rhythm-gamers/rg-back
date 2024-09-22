@@ -29,3 +29,8 @@ export class UpdatePlatedataDto {
   @IsOptional()
   currentLevel?: number;
 }
+
+export class UpdatePlatelevelDto {
+  @IsNumber()
+  currentLevel: number;
+}
