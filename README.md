@@ -43,7 +43,13 @@ bun i
 ## 3. 서버 실행
 
 ```
-bun start:dev
+cd server
+pm2 start "bun start"
+```
+
+### 3.1. 서버 재실행
+```
+pm2 restart "bun start"
 ```
 ---
 
