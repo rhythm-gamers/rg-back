@@ -9,6 +9,7 @@ import { Response } from "express";
 import { IS_PUBLIC_KEY } from "./token.metadata";
 import { TokenPayload } from "src/auth/object/token-payload.obj";
 import { TokenService } from "./token.service";
+import { cookieOptions } from "./cookie.options";
 
 type Cookies = {
   access_token: string;
@@ -54,7 +55,7 @@ export class TokenGuard implements CanActivate {
           process.env.ACCESS_TOKEN_EXPIRE,
         );
         request.user = decodedRefreshToken;
-        response.cookie("access_token", newAccessToken, { httpOnly: true });
+        response.cookie("access_token", newAccessToken, { ...cookieOptions});
         return true;
       } catch (refreshTokenError) {
         if (isPublic) {

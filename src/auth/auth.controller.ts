@@ -13,6 +13,7 @@ import { TokenPayload } from "./object/token-payload.obj";
 import { UserService } from "src/user/user.service";
 import { CodecService } from "src/codec/codec.service";
 import { ChinghoService } from "src/chingho/chingho.service";
+import { cookieOptions } from "src/token/cookie.options";
 
 axios.defaults.paramsSerializer = (params) => {
   return qs.stringify(params);
@@ -71,8 +72,8 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
     const tokens = await this.authService.login(loginDto);
     res
-      .cookie("access_token", tokens.accessToken, { httpOnly: true })
-      .cookie("refresh_token", tokens.refreshToken, { httpOnly: true })
+      .cookie("access_token", tokens.accessToken, { ...cookieOptions })
+      .cookie("refresh_token", tokens.refreshToken, { ...cookieOptions })
       .status(HttpStatusCode.Ok)
       .send();
   }
