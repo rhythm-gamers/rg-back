@@ -32,7 +32,7 @@ async function bootstrap() {
   }
   app.use(cookieParser());
   app.enableCors({
-    origin: "*",
+    origin: ["https://rhythm-gamers.com", "http://localhost:3000"],
     credentials: true,
   });
   const reflector = app.get(Reflector);
