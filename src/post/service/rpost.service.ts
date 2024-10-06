@@ -132,7 +132,7 @@ export class RPostService {
       },
     });
     this.updatePost(posts, take);
-    return posts;
+    return { posts: posts[0], allCount: posts[1] };
   }
 
   async update(userid: number, postid: number, dto: UpdatePostDto) {
