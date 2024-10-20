@@ -8,11 +8,13 @@ import { UserService } from "src/user/user.service";
 import { UpdatePostDto } from "../dto/update-post.dto";
 import { PostLikeService } from "./post-like.service";
 import { CommentService } from "src/comment/service/comment.service";
+import { PostLike } from "../entity/post-like.entity";
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(PostLike) private postLikeRepository: Repository<PostLike>,
     private readonly boardService: BoardService,
     private readonly userService: UserService,
     private readonly postLikeService: PostLikeService,
@@ -97,16 +99,11 @@ export class PostService {
       },
     });
 
-    const likeCount = await this.postRepository.count({
+    const likeCount = await this.postLikeRepository.count({
       where: {
-        likeList: {
-          post: {
-            id: postId,
-          }
+        post: {
+          id: postId,
         }
-      },
-      relations: {
-        likeList: true
       }
     })
 
