@@ -12,11 +12,13 @@ import { RBoardService } from "src/board/service/rboard.service";
 import { UpdatePostDto } from "../dto/update-post.dto";
 import { Comment } from "src/comment/entity/comment.entity";
 import { RPostLikeService } from "./rpost-like.service";
+import { PostLike } from "../entity/post-like.entity";
 
 @Injectable()
 export class RPostService {
   constructor(
     @InjectRepository(Post) private readonly postRepo: Repository<Post>,
+    @InjectRepository(PostLike) private postLikeRepo: Repository<PostLike>,
     private readonly userService: UserService,
     private readonly boardService: RBoardService,
     private readonly postLikeService: RPostLikeService,
@@ -131,6 +133,18 @@ export class RPostService {
         createdAt: "DESC",
       },
     });
+
+    for(const post of posts[0]) {
+      const likeCount = await this.postLikeRepo.count({
+        where: {
+          post: {
+            id: post.id,
+          }
+        }
+      })
+      post["likeCount"] = likeCount;
+    }
+
     this.updatePost(posts, take);
     return { posts: posts[0], allCount: posts[1] };
   }
