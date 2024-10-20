@@ -37,12 +37,13 @@ export class AwsS3Service {
 
   // upload == update
   // 파일 이름이 같으면 update 실행
-  async upload(filepath: string, filebody: Buffer) {
+  async upload(filepath: string, filebody: Buffer, mimetype?: string) {
     // type : practice | level-test
     const command: PutObjectCommand = new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: filepath,
       Body: filebody, // fileContent
+      ContentType: mimetype ? mimetype : null,
     });
     const uploadFile = await this.s3.send(command);
     return uploadFile;

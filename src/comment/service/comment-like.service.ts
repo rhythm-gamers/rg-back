@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CommentLike } from "../entity/comment-like.entity";
 import { CommentService } from "./comment.service";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/user/service/user.service";
 
 @Injectable()
 export class CommentLikeService {
@@ -17,9 +17,7 @@ export class CommentLikeService {
 
   async appendUserToLikeList(userId: number, commentId: number) {
     const user = await this.userService.fetchUserLikeListWithUserID(userId);
-    if (
-      user.commentLikeList.some((like) => like.comment.id === commentId)
-    ) {
+    if (user.commentLikeList.some((like) => like.comment.id === commentId)) {
       return false;
     }
 

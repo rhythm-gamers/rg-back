@@ -15,14 +15,12 @@ export class PatternInfo {
 
   @OneToOne(() => Practice, (practice) => practice.patternInfo, {
     nullable: true,
-    onDelete: "CASCADE",
   })
   @JoinColumn()
   practice: Practice;
 
   @OneToOne(() => LevelTest, (levelTest) => levelTest.patternInfo, {
     nullable: true,
-    onDelete: "CASCADE",
   })
   @JoinColumn()
   levelTest: LevelTest;

@@ -12,7 +12,7 @@ export class UpdatePlateSettingDto {
   showComment?: boolean;
 
   @ApiProperty({
-    description: "현재 레벨을을 보일 것인가?",
+    description: "현재 레벨을 보일 것인가?",
     example: false,
     required: false,
   })
@@ -29,21 +29,22 @@ export class UpdatePlateSettingDto {
   @IsOptional()
   showChingho?: boolean;
 
-  @ApiProperty({
-    description: "칭호 아이콘을 보일 것인가?",
-    example: false,
-    required: false,
-  })
-  @IsBoolean()
-  @IsOptional()
-  showChinghoIco?: boolean;
+  // 칭호 아이콘과 칭호는 같이 보여야 한다?
+  // @ApiProperty({
+  //   description: "칭호 아이콘을 보일 것인가?",
+  //   example: false,
+  //   required: false,
+  // })
+  // @IsBoolean()
+  // @IsOptional()
+  // showChinghoIco?: boolean;
 
   @ApiProperty({
-    description: "운영자가 지정한 뱃지 디자인 선택",
-    example: 3,
+    description: "배경 디자인을 보일 것인가?",
+    example: false,
     required: false,
   })
   @IsNumber()
   @IsOptional()
-  showBgdesign?: number;
+  showBgdesign?: boolean;
 }

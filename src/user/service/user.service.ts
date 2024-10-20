@@ -5,15 +5,17 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { And, IsNull, Not, Repository } from "typeorm";
-import { User } from "./entity/user.entity";
+import { User } from "../entity/user.entity";
 import { AwsS3Service } from "src/s3/aws-s3.service";
-import { PlateDataService } from "./service/plate-data.service";
+import { PlateDataService } from "src/plate/service/plate-data.service";
 import axios from "axios";
 import { CodecService } from "src/codec/codec.service";
 import { FirebaseService } from "src/firebase/firebase.service";
-import { UpdateChinghoDto } from "./dto/update-chingho.dto";
-import { PlateData } from "./entity/plate-data.entity";
-import { UpdatePlatedataDto } from "./dto/update-platedata.dto";
+import { UpdateChinghoDto } from "../../chingho/dto/update-chingho.dto";
+import { PlateData } from "../../plate/entity/plate-data.entity";
+import { UpdatePlatedataDto } from "../../plate/dto/update-platedata.dto";
+import { RegisterDto } from "src/auth/dto/register.dto";
+import { PlateSettingService } from "src/plate/service/plate-setting.service";
 
 @Injectable()
 export class UserService {
@@ -23,6 +25,7 @@ export class UserService {
     private readonly plateDataService: PlateDataService,
     private readonly codecService: CodecService,
     private readonly firebaseService: FirebaseService,
+    private readonly plateSettingService: PlateSettingService,
   ) {}
 
   private readonly PROFILE_IMAGE_PATH: string = "profile-image";
@@ -52,6 +55,10 @@ export class UserService {
       nickname: nickname,
     });
     return user;
+  }
+
+  async fetchWithRegisterId(registerId: string) {
+    return await this.userRepository.findOneBy({ registerId: registerId });
   }
 
   async fetchUserLikeListWithUserID(userId: number) {
@@ -289,5 +296,32 @@ export class UserService {
   async fetchLeveltestLevel(userid: number) {
     const data: PlateData = await this.plateDataService.fetch(userid);
     return data.currentLevel;
+  }
+
+  async isDuplicatedNickname(nickname: string): Promise<boolean> {
+    const user = await this.userRepository.findOneBy({ nickname: nickname });
+    return user ? true : false;
+  }
+
+  async isDuplicatedRegisterId(registreId: string): Promise<boolean> {
+    const user = await this.userRepository.findOneBy({ registerId: registreId });
+    return user ? true : false;
+  }
+
+  async create(registerDto: RegisterDto) {
+    let newUser = this.userRepository.create({
+      registerId: registerDto.username,
+      nickname: registerDto.nickname,
+      password: registerDto.password,
+    });
+    newUser = await this.userRepository.save(newUser);
+    newUser.plateSetting = await this.plateSettingService.create();
+    newUser.plateData = await this.plateDataService.create();
+
+    try {
+      return await this.userRepository.save(newUser);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

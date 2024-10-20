@@ -6,7 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { PlateSetting } from "./plate-setting.entity";
+import { PlateSetting } from "src/plate/entity/plate-setting.entity";
 import { Post } from "src/post/entity/post.entity";
 import { Comment } from "src/comment/entity/comment.entity";
 import { PostReport } from "src/report/entity/post-report.entity";
@@ -16,7 +16,7 @@ import { LevelTestProgress } from "../../progress/entity/level-test-progress.ent
 import { PracticeProgress } from "../../progress/entity/practice-progress.entity";
 import { CommentLike } from "src/comment/entity/comment-like.entity";
 import { PostLike } from "src/post/entity/post-like.entity";
-import { PlateData } from "./plate-data.entity";
+import { PlateData } from "../../plate/entity/plate-data.entity";
 
 @Entity()
 export class User {

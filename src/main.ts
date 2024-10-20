@@ -11,6 +11,7 @@ import { json } from "express";
 import { RolesGuard } from "./token/roles.guard";
 import { TokenService } from "./token/token.service";
 import expressBasicAuth from "express-basic-auth";
+import { tokenHeaderMiddleware } from "./token/token-header.middleware";
 
 function setSwaggerAuth(app: INestApplication) {
   app.use(
@@ -30,7 +31,7 @@ async function bootstrap() {
   });
   if (isDevelope) {
   }
-  app.use(cookieParser());
+  app.use(cookieParser(), tokenHeaderMiddleware);
   app.enableCors({
     origin: "*",
     credentials: true,

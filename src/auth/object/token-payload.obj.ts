@@ -1,3 +1,4 @@
+import { RUser } from "src/user/entity/ruser.entity";
 import { User } from "src/user/entity/user.entity";
 
 export class TokenPayload {
@@ -6,7 +7,7 @@ export class TokenPayload {
   nickname: string;
   role: Role;
 
-  constructor(user: User) {
+  constructor(user: User | RUser) {
     this.uid = user.id;
     this.registerId = user.registerId;
     this.nickname = user.nickname;

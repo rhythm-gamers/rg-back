@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 import { CommentLike } from "../entity/comment-like.entity";
 import { RCommentService } from "./rcomment.service";
 import { ToggleLike } from "src/common/enum/toggle-like.enum";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/user/service/user.service";
 
 @Injectable()
 export class RCommentLikeService {

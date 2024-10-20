@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { LevelTestProgressService } from "./level-test-progress.service";
 import { PracticeProgressService } from "./practice-progress.service";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/user/service/user.service";
 import { LevelTestService } from "src/pattern/service/level-test.service";
 import { PracticeService } from "src/pattern/service/practice.service";
 

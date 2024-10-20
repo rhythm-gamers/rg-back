@@ -13,14 +13,10 @@ export class PracticeProgress {
   @PrimaryGeneratedColumn()
   practiceProgressId: number;
 
-  @ManyToOne(() => User, (user) => user.practiceProgresses, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => User, (user) => user.practiceProgresses)
   user: User;
 
-  @ManyToOne(() => Practice, (practice) => practice.userProgresses, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => Practice, (practice) => practice.userProgresses)
   practice: Practice;
 
   @Column({ type: "decimal", precision: 5, scale: 2, comment: "000.00~999.99" })
