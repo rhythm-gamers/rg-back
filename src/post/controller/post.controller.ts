@@ -48,7 +48,7 @@ export class PostController {
     @Query("page") page: number = 0,
     @Query("limit") limit: number = +process.env.COMMENT_LIMIT,
   ) {
-    return await this.postRefactoringService.fetchPagenatedPostsWithBoardname(boardName, 0, 10);
+    return await this.postRefactoringService.fetchPagenatedPostsWithBoardname(boardName, page, limit);
     // return await this.postService.fetchPostsAndCommentCountWithBoardname(
     //   boardName,
     //   +page,

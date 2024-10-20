@@ -97,8 +97,22 @@ export class PostService {
       },
     });
 
+    const likeCount = await this.postRepository.count({
+      where: {
+        likeList: {
+          post: {
+            id: postId,
+          }
+        }
+      },
+      relations: {
+        likeList: true
+      }
+    })
+
     if (post) {
       post["modified"] = post.createdAt === post.updatedAt ? false : true;
+      post["likeCount"] = likeCount;
     }
     return post;
   }
