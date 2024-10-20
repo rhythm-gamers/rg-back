@@ -77,6 +77,7 @@ export class CommentService {
         user: {
           id: true,
           nickname: true,
+          userLevel: true,
         },
       },
       where: {
@@ -85,14 +86,33 @@ export class CommentService {
         },
       },
       order: {
-        id: "DESC",
+        id: "ASC",
       },
       skip: page * limit,
       take: limit,
       relations: ["user"],
     });
 
-    return result;
+    let [comments, commentCount] = result
+
+    comments.forEach((comment, idx) => {
+      comment["reComments"] = []; // 모든 comment에 reComment 배열 초기화
+      if(comment.parentId === 0) return;
+      
+      for (const parentComment of comments) {
+        if(parentComment === null) continue;
+        if (parentComment.id === comment.parentId) {
+          parentComment["reComments"]
+            ? parentComment["reComments"].push(comment) // 자식 댓글을 부모 댓글의 reComment 배열에 추가
+            : parentComment["reComments"] = [comment]; // 배열이 없으면 새로 초기화하고 자식 댓글 추가
+          
+          comments[idx] = null // 자식 댓글 삭제
+        }
+      }
+    });
+
+    comments = comments.filter((comment)=>comment);
+    return {comments, commentCount};
   }
 
   async fetchCommentWithCommentID(commentId: number) {
